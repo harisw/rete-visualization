@@ -42,6 +42,11 @@ public:
 	virtual void printQueueLen() = 0;
 
 	string justCondition;
+
+	//visualization reqs
+	pair<int, int> visualPosition;
+	virtual vector<Node*> getNextPairs() = 0;
+
 };
 
 

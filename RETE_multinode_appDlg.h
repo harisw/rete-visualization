@@ -5,7 +5,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "../RETEwithDoubleNodeIndexing/ReteNet.h"
+#include "ReteNet.h"
 #include "MFC_MultiThread.h"
 #include "RulesVisualDlg.h"
 

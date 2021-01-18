@@ -1804,6 +1804,7 @@ void CRETEmultinodeappDlg::OnBnClickedButtonStopSim2()
 
 void CRETEmultinodeappDlg::OnBnClickedButton7()
 {
+	ReteNet::buildNetNode();
 	RulesVisualDlg dialog_visual;
 	dialog_visual.m_NodeList = ReteNet::getCopyNodes();
 	dialog_visual.DoModal();

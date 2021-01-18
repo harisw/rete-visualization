@@ -1,6 +1,6 @@
 #pragma once
-#include "../RETEwithDoubleNodeIndexing/Node.h"
-
+#include "Node.h"
+#include <algorithm>
 #ifndef RULESVISUAL_H
 #define RULESVISUAL_H
 
@@ -28,10 +28,14 @@ public:
 	vector<Node*> m_NodeList;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg
-		void displayAlphaDetail(int x);
+	void displayAlphaDetail(int x);
+	void displayBetaDetail(CPoint point);
 	void OnLButtonDown(UINT nFlags, CPoint point);
-	vector<pair<int, string>> alphaPositions;
+	vector<pair<int, Node*>> alphaPositions;
+	vector<pair<int, Node*>> betaPositions;
 	int rad;
+	int nodeWidth;
+	int nodeHeight;
 };
 
 #endif // !RULESVISUAL_H

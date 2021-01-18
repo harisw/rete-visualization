@@ -1,5 +1,5 @@
 #pragma once
-#include "../RETEwithDoubleNodeIndexing/ReteNet.h"
+#include "ReteNet.h"
 #include <thread>
 #include <iostream>
 #include <set>

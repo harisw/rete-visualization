@@ -893,6 +893,11 @@ long long BetaNode::getExecutionEstimated()
 		return win->getInitTime();
 }
 
+vector<Node*> BetaNode::getNextPairs()
+{
+	return this->listOfNextPair;
+}
+
 void BetaNode::printQueueLen()
 {
 	cout << " size left: " << leftInputQueue.first.size() << " right input: " << rightInputQueue.first.size() << endl;

@@ -75,6 +75,7 @@ public:
 	//WINDOW PART
 	void refreshEvent(queue<EventPtr>& inputEvent);
 	long long getExecutionEstimated();
+	vector<Node*> getNextPairs();
 
 private:
 	//int id;

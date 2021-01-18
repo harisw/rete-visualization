@@ -142,6 +142,11 @@ long long AlphaNode::getExecutionEstimated()
 		return win->getInitTime();
 }
 
+vector<Node*> AlphaNode::getNextPairs()
+{
+	return this->listOfNextPair;
+}
+
 int AlphaNode::checkExistPair(Node* pairs)
 {
 	for (int i = 0; i < listOfNextPair.size(); i++) {
