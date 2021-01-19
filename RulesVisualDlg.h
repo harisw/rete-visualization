@@ -2,11 +2,17 @@
 #include "Node.h"
 #include "BetaNode.h"
 #include "AlphaNodeDlg.h"
+#include "BetaNodeDlg.h"
 #include <algorithm>
 #ifndef RULESVISUAL_H
 #define RULESVISUAL_H
 
 // RulesVisualDlg dialog
+
+struct LinkedNode {
+	Node* node;
+	LinkedNode* next = nullptr;
+};
 
 class RulesVisualDlg : public CDialog
 {
@@ -27,20 +33,23 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnPaint();
+	void addNodePosition(Node* nodeInput);
 	vector<Node*> m_NodeList;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg
 	void displayAlphaDetail(int x);
 	void displayBetaDetail(CPoint point);
+
 	void OnLButtonDown(UINT nFlags, CPoint point);
 	vector<pair<int, AlphaNode*>> alphaPositions;
 	vector<pair<int, BetaNode*>> betaPositions;
 	int rad;
 	int nodeWidth;
 	int nodeHeight;
-
+	LinkedNode* nodePositions[49][49];
 private:
 	void showAlphaWindow(AlphaNode* nodeInput);
+	void showBetaWindow(BetaNode* nodeInput);
 };
 
 #endif // !RULESVISUAL_H

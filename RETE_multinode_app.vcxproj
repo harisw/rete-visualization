@@ -186,6 +186,7 @@
     <ClInclude Include="AlphaNode.h" />
     <ClInclude Include="AlphaNodeDlg.h" />
     <ClInclude Include="BetaNode.h" />
+    <ClInclude Include="BetaNodeDlg.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MFC_MultiThread.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="AlphaNode.cpp" />
     <ClCompile Include="AlphaNodeDlg.cpp" />
     <ClCompile Include="BetaNode.cpp" />
+    <ClCompile Include="BetaNodeDlg.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="MFC_MultiThread.cpp" />
     <ClCompile Include="MultiNodeIndexing.cpp" />
