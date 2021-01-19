@@ -73,7 +73,7 @@ void RulesVisualDlg::OnPaint()
 			hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, nodeWidth, nodeHeight);
 			
 			//STORING POSITION
-			alphaPositions.push_back(make_pair(xStart, currNode));
+			alphaPositions.push_back(make_pair(xStart, dynamic_cast<AlphaNode*>(currNode)));
 
 			currNode->visualPosition = make_pair(xStart, yAlpha);
 			unconnectedNode.push_back(currNode);
@@ -109,8 +109,8 @@ void RulesVisualDlg::OnPaint()
 
 			hRgn = CreateRoundRectRgn(xBeta, yBeta, xBeta + rad, yBeta + rad, nodeWidth, nodeHeight);
 			///// END OF DRAWING
-
-			betaPositions.push_back(make_pair(xBeta, currNode));
+		
+			betaPositions.push_back(make_pair(xBeta, dynamic_cast<BetaNode*>(currNode)));
 			currNode->visualPosition = make_pair(xBeta, yBeta);
 
 			///// CONNECTING NODES
@@ -190,8 +190,9 @@ void RulesVisualDlg::displayAlphaDetail(int x)
 	while (l <= r) {
 		int m = l + (r - l) / 2;
 		if (x >= alphaPositions[m].first && x <= alphaPositions[m].first + rad) {
-			wstring nodeInfo(alphaPositions[m].second->justCondition.begin(), alphaPositions[m].second->justCondition.end());
-			MessageBox(nodeInfo.c_str(), L"Judulll", MB_OK);
+			showAlphaWindow(alphaPositions[m].second);
+			/*wstring nodeInfo(alphaPositions[m].second->justCondition.begin(), alphaPositions[m].second->justCondition.end());
+			MessageBox(nodeInfo.c_str(), L"Judulll", MB_OK);*/
 			return;
 		}
 		else if (x > alphaPositions[m].first)
@@ -224,6 +225,7 @@ void RulesVisualDlg::displayBetaDetail(CPoint point)
 			r = m - 1;
 	}
 }
+
 void RulesVisualDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
@@ -232,4 +234,11 @@ void RulesVisualDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	else
 		displayBetaDetail(point);
 	CDialog::OnLButtonDown(nFlags, point);
+}
+
+void RulesVisualDlg::showAlphaWindow(AlphaNode* nodeInput)
+{
+	AlphaNodeDlg dialog_alpha;
+	dialog_alpha.currNode = nodeInput;
+	dialog_alpha.DoModal();
 }

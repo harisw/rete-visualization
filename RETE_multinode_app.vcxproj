@@ -184,6 +184,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AlphaNode.h" />
+    <ClInclude Include="AlphaNodeDlg.h" />
     <ClInclude Include="BetaNode.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="framework.h" />
@@ -207,6 +208,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlphaNode.cpp" />
+    <ClCompile Include="AlphaNodeDlg.cpp" />
     <ClCompile Include="BetaNode.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="MFC_MultiThread.cpp" />

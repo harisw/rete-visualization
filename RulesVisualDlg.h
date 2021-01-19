@@ -1,5 +1,7 @@
 #pragma once
 #include "Node.h"
+#include "BetaNode.h"
+#include "AlphaNodeDlg.h"
 #include <algorithm>
 #ifndef RULESVISUAL_H
 #define RULESVISUAL_H
@@ -31,11 +33,14 @@ public:
 	void displayAlphaDetail(int x);
 	void displayBetaDetail(CPoint point);
 	void OnLButtonDown(UINT nFlags, CPoint point);
-	vector<pair<int, Node*>> alphaPositions;
-	vector<pair<int, Node*>> betaPositions;
+	vector<pair<int, AlphaNode*>> alphaPositions;
+	vector<pair<int, BetaNode*>> betaPositions;
 	int rad;
 	int nodeWidth;
 	int nodeHeight;
+
+private:
+	void showAlphaWindow(AlphaNode* nodeInput);
 };
 
 #endif // !RULESVISUAL_H
