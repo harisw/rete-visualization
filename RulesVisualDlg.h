@@ -6,7 +6,7 @@
 #include <algorithm>
 #ifndef RULESVISUAL_H
 #define RULESVISUAL_H
-
+#define NODE_SIZE 25
 // RulesVisualDlg dialog
 
 struct LinkedNode {
@@ -37,16 +37,15 @@ public:
 	vector<Node*> m_NodeList;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg
-	void displayAlphaDetail(int x);
-	void displayBetaDetail(CPoint point);
+	//void displayAlphaDetail(int x);
+	//void displayBetaDetail(CPoint point);
 
 	void OnLButtonDown(UINT nFlags, CPoint point);
-	vector<pair<int, AlphaNode*>> alphaPositions;
-	vector<pair<int, BetaNode*>> betaPositions;
+	vector<pair<int, Node*>> nodePositions;
+	Node* findClickedNode(CPoint point);
 	int rad;
 	int nodeWidth;
 	int nodeHeight;
-	LinkedNode* nodePositions[49][49];
 private:
 	void showAlphaWindow(AlphaNode* nodeInput);
 	void showBetaWindow(BetaNode* nodeInput);

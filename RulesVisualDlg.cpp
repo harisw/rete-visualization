@@ -68,14 +68,14 @@ void RulesVisualDlg::OnPaint()
 	Node* currNode;
 	for (int i = 0; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
+
 		if (currNode->getType() == "Alpha") {
 			alphaXs.push_back(xStart+20);
 			hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, nodeWidth, nodeHeight);
 			
 			//STORING POSITION
-			//alphaPositions.push_back(make_pair(xStart, dynamic_cast<AlphaNode*>(currNode)));
 			currNode->visualPosition = make_pair(xStart, yAlpha);
-			addNodePosition(currNode);
+			nodePositions.push_back(make_pair(xStart, currNode));
 
 
 			unconnectedNode.push_back(currNode);
@@ -100,8 +100,8 @@ void RulesVisualDlg::OnPaint()
 				}
 			}
 			
+
 			//GET x position for BetaNodes FROM connected node's X
-			
 			if (inputIndexes.size() == 2)
 				xBeta = (unconnectedNode[inputIndexes.front()]->visualPosition.first + unconnectedNode[inputIndexes.back()]->visualPosition.first) / 2;
 			else
@@ -112,9 +112,9 @@ void RulesVisualDlg::OnPaint()
 			hRgn = CreateRoundRectRgn(xBeta, yBeta, xBeta + rad, yBeta + rad, nodeWidth, nodeHeight);
 			///// END OF DRAWING
 		
-			//betaPositions.push_back(make_pair(xBeta, dynamic_cast<BetaNode*>(currNode)));
 			currNode->visualPosition = make_pair(xBeta, yBeta);
-			addNodePosition(currNode);
+			nodePositions.push_back(make_pair(xBeta, currNode));
+
 
 			///// CONNECTING NODES
 			if (currNode->getNextPairs().size() > 0)
@@ -131,36 +131,6 @@ void RulesVisualDlg::OnPaint()
 				unconnectedNode.clear();
 			}
 
-
-
-			//if (currNode->getNextPairs().size() > 0)
-			//	unconnectedNode.push_back(currNode);
-
-
-
-
-			//if (!alphaXs.empty()) {
-			//	xBeta = xSum / alphaXs.size();
-
-			//	hRgn = CreateRoundRectRgn(xBeta, yBeta, xBeta + rad, yBeta + rad, nodeWidth, nodeHeight);
-			//	for (int j = 0; j < alphaXs.size(); j++) {
-			//		dc.MoveTo(alphaXs[j]+10, yAlpha+40);
-			//		dc.LineTo(xBeta+30, yBeta+30);
-			//	}
-			//	alphaXs.clear(); xSum = 0;
-			//	lastXBeta = xBeta; lastYBeta = yBeta;
-			//}
-			//else {
-			//	dc.MoveTo(lastXBeta+30, lastYBeta+40);
-			//	lastYBeta += 80;
-			//	hRgn = CreateRoundRectRgn(lastXBeta, lastYBeta, lastXBeta + rad, lastYBeta + rad, nodeWidth, nodeHeight);
-			//	
-			//	dc.LineTo(lastXBeta+30, lastYBeta+30);
-			//}
-
-
-			//nAlpha = 0;
-			//xBeta += 80;
 		}
 
 
@@ -176,23 +146,6 @@ void RulesVisualDlg::OnPaint()
 	CDialog::OnPaint();
 }
 
-void RulesVisualDlg::addNodePosition(Node* nodeInput)
-{
-	const int x = nodeInput->visualPosition.first % 48;
-	const int y = nodeInput->visualPosition.second % 48;
-	if (nodePositions[x][y] == nullptr) {
-		LinkedNode* newNode;
-		newNode->node = nodeInput;
-		nodePositions[x][y] = newNode;
-	}
-	else {
-		LinkedNode* newNode;
-		newNode->node = nodeInput;
-		newNode->next = nodePositions[x][y];
-		nodePositions[x][y] = newNode;
-	}
-}
-
 BOOL RulesVisualDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -201,87 +154,80 @@ BOOL RulesVisualDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialog::PreTranslateMessage(pMsg);
 }
 
-void RulesVisualDlg::displayAlphaDetail(int x)
-{
-	
-	int l = 0;
-	int r = alphaPositions.size() - 1;
-	while (l <= r) {
-		int m = l + (r - l) / 2;
-		if (x >= alphaPositions[m].first && x <= alphaPositions[m].first + (rad*2)) {
-			showAlphaWindow(alphaPositions[m].second);
-			/*wstring nodeInfo(alphaPositions[m].second->justCondition.begin(), alphaPositions[m].second->justCondition.end());
-			MessageBox(nodeInfo.c_str(), L"Judulll", MB_OK);*/
-			return;
-		}
-		else if (x > alphaPositions[m].first)
-			l = m + 1;
-		else
-			r = m - 1;
-	}
-}
-void RulesVisualDlg::displayBetaDetail(CPoint point)
-{
-	int l = 0;
-	int r = betaPositions.size() - 1;
-	int x = point.x;
-	int y = point.y;
-	if (betaPositions.size() == 2) {
-		int m = 0;
-		if (x >= betaPositions[m].first && x <= betaPositions[m].first + (rad+20)) {
+//void RulesVisualDlg::displayAlphaDetail(int x)
+//{
+//	int l = 0;
+//	int r = alphaPositions.size() - 1;
+//	while (l <= r) {
+//		int m = l + (r - l) / 2;
+//		if (x >= alphaPositions[m].first && x <= alphaPositions[m].first + (rad*2)) {
+//			showAlphaWindow(alphaPositions[m].second);
+//			/*wstring nodeInfo(alphaPositions[m].second->justCondition.begin(), alphaPositions[m].second->justCondition.end());
+//			MessageBox(nodeInfo.c_str(), L"Judulll", MB_OK);*/
+//			return;
+//		}
+//		else if (x > alphaPositions[m].first)
+//			l = m + 1;
+//		else
+//			r = m - 1;
+//	}
+//}
 
-			while (x >= betaPositions[m].first && m < betaPositions.size()) {		//FIND THE RIGHT BETA NODE RESPECTING TO Y POS
-				if (y >= betaPositions[m].second->visualPosition.second && y <= betaPositions[m].second->visualPosition.second + (rad+20)) {
-					showBetaWindow(betaPositions[m].second);
-					//wstring nodeInfo(betaPositions[m].second->justCondition.begin(), betaPositions[m].second->justCondition.end());
-					//MessageBox(nodeInfo.c_str(), L"Judulll", MB_OK);
-					return;
-				}
-				m++;
-			}
-		} 
-		m = 1;
-		if (x >= betaPositions[m].first && x <= betaPositions[m].first + (rad + 20)) {
-			while (x >= betaPositions[m].first && m < betaPositions.size()) {		//FIND THE RIGHT BETA NODE RESPECTING TO Y POS
-				if (y >= betaPositions[m].second->visualPosition.second && y <= betaPositions[m].second->visualPosition.second + (rad+20)) {
-					showBetaWindow(betaPositions[m].second);
-					//wstring nodeInfo(betaPositions[m].second->justCondition.begin(), betaPositions[m].second->justCondition.end());
-					//MessageBox(nodeInfo.c_str(), L"Judulll", MB_OK);
-					return;
-				}
-				m++;
-			}
-		}
-	}
-	while (l <= r) {
-		int m = l + (r - l) / 2;
-		if (x >= betaPositions[m].first && x <= betaPositions[m].first + (rad+20)) {
-			
-			while (x >= betaPositions[m].first && m < betaPositions.size()) {		//FIND THE RIGHT BETA NODE RESPECTING TO Y POS
-				if (y >= betaPositions[m].second->visualPosition.second && y <= betaPositions[m].second->visualPosition.second + (rad+20)) {
-					showBetaWindow(betaPositions[m].second);
-					//wstring nodeInfo(betaPositions[m].second->justCondition.begin(), betaPositions[m].second->justCondition.end());
-					//MessageBox(nodeInfo.c_str(), L"Judulll", MB_OK);
-					return;
-				}
-				m++;
-			}
-		}
-		else if (x > betaPositions[m].first)
-			l = m + 1;
-		else
-			r = m - 1;
-	}
-}
 
 void RulesVisualDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
-	if (point.y <= 100)	//ALPHA NODE
-		displayAlphaDetail(point.x);
+	Node* currentNode = findClickedNode(point);
+	
+	if (currentNode->getType() == "Alpha")
+		showAlphaWindow(dynamic_cast<AlphaNode*>(currentNode));
 	else
-		displayBetaDetail(point);
+		showBetaWindow(dynamic_cast<BetaNode*>(currentNode));
+	
 	CDialog::OnLButtonDown(nFlags, point);
+}
+
+
+
+
+bool comparator(pair<int, Node*> a, pair<int, Node*> b) {
+	return a.second->visualPosition.first < b.second->visualPosition.first;
+}
+
+Node* RulesVisualDlg::findClickedNode(CPoint point)
+{
+	sort(nodePositions.begin(), nodePositions.end(), comparator);
+	int l = 0;
+	int r = nodePositions.size() - 1;
+	int x = point.x;
+	int y = point.y;
+
+	while (l <= r) {
+		int m = l + (r - l) / 2;
+		if (x >= nodePositions[m].first && x <= nodePositions[m].first + (rad*2)) {
+			
+			while (1) {		//GOES TO LEFTMOST NODE
+				if (m == 0 || (x >= nodePositions[m-1].first + (rad * 2) ))
+					break;
+				
+				m--;
+			}
+
+			while (1) {		//FIND RIGHT Y position
+				if (y >= nodePositions[m].second->visualPosition.second && y <= nodePositions[m].second->visualPosition.second + (rad * 2)) {
+					return nodePositions[m].second;
+				}
+				m++;
+				
+			}
+			
+		}
+		else if (x > nodePositions[m].first)
+			l = m + 1;
+		else
+			r = m - 1;
+	}
+	return nullptr;
 }
 
 void RulesVisualDlg::showAlphaWindow(AlphaNode* nodeInput)
