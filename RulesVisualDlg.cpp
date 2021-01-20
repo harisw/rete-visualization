@@ -24,6 +24,7 @@ RulesVisualDlg::~RulesVisualDlg()
 void RulesVisualDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_SCROLLBAR2, m_hbar);
 }
 
 
@@ -142,6 +143,7 @@ void RulesVisualDlg::OnPaint()
 			FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, blueBrush);
 
 	}
+	//m_size
 
 	CDialog::OnPaint();
 }
@@ -242,4 +244,18 @@ void RulesVisualDlg::showBetaWindow(BetaNode* nodeInput)
 	BetaNodeDlg dialog_beta;
 	dialog_beta.currNode = nodeInput;
 	dialog_beta.DoModal();
+}
+
+BOOL RulesVisualDlg::OnInitDialog()
+{
+	CDialog::OnInitDialog();
+
+	// TODO:  Add extra initialization here
+	CClientDC dc(this);
+	m_dcMem.CreateCompatibleDC(&dc);
+	//m_vbar.ShowWindow(false);  //Hide Vertical Scroll Bar
+	m_hbar.ShowWindow(false);  //Hide Horizontal Scroll Bar
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+				  // EXCEPTION: OCX Property Pages should return FALSE
 }

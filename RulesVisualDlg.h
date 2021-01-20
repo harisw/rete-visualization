@@ -46,9 +46,18 @@ public:
 	int rad;
 	int nodeWidth;
 	int nodeHeight;
+
+	//TRYING SCROLLBAR
+	SCROLLINFO horz, vert;
+	int sourcex, sourcey, offsetx, offsety;
+	CDC m_dcMem;
+
 private:
 	void showAlphaWindow(AlphaNode* nodeInput);
 	void showBetaWindow(BetaNode* nodeInput);
+public:
+	CScrollBar m_hbar;
+	virtual BOOL OnInitDialog();
 };
 
 #endif // !RULESVISUAL_H
