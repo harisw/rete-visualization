@@ -207,15 +207,15 @@ void CRETEmultinodeappDlg::OnPaint()
 	}
 	else
 	{
-		CWnd* pImage = GetDlgItem(IDC_1);
-		CRect rc;
-		pImage->GetWindowRect(rc);
-		HRGN hRgn = CreateRoundRectRgn(0, 0, 20, 20, 10, 10);
-		HINSTANCE hIns = AfxGetInstanceHandle();
-		
-		HBRUSH hBr = CreateSolidBrush(BLACK_BRUSH);
-		DeleteObject(hIns);
-		FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, hBr);
+		//CWnd* pImage = GetDlgItem(IDC_1);
+		//CRect rc;
+		//pImage->GetWindowRect(rc);
+		//HRGN hRgn = CreateRoundRectRgn(0, 0, 20, 20, 10, 10);
+		//HINSTANCE hIns = AfxGetInstanceHandle();
+		//
+		//HBRUSH hBr = CreateSolidBrush(BLACK_BRUSH);
+		//DeleteObject(hIns);
+		//FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, hBr);
 		CDialog::OnPaint();
 		CDialogEx::OnPaint();
 	}

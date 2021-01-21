@@ -45,11 +45,11 @@ void RulesVisualDlg::OnPaint()
 	CWnd* pImage = GetDlgItem(IDC_STATIC);
 	CRect rc;
 	pImage->GetWindowRect(rc);
-	rad = 50;
-	nodeWidth = 60;
-	nodeHeight = 60;
+	//rad = WIND_WIDTH / (m_NodeList.size() * RAD_CONST);
+	rad = 35;
+	//distance = (WIND_WIDTH / m_NodeList.size()) * DIST_CONST;
+	distance = 80;
 
-	
 	int xStart = 0;
 	int yAlpha = 0;
 	int yBeta = 100;
@@ -65,36 +65,36 @@ void RulesVisualDlg::OnPaint()
 	vector<int> alphaXs;
 	HRGN hRgn;
 
-	vector<Node*> unconnectedNode;
+	vector<Node*> unconnectedNodes;
 	Node* currNode;
 	for (int i = 0; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
 		if (currNode->getType() == "Alpha") {
 			alphaXs.push_back(xStart+20);
-			hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, nodeWidth, nodeHeight);
+			hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, rad, rad);
 			
 			//STORING POSITION
 			currNode->visualPosition = make_pair(xStart, yAlpha);
 			nodePositions.push_back(make_pair(xStart, currNode));
 
 
-			unconnectedNode.push_back(currNode);
+			unconnectedNodes.push_back(currNode);
 
 			if (nAlpha == 0) {
 				xBeta = xStart;
 			}
 			xSum += xStart;
 			nAlpha++;
-			xStart += 80;
+			xStart += distance;
 			lastYBeta = yBeta;
 		}
 		else {
 			vector<int> inputIndexes;
 			vector<Node*> nextPairs;
 			//DRAWING BETA
-			for (int index = 0; index < unconnectedNode.size(); index++) {		//CHECK FOR CONNECTED ALPHA NODES
-				nextPairs = unconnectedNode[index]->getNextPairs();
+			for (int index = 0; index < unconnectedNodes.size(); index++) {		//CHECK FOR CONNECTED ALPHA NODES
+				nextPairs = unconnectedNodes[index]->getNextPairs();
 				if ((nextPairs.size() == 1 && nextPairs[0] == currNode) ||
 					find(nextPairs.begin(), nextPairs.end(), currNode) != nextPairs.end()) {
 					inputIndexes.push_back(index);
@@ -104,34 +104,27 @@ void RulesVisualDlg::OnPaint()
 
 			//GET x position for BetaNodes FROM connected node's X
 			if (inputIndexes.size() == 2)
-				xBeta = (unconnectedNode[inputIndexes.front()]->visualPosition.first + unconnectedNode[inputIndexes.back()]->visualPosition.first) / 2;
+				xBeta = (unconnectedNodes[inputIndexes.front()]->visualPosition.first + unconnectedNodes[inputIndexes.back()]->visualPosition.first) / 2;
 			else
-				xBeta = unconnectedNode[inputIndexes.front()]->visualPosition.first;
+				xBeta = unconnectedNodes[inputIndexes.front()]->visualPosition.first;
 
-			yBeta = max(unconnectedNode[inputIndexes.front()]->visualPosition.second, unconnectedNode[inputIndexes.back()]->visualPosition.second) + 80;
+			yBeta = max(unconnectedNodes[inputIndexes.front()]->visualPosition.second, unconnectedNodes[inputIndexes.back()]->visualPosition.second) + distance;
 
-			hRgn = CreateRoundRectRgn(xBeta, yBeta, xBeta + rad, yBeta + rad, nodeWidth, nodeHeight);
+			//CPoint pointCandidate(xBeta, yBeta);
+
+			//while (findClickedNode(pointCandidate) != nullptr) {
+			//	yBeta += distance;
+			//	pointCandidate =  CPoint(xBeta, yBeta);
+			//}
+
+
+			hRgn = CreateRoundRectRgn(xBeta, yBeta, xBeta + rad, yBeta + rad, rad, rad);
 			///// END OF DRAWING
 		
 			currNode->visualPosition = make_pair(xBeta, yBeta);
 			nodePositions.push_back(make_pair(xBeta, currNode));
 
-
-			///// CONNECTING NODES
-			if (currNode->getNextPairs().size() > 0)
-				unconnectedNode.push_back(currNode);
-			else {
-				for (int j = 0; j < unconnectedNode.size(); j++) {
-					Node* unconnNode = unconnectedNode[j];
-					vector<Node*> targetNodes = unconnNode->getNextPairs();
-					for (int k = 0; k < targetNodes.size(); k++) {	//CONNECTING WITH NEXT PAIRS
-						dc.MoveTo(unconnNode->visualPosition.first+25, unconnNode->visualPosition.second + 40);		//DRAWING LINE
-						dc.LineTo(targetNodes[k]->visualPosition.first + 40, targetNodes[k]->visualPosition.second + 40);
-					}
-				}
-				unconnectedNode.clear();
-			}
-
+			connectNodes(currNode, unconnectedNodes, dc);
 		}
 
 
@@ -148,6 +141,24 @@ void RulesVisualDlg::OnPaint()
 	CDialog::OnPaint();
 }
 
+void RulesVisualDlg::connectNodes(Node* &currNode, vector<Node*> &unconnectedNodes, CPaintDC &dc)
+{
+	///// CONNECTING NODES
+	if (currNode->getNextPairs().size() > 0)
+		unconnectedNodes.push_back(currNode);
+	else {
+		for (int j = 0; j < unconnectedNodes.size(); j++) {
+			Node* unconnNode = unconnectedNodes[j];
+			vector<Node*> targetNodes = unconnNode->getNextPairs();
+			for (int k = 0; k < targetNodes.size(); k++) {	//CONNECTING WITH NEXT PAIRS
+				dc.MoveTo(unconnNode->visualPosition.first + 25, unconnNode->visualPosition.second + 40);		//DRAWING LINE
+				dc.LineTo(targetNodes[k]->visualPosition.first + 40, targetNodes[k]->visualPosition.second + 40);
+			}
+		}
+		unconnectedNodes.clear();
+	}
+}
+
 BOOL RulesVisualDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -155,25 +166,6 @@ BOOL RulesVisualDlg::PreTranslateMessage(MSG* pMsg)
 		OnLButtonDown(MK_LBUTTON, pMsg->pt);
 	return CDialog::PreTranslateMessage(pMsg);
 }
-
-//void RulesVisualDlg::displayAlphaDetail(int x)
-//{
-//	int l = 0;
-//	int r = alphaPositions.size() - 1;
-//	while (l <= r) {
-//		int m = l + (r - l) / 2;
-//		if (x >= alphaPositions[m].first && x <= alphaPositions[m].first + (rad*2)) {
-//			showAlphaWindow(alphaPositions[m].second);
-//			/*wstring nodeInfo(alphaPositions[m].second->justCondition.begin(), alphaPositions[m].second->justCondition.end());
-//			MessageBox(nodeInfo.c_str(), L"Judulll", MB_OK);*/
-//			return;
-//		}
-//		else if (x > alphaPositions[m].first)
-//			l = m + 1;
-//		else
-//			r = m - 1;
-//	}
-//}
 
 
 void RulesVisualDlg::OnLButtonDown(UINT nFlags, CPoint point)
@@ -216,11 +208,13 @@ Node* RulesVisualDlg::findClickedNode(CPoint point)
 			}
 
 			while (1) {		//FIND RIGHT Y position
-				if (y >= nodePositions[m].second->visualPosition.second && y <= nodePositions[m].second->visualPosition.second + (rad * 2)) {
+				if (x >= nodePositions[m].first && x <= nodePositions[m].first + (rad * 2)
+					&& y >= nodePositions[m].second->visualPosition.second && y <= nodePositions[m].second->visualPosition.second + (rad * 2)) {
 					return nodePositions[m].second;
 				}
 				m++;
-				
+				if (m == nodePositions.size())
+					return nullptr;
 			}
 			
 		}
@@ -255,7 +249,7 @@ BOOL RulesVisualDlg::OnInitDialog()
 	m_dcMem.CreateCompatibleDC(&dc);
 	//m_vbar.ShowWindow(false);  //Hide Vertical Scroll Bar
 	m_hbar.ShowWindow(false);  //Hide Horizontal Scroll Bar
-
+	MoveWindow(100, 100, WIND_WIDTH, WIND_HEIGHT);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }

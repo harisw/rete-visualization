@@ -7,6 +7,10 @@
 #ifndef RULESVISUAL_H
 #define RULESVISUAL_H
 #define NODE_SIZE 25
+#define WIND_WIDTH 1700
+#define WIND_HEIGHT 800
+#define RAD_CONST 1.25
+#define DIST_CONST 0.8
 // RulesVisualDlg dialog
 
 struct LinkedNode {
@@ -33,6 +37,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnPaint();
+	void connectNodes(Node*& currNode, vector<Node*>& unconnectedNodes, CPaintDC& dc);
 	void addNodePosition(Node* nodeInput);
 	vector<Node*> m_NodeList;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -43,9 +48,10 @@ public:
 	void OnLButtonDown(UINT nFlags, CPoint point);
 	vector<pair<int, Node*>> nodePositions;
 	Node* findClickedNode(CPoint point);
+	
+	//SIZE CONSTANTS
 	int rad;
-	int nodeWidth;
-	int nodeHeight;
+	int distance;
 
 	//TRYING SCROLLBAR
 	SCROLLINFO horz, vert;
