@@ -166,6 +166,8 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 
 
 
+	
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -207,15 +209,28 @@ void CRETEmultinodeappDlg::OnPaint()
 	}
 	else
 	{
-		//CWnd* pImage = GetDlgItem(IDC_1);
-		//CRect rc;
-		//pImage->GetWindowRect(rc);
-		//HRGN hRgn = CreateRoundRectRgn(0, 0, 20, 20, 10, 10);
-		//HINSTANCE hIns = AfxGetInstanceHandle();
-		//
-		//HBRUSH hBr = CreateSolidBrush(BLACK_BRUSH);
-		//DeleteObject(hIns);
-		//FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, hBr);
+		CWnd* pImage = GetDlgItem(IDC_GUIDE_IMG);
+		CRect rc;
+		pImage->GetWindowRect(rc);
+
+		int xStart = 0;
+		int yAlpha = 0;
+		int rad = 60;
+		HBRUSH redBrush = CreateSolidBrush(0x000000FF);
+		HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
+		HRGN hRgn;
+
+		hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, rad, rad);
+		HINSTANCE hIns = AfxGetInstanceHandle();
+		DeleteObject(hIns);
+		FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, redBrush);
+
+		yAlpha += 70;
+		hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, rad, rad);
+		hIns = AfxGetInstanceHandle();
+		DeleteObject(hIns);
+		FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, blueBrush);
+
 		CDialog::OnPaint();
 		CDialogEx::OnPaint();
 	}

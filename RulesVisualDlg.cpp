@@ -31,6 +31,7 @@ void RulesVisualDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(RulesVisualDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_LBUTTONDOWN()
+	ON_BN_CLICKED(IDC_BUTTON1, &RulesVisualDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -252,4 +253,13 @@ BOOL RulesVisualDlg::OnInitDialog()
 	MoveWindow(100, 100, WIND_WIDTH, WIND_HEIGHT);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+
+void RulesVisualDlg::OnBnClickedButton1()
+{
+	/*RulesVisualDlg* modeless_dlg = new RulesVisualDlg(this);
+	modeless_dlg->Create();
+	modeless_dlg->ShowWindow(SW_SHOW);*/
+	// TODO: Add your control notification handler code here
 }

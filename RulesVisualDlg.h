@@ -3,6 +3,7 @@
 #include "BetaNode.h"
 #include "AlphaNodeDlg.h"
 #include "BetaNodeDlg.h"
+#include "RulesVisualDlg.h"
 #include <algorithm>
 #ifndef RULESVISUAL_H
 #define RULESVISUAL_H
@@ -64,6 +65,7 @@ private:
 public:
 	CScrollBar m_hbar;
 	virtual BOOL OnInitDialog();
+	afx_msg void OnBnClickedButton1();
 };
 
 #endif // !RULESVISUAL_H
