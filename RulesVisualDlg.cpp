@@ -47,23 +47,29 @@ void RulesVisualDlg::OnPaint()
 	CRect rc;
 	pImage->GetWindowRect(rc);
 	//rad = WIND_WIDTH / (m_NodeList.size() * RAD_CONST);
-	rad = 35;
 	//distance = (WIND_WIDTH / m_NodeList.size()) * DIST_CONST;
-	distance = 80;
+	if (m_NodeList.size() < 70) {
+		rad = 80;
+		distance = 120;
+	}
+	else if (m_NodeList.size() < 100) {
+		rad = 55;
+		distance = 68;
+	}
+	else {
+		rad = 45;
+		distance = 50;
+	}
 
 	int xStart = 0;
 	int yAlpha = 0;
 	int yBeta = 100;
 	int xBeta = 0;
-	int nAlpha = 0;
 
 
-	int lastXBeta;
-	int lastYBeta;
-	int xSum = 0;
 	HBRUSH redBrush = CreateSolidBrush(0x000000FF);
 	HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
-	vector<int> alphaXs;
+
 	HRGN hRgn;
 
 	vector<Node*> unconnectedNodes;
@@ -72,7 +78,6 @@ void RulesVisualDlg::OnPaint()
 		currNode = m_NodeList[i];
 
 		if (currNode->getType() == "Alpha") {
-			alphaXs.push_back(xStart+20);
 			hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, rad, rad);
 			
 			//STORING POSITION
@@ -81,14 +86,7 @@ void RulesVisualDlg::OnPaint()
 
 
 			unconnectedNodes.push_back(currNode);
-
-			if (nAlpha == 0) {
-				xBeta = xStart;
-			}
-			xSum += xStart;
-			nAlpha++;
 			xStart += distance;
-			lastYBeta = yBeta;
 		}
 		else {
 			vector<int> inputIndexes;
@@ -111,12 +109,12 @@ void RulesVisualDlg::OnPaint()
 
 			yBeta = max(unconnectedNodes[inputIndexes.front()]->visualPosition.second, unconnectedNodes[inputIndexes.back()]->visualPosition.second) + distance;
 
-			//CPoint pointCandidate(xBeta, yBeta);
+			/*CPoint pointCandidate(xBeta, yBeta);
 
-			//while (findClickedNode(pointCandidate) != nullptr) {
-			//	yBeta += distance;
-			//	pointCandidate =  CPoint(xBeta, yBeta);
-			//}
+			while (findClickedNode(pointCandidate) != nullptr) {
+				yBeta += distance;
+				pointCandidate =  CPoint(xBeta, yBeta);
+			}*/
 
 
 			hRgn = CreateRoundRectRgn(xBeta, yBeta, xBeta + rad, yBeta + rad, rad, rad);
@@ -137,7 +135,6 @@ void RulesVisualDlg::OnPaint()
 			FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, blueBrush);
 
 	}
-	//m_size
 
 	CDialog::OnPaint();
 }
@@ -173,7 +170,9 @@ void RulesVisualDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
 	Node* currentNode = findClickedNode(point);
-	
+
+	if (currentNode == nullptr)
+		return;
 	if (currentNode->getType() == "Alpha")
 		showAlphaWindow(dynamic_cast<AlphaNode*>(currentNode));
 	else
@@ -199,18 +198,18 @@ Node* RulesVisualDlg::findClickedNode(CPoint point)
 
 	while (l <= r) {
 		int m = l + (r - l) / 2;
-		if (x >= nodePositions[m].first && x <= nodePositions[m].first + (rad*2)) {
+		if (x >= nodePositions[m].first && x <= nodePositions[m].first + (rad*1.15)) {
 			
 			while (1) {		//GOES TO LEFTMOST NODE
-				if (m == 0 || (x >= nodePositions[m-1].first + (rad * 2) ))
+				if (m == 0 || (x >= nodePositions[m-1].first + (rad*1.15 )))
 					break;
 				
 				m--;
 			}
 
 			while (1) {		//FIND RIGHT Y position
-				if (x >= nodePositions[m].first && x <= nodePositions[m].first + (rad * 2)
-					&& y >= nodePositions[m].second->visualPosition.second && y <= nodePositions[m].second->visualPosition.second + (rad * 2)) {
+				if (x >= nodePositions[m].first && x <= nodePositions[m].first + (rad * 1.15)
+					&& y >= nodePositions[m].second->visualPosition.second && y <= nodePositions[m].second->visualPosition.second + (rad * 1.15)) {
 					return nodePositions[m].second;
 				}
 				m++;
