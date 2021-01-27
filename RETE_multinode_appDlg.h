@@ -7,7 +7,9 @@
 #include <vector>
 #include "ReteNet.h"
 #include "MFC_MultiThread.h"
+#include "MFC_FixedMultiThread.h"
 #include "RulesVisualDlg.h"
+#include "ObjectVisualization.h"
 
 using namespace std;
 
@@ -79,4 +81,10 @@ public:
 	afx_msg void OnBnClickedButtonStopSim2();
 	queue<EventPtr> generatedEvent;
 	afx_msg void OnBnClickedButton7();
+	CMFCEditBrowseCtrl dataFileCtrl;
+	int fixed_data_num_of_obj;
+//	afx_msg void OnDropdownButtonVessel(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnBnClickedButton9();
+	afx_msg void OnBnClickedButton10();
+	afx_msg void OnBnClickedButton6();
 };

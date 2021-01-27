@@ -45,18 +45,6 @@ struct SpatialRect {
 
 class SpatialNodeIndexing
 {
-public:
-	static int AddStaticCQ(Node* n);
-	static int buildStaticTree();
-	static int getStaticCQDictionaryID(string observedObj);
-	static vector<int> stabStaticTree(EventPtr ev, string observedObj);
-
-	static vector<int> stabStaticBoostTree(EventPtr ev, string observedObj);
-	static void reset();
-
-	static vector<pair<string, Node*>> setAnchorEntity();
-
-	static int AddDynamicCQ(Node* n);
 
 private:
 	static RTree<int, float, THE_DIM, float> staticTree; //format -> lat, long, enum
@@ -76,6 +64,21 @@ private:
 	static unordered_map<string, bgi::rtree< value, bgi::rstar<16, 4> >> spatialTree; //observed obj -- the rstar tree
 	static unordered_map<string, vector<int>> node_id_dictionary;
 	static unordered_map<int, polygon> polygon_dict;
+
+public:
+	static int AddStaticCQ(Node* n);
+	static int buildStaticTree();
+	static int getStaticCQDictionaryID(string observedObj);
+	static vector<int> stabStaticTree(EventPtr ev, string observedObj);
+
+	static vector<int> stabStaticBoostTree(EventPtr ev, string observedObj);
+	static void reset();
+
+	static vector<pair<string, Node*>> setAnchorEntity();
+
+	static int AddDynamicCQ(Node* n);
+
+	static unordered_map<int, polygon> getExistingPolygons();
 
 	//static vector<pair<int, Node*>> dynamicCQ_collected_Node;
 };

@@ -7,6 +7,7 @@
 #include "RETE_multinode_app.h"
 #include "RETE_multinode_appDlg.h"
 #include "afxdialogex.h"
+#include <fstream>
 
 #define SHOW_RULE_EXAMPLE
 #define MINLATITUDE 20
@@ -18,6 +19,8 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 
+#define VISUAL_W 800
+#define VISUAL_H 300
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 #endif
@@ -83,6 +86,7 @@ void CRETEmultinodeappDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT4, m_search_cq);
 	DDX_Text(pDX, IDC_EDIT6, m_search_cep);
 	DDX_Text(pDX, IDC_EDIT_DUP_RULE, m_DupNum);
+	DDX_Control(pDX, IDC_MFCEDITBROWSE1, dataFileCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
@@ -111,6 +115,10 @@ BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RULES_52, &CRETEmultinodeappDlg::OnBnClickedRules52)
 	ON_BN_CLICKED(IDC_BUTTON_STOP_SIM2, &CRETEmultinodeappDlg::OnBnClickedButtonStopSim2)
 	ON_BN_CLICKED(IDC_BUTTON7, &CRETEmultinodeappDlg::OnBnClickedButton7)
+//	ON_NOTIFY(BCN_DROPDOWN, IDC_BUTTON_VESSEL, &CRETEmultinodeappDlg::OnDropdownButtonVessel)
+ON_BN_CLICKED(IDC_BUTTON9, &CRETEmultinodeappDlg::OnBnClickedButton9)
+ON_BN_CLICKED(IDC_BUTTON10, &CRETEmultinodeappDlg::OnBnClickedButton10)
+ON_BN_CLICKED(IDC_BUTTON6, &CRETEmultinodeappDlg::OnBnClickedButton6)
 END_MESSAGE_MAP()
 
 
@@ -1823,5 +1831,257 @@ void CRETEmultinodeappDlg::OnBnClickedButton7()
 	RulesVisualDlg dialog_visual;
 	dialog_visual.m_NodeList = ReteNet::getCopyNodes();
 	dialog_visual.DoModal();
+	// TODO: Add your control notification handler code here
+}
+
+
+void CRETEmultinodeappDlg::OnBnClickedButton9()
+{
+	UpdateData(true);
+	cout << "Rules for checking Aircraft, Vessels, submarines" << endl;
+
+	//BASIC IF ELSE
+	vector<string> made;
+	vector<vector<pair<string, string>>> colMade;
+
+	//vessels
+	made = {};
+	made.push_back("IF elevation<10 & iff=false");
+	made.push_back("THEN enemyvessel");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	//made = {};
+	//made.push_back("IF speed>3 & elevation<10 & iff=true");
+	//made.push_back("THEN allyvessel");
+	//colMade = ReteNet::parseConditionOriginal(made);
+
+	//ReteNet::growTheNodes(colMade);
+
+	//submarines
+	made = {};
+	made.push_back("IF elevation<0 & iff=false");
+	made.push_back("THEN enemysubmarine");
+	colMade = ReteNet::parseConditionOriginal(made);
+
+	ReteNet::growTheNodes(colMade);
+
+	//made = {};
+	//made.push_back("IF speed>3 & elevation<0 & iff=true");
+	//made.push_back("THEN allysubmarine");
+	//colMade = ReteNet::parseConditionOriginal(made);
+
+	//ReteNet::growTheNodes(colMade);
+
+	//aircraft
+	made = {};
+	made.push_back("IF elevation>5 & iff=false");
+	made.push_back("THEN enemyaircraft");
+	colMade = ReteNet::parseConditionOriginal(made);
+
+	ReteNet::growTheNodes(colMade);
+
+	//made = {};
+	//made.push_back("IF speed>10 & elevation>5 & iff=true");
+	//made.push_back("THEN allyaircraft");
+	//colMade = ReteNet::parseConditionOriginal(made);
+
+	//ReteNet::growTheNodes(colMade);
+
+	//RADAR -------------------------------------
+	int x_int = VISUAL_W / 2;
+	int y_int = VISUAL_H / 2;
+
+	char buff[10];
+
+	made = {};
+	x_int += 50;
+	string x = _itoa(x_int, buff, 10);
+	string y = _itoa(y_int, buff, 10);
+	string temp = "IF radar_dist(point(" + y + ", " + x + "), 100, enemyaircraft) & enemyaircraft.type = recon";
+	made.push_back(temp);
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN radarenemyaircraft0");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	made = {};
+	made.push_back("IF exist(radarenemyaircraft0)");
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN radarenemyaircraftresp0");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	x_int -= 100;
+	x = _itoa(x_int, buff, 10);
+	made = {};
+	temp = "IF radar_dist(point(" + y + ", " + x + "), 100, enemyaircraft) & enemyaircraft.type = recon";
+	made.push_back(temp);
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN radarenemyaircraft1");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	made = {};
+	made.push_back("IF exist(radarenemyaircraft1)");
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN radarenemyaircraftresp1");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	//SONAR -------------------------------------
+	x_int = VISUAL_W / 2;
+	y_int = VISUAL_H / 2;
+
+	x_int += 50;
+	x = _itoa(x_int, buff, 10);
+	y = _itoa(y_int, buff, 10);
+	made = {};
+	temp = "IF sonar_dist(config((0,40),80,(" + y + "," + x + ")), enemyvessel) & enemyvessel.type = recon";
+	made.push_back(temp);
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN sonarenemyvessel0");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	made = {};
+	made.push_back("IF exist(sonarenemyvessel0)");
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN sonarenemyvesselresp0");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	x_int -= 100;
+	x = _itoa(x_int, buff, 10);
+	y = _itoa(y_int, buff, 10);
+	made = {};
+	temp = "IF sonar_dist(config((160,200),80,(" + y + "," + x + ")), enemyvessel) & enemyvessel.type = recon";
+	made.push_back(temp);
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN sonarenemyvessel1");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	made = {};
+	made.push_back("IF exist(sonarenemyvessel1)");
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN sonarenemyvesselresp1");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	x_int += 50;
+
+	x = _itoa(x_int, buff, 10);
+	y = _itoa(y_int, buff, 10);
+	made = {};
+	temp = "IF sonar_dist(config((60,110),80,(" + y + "," + x + ")), enemyvessel) & enemyvessel.type = recon";
+	made.push_back(temp);
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN sonarenemyvessel2");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	made = {};
+	made.push_back("IF exist(sonarenemyvessel1)");
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN sonarenemyvesselresp2");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	x = _itoa(x_int, buff, 10);
+	y = _itoa(y_int, buff, 10);
+	made = {};
+	temp = "IF sonar_dist(config((250,290),80,(" + y + "," + x + ")), enemyvessel) & enemyvessel.type = recon";
+	made.push_back(temp);
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN sonarenemyvessel3");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	made = {};
+	made.push_back("IF exist(sonarenemyvessel1)");
+	made.push_back("WINDOW range=2, trigger=1");
+	made.push_back("THEN sonarenemyvesselresp3");
+	colMade = ReteNet::parseConditionOriginal(made);
+	ReteNet::growTheNodes(colMade);
+
+	MessageBox(L"Rules for checking Aircraft, Vessels, and Submarines have been inserted",
+		L"Rules Inserted", MB_OK);
+}
+
+
+void CRETEmultinodeappDlg::OnBnClickedButton10()
+{
+	UpdateData(TRUE);
+	// TODO: Add your control notification handler code here
+	try
+	{
+		/*CT2CA pszStr(input_file_addr);
+		string filename(pszStr);*/
+		CString filename;
+		dataFileCtrl.GetWindowText(filename);
+		if (filename == L"") {
+			MessageBox(L"Please Insert Data File source firstly",
+				L"Rules Insertion Error", MB_OK | MB_ICONERROR);
+			return;
+		}
+
+		fstream newfile;
+
+		newfile.open(filename, ios::in); //open a file to perform read operation using file object
+		if (newfile.is_open()) {   //checking whether the file is open
+			string tp;
+			int obj_id_counter = 0;
+			vector<pair<float, float>> collectedLatLong = {};
+			while (getline(newfile, tp)) { //read data from file object and put it into string.
+
+				std::size_t found = tp.find(",");
+
+				if (found > 0 && found < tp.length()) {
+					float lat = atof(tp.substr(0, found).c_str());
+					float lon = atof(tp.substr(found + 1, tp.length()).c_str());
+
+					collectedLatLong.push_back({ lat, lon });
+				}
+				else {
+					if (collectedLatLong.size() == 0)
+						continue;
+
+					MFC_FixedMultiThread::setupData(obj_id_counter, collectedLatLong);
+					//MFC_MultiThread::setupEventLatLong(obj_id_counter, collectedLatLong);
+
+					obj_id_counter++;
+					collectedLatLong = {};
+				}
+
+				cout << tp << "\n"; //print the data of the string
+			}
+
+			//last line has to be manually recognized
+			MFC_FixedMultiThread::setupData(obj_id_counter, collectedLatLong);
+
+			fixed_data_num_of_obj = obj_id_counter;
+			newfile.close(); //close the file object.
+		}
+	}
+	catch (const std::string& e)
+	{
+		CString cs(e.c_str());
+		MessageBox(cs, MB_OK);
+	}
+
+	MessageBox(L"Fixed Data included", MB_OK);
+
+	UpdateData(FALSE);
+}
+
+
+void CRETEmultinodeappDlg::OnBnClickedButton6()
+{
+	if (fixed_data_num_of_obj > 0)
+		MFC_FixedMultiThread::start(fixed_data_num_of_obj);
+	ObjectVisualization f = new ObjectVisualization();
+
+	f.DoModal();
 	// TODO: Add your control notification handler code here
 }

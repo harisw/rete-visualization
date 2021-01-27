@@ -10,6 +10,7 @@
 #define IDD_AlphaNodeDlg                104
 #define IDD_BetaNodeDlg                 105
 #define IDD_RulesHelpDlg                106
+#define IDD_ObjectVisualization         108
 #define IDR_MAINFRAME                   128
 #define IDC_COMBO1                      1001
 #define IDC_EDIT1                       1002
@@ -54,14 +55,18 @@
 #define IDC_SCROLLBAR2                  1038
 #define IDC_GUIDE_GROUP                 1039
 #define IDC_GUIDE_IMG                   1040
+#define IDC_MFCEDITBROWSE1              1041
+#define IDC_BUTTON6                     1042
+#define IDC_BUTTON9                     1043
+#define IDC_BUTTON10                    1044
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1041
-#define _APS_NEXT_SYMED_VALUE           107
+#define _APS_NEXT_CONTROL_VALUE         1045
+#define _APS_NEXT_SYMED_VALUE           109
 #endif
 #endif

@@ -285,7 +285,7 @@ int SpatialNodeIndexing::buildStaticTree()
 			point max(tempX, tempY);
 
 			//mid -------------------------------------------------------
-			rad = abs((fetchedValue[1] - fetchedValue[0]) / 2) * 3.1416 / 180;
+			rad = (fetchedValue[0] + (abs(fetchedValue[1] - fetchedValue[0]) / 2)) * 3.1416 / 180;
 			tempX = fetchedValue[4] + (fetchedValue[2] * std::cos(rad));
 			tempY = fetchedValue[3] + (fetchedValue[2] * std::sin(rad));
 			point mid(tempX, tempY);
@@ -299,6 +299,10 @@ int SpatialNodeIndexing::buildStaticTree()
 			p1.outer().push_back(min);
 			p1.outer().push_back(mid);
 			p1.outer().push_back(max);
+			//p1.outer().push_back(ori);
+			//p1.outer().push_back(mid);
+			//p1.outer().push_back(min);
+			//p1.outer().push_back(max);
 
 			//insert into tree ---------------------------------------
 			box b = bg::return_envelope<box>(p1);
@@ -428,4 +432,9 @@ vector<pair<string, Node*>> SpatialNodeIndexing::setAnchorEntity()
 int SpatialNodeIndexing::AddDynamicCQ(Node* n)
 {
 	return 0;
+}
+
+unordered_map<int, polygon> SpatialNodeIndexing::getExistingPolygons()
+{
+	return polygon_dict;
 }

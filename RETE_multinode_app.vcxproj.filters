@@ -87,6 +87,12 @@
     <ClInclude Include="RulesHelpDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MFC_FixedMultiThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectVisualization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RETE_multinode_app.cpp">
@@ -147,6 +153,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RulesHelpDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MFC_FixedMultiThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectVisualization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
