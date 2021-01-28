@@ -1,6 +1,8 @@
 #include "MFC_FixedMultiThread.h"
 
 #define FUTURE_TOLLERANCE_IN_SEC 10
+
+//this is where to fix beteween cycle and command prompt
 #define SLEEP_GAP 1000
 
 static int global_curr_itt;
@@ -91,6 +93,8 @@ void ThreadFixedDataGeneration::run()
 
 				//std::this_thread::sleep_for(std::chrono::milliseconds(this_obj_num / 10));
 				//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+
 				std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_GAP));
 
 				//Utilities::start_cycle_time = Utilities::getTime();// +1000;

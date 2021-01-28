@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\DatGeneration">
+      <UniqueIdentifier>{01038148-f44e-435b-a991-4e72008519ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DataGeneration">
+      <UniqueIdentifier>{5517ed17-8ed2-49ba-a21d-f445721a09f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RETE_multinode_app.h">
@@ -93,6 +99,21 @@
     <ClInclude Include="ObjectVisualization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="curve_spline.h">
+      <Filter>Header Files\DataGeneration</Filter>
+    </ClInclude>
+    <ClInclude Include="CQUtil.h">
+      <Filter>Header Files\DataGeneration</Filter>
+    </ClInclude>
+    <ClInclude Include="curve_bezier.h">
+      <Filter>Header Files\DataGeneration</Filter>
+    </ClInclude>
+    <ClInclude Include="CQObject.h">
+      <Filter>Header Files\DataGeneration</Filter>
+    </ClInclude>
+    <ClInclude Include="GenerateData.h">
+      <Filter>Header Files\DataGeneration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RETE_multinode_app.cpp">
@@ -160,6 +181,15 @@
     </ClCompile>
     <ClCompile Include="ObjectVisualization.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CQObject.cpp">
+      <Filter>Source Files\DatGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="CQUtil.cpp">
+      <Filter>Source Files\DatGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="GenerateData.cpp">
+      <Filter>Source Files\DatGeneration</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
