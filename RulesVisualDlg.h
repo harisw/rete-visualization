@@ -60,6 +60,7 @@ public:
 	CDC m_dcMem;
 
 private:
+	CPoint wmPos;
 	void showAlphaWindow(AlphaNode* nodeInput);
 	void showBetaWindow(BetaNode* nodeInput);
 public:

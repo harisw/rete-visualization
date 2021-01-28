@@ -46,21 +46,30 @@ void RulesVisualDlg::OnPaint()
 	CWnd* pImage = GetDlgItem(IDC_STATIC);
 	CRect rc;
 	pImage->GetWindowRect(rc);
+
+
+	int wmRad;
+	int xWM;
 	//rad = WIND_WIDTH / (m_NodeList.size() * RAD_CONST);
 	//distance = (WIND_WIDTH / m_NodeList.size()) * DIST_CONST;
 	if (m_NodeList.size() < 70) {
 		rad = 80;
 		distance = 120;
+		wmRad = rad + 20;
+		xWM = (WIND_WIDTH / 2) - 450;
 	}
 	else if (m_NodeList.size() < 100) {
 		rad = 55;
 		distance = 68;
+		wmRad = rad + 10;
+		xWM = (WIND_WIDTH / 2) - 150;
 	}
 	else {
 		rad = 45;
 		distance = 50;
+		wmRad = rad + 5;
+		xWM = (WIND_WIDTH / 2);
 	}
-
 	int xStart = 0;
 	int yAlpha = 0;
 	int yBeta = 100;
@@ -69,11 +78,22 @@ void RulesVisualDlg::OnPaint()
 
 	HBRUSH redBrush = CreateSolidBrush(0x000000FF);
 	HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
-
+	HBRUSH blackBrush = CreateSolidBrush(0x00000000);
 	HRGN hRgn;
 
 	vector<Node*> unconnectedNodes;
 	Node* currNode;
+
+	
+	hRgn = CreateRoundRectRgn(xWM, yAlpha, xWM + wmRad, yAlpha + wmRad, wmRad, wmRad);
+
+	wmPos = CPoint(xWM + wmRad, yAlpha+wmRad);
+	HINSTANCE hIns = AfxGetInstanceHandle();
+	DeleteObject(hIns);
+	FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, blackBrush);
+
+	yAlpha += distance;
+
 	for (int i = 0; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
@@ -195,21 +215,37 @@ Node* RulesVisualDlg::findClickedNode(CPoint point)
 	int r = nodePositions.size() - 1;
 	int x = point.x;
 	int y = point.y;
+	//return nullptr;
+	
+	int xMin, xMax, yMin, yMax;
+	float windowH = WIND_HEIGHT; float windowW = WIND_WIDTH;
+	float xDist = 2.5 * rad * (windowH / windowW);
+	float yDist = 2.5 * rad * (windowW / (windowH * 2));
+
 
 	while (l <= r) {
 		int m = l + (r - l) / 2;
-		if (x >= nodePositions[m].first && x <= nodePositions[m].first + (rad*1.15)) {
+		xMin = nodePositions[m].first;
+		xMax = xMin + xDist;
+		cout << "min : " << xMin << " max : " << xMax << endl;
+		if (x >= xMin && x <= xMax) {
 			
 			while (1) {		//GOES TO LEFTMOST NODE
-				if (m == 0 || (x >= nodePositions[m-1].first + (rad*1.15 )))
+
+				if (m == 0 || (x >= nodePositions[m-1].first + xDist ) )
 					break;
 				
 				m--;
 			}
 
 			while (1) {		//FIND RIGHT Y position
-				if (x >= nodePositions[m].first && x <= nodePositions[m].first + (rad * 1.15)
-					&& y >= nodePositions[m].second->visualPosition.second && y <= nodePositions[m].second->visualPosition.second + (rad * 1.15)) {
+				xMin = nodePositions[m].first;
+				xMax = xMin + xDist;
+				yMin = nodePositions[m].second->visualPosition.second + 10;
+				yMax = yMin + yDist;
+
+				if (x >= xMin && x <= xMax
+					&& y >= (yMin) && y <= yMax) {
 					return nodePositions[m].second;
 				}
 				m++;
@@ -218,7 +254,7 @@ Node* RulesVisualDlg::findClickedNode(CPoint point)
 			}
 			
 		}
-		else if (x > nodePositions[m].first)
+		else if (x > xMin)
 			l = m + 1;
 		else
 			r = m - 1;
