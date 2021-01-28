@@ -1,9 +1,19 @@
 #include "BetaNode.h"
 
+//all of this is located in line 785
+
+//hmm, i forget :v
 //#define ONLY_TRIGGER_RESULT
-#define ONLY_TRIGGER_TIME_RESULT
-//#define SHOW_RESULT
-//#define SHOW_LAST_NODE_TRIGGER
+
+//due to effectivity, this only show the time, without explaining what event that trigger dis
+//#define ONLY_TRIGGER_TIME_RESULT 
+
+//will definitely trigger all triggered node, hmm, i think its the same with the SHOW_RESULT
+//#define SHOW_RESULT 
+
+//will only cout the trigger of the last node, and the node name (CEP name)
+//#define SHOW_LAST_NODE_TRIGGER 
+
 #define INDEX_ON
 //#define INDEX_OFF
 
