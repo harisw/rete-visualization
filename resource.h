@@ -24,7 +24,9 @@
 #define IDC_BUTTON4                     1008
 #define IDC_BUTTON_DEL_EC               1008
 #define IDC_LIST2                       1009
+#define IDC_EDITCOOR_2                  1009
 #define IDC_BUTTON5                     1010
+#define IDC_BUTTON_INSERT_COOR          1010
 #define IDC_EDIT3                       1011
 #define IDC_EDIT4                       1012
 #define IDC_BUTTON_FIND_CQ              1013
@@ -50,15 +52,21 @@
 #define IDC_EDIT_DUP_RULE               1032
 #define IDC_BUTTON_STOP_SIM2            1033
 #define IDC_1                           1034
+#define IDC_EDITCOOR_3                  1034
 #define IDC_2                           1035
+#define IDC_EDITCOOR_4                  1035
 #define IDC_BUTTON7                     1036
+#define IDC_EDITCOOR_5                  1037
 #define IDC_SCROLLBAR2                  1038
+#define IDC_EDITCOOR_6                  1038
 #define IDC_GUIDE_GROUP                 1039
 #define IDC_GUIDE_IMG                   1040
 #define IDC_MFCEDITBROWSE1              1041
 #define IDC_BUTTON6                     1042
 #define IDC_BUTTON9                     1043
 #define IDC_BUTTON10                    1044
+#define IDC_EDITCOOR_0                  1045
+#define IDC_EDITCOOR_1                  1046
 
 // Next default values for new objects
 // 
@@ -66,7 +74,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1045
+#define _APS_NEXT_CONTROL_VALUE         1047
 #define _APS_NEXT_SYMED_VALUE           109
 #endif
 #endif

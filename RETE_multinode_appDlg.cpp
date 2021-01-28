@@ -69,6 +69,12 @@ CRETEmultinodeappDlg::CRETEmultinodeappDlg(CWnd* pParent /*=nullptr*/)
 	, m_search_cq(_T(""))
 	, m_search_cep(_T(""))
 	, m_DupNum(_T(""))
+	, m_coordinate_0(_T(""))
+	, m_coordinate_1(_T(""))
+	, m_coordinate_2(_T(""))
+	, m_coordinate_4(_T(""))
+	, m_coord_obj_num(_T(""))
+	, m_coord_time(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -87,6 +93,13 @@ void CRETEmultinodeappDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT6, m_search_cep);
 	DDX_Text(pDX, IDC_EDIT_DUP_RULE, m_DupNum);
 	DDX_Control(pDX, IDC_MFCEDITBROWSE1, dataFileCtrl);
+	DDX_Text(pDX, IDC_EDITCOOR_0, m_coordinate_0);
+	DDX_Text(pDX, IDC_EDITCOOR_1, m_coordinate_1);
+	DDX_Text(pDX, IDC_EDITCOOR_2, m_coordinate_2);
+	DDX_Text(pDX, IDC_EDITCOOR_3, m_coordinate_4);
+	DDX_Text(pDX, IDC_EDITCOOR_4, m_coordinate_4);
+	DDX_Text(pDX, IDC_EDITCOOR_5, m_coord_obj_num);
+	DDX_Text(pDX, IDC_EDITCOOR_6, m_coord_time);
 }
 
 BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
@@ -97,7 +110,7 @@ BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CRETEmultinodeappDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CRETEmultinodeappDlg::OnBnClickedButtonInsertRule)
 	ON_EN_CHANGE(IDC_EDIT1, &CRETEmultinodeappDlg::OnEnChangeEdit1)
-	ON_BN_CLICKED(IDC_BUTTON5, &CRETEmultinodeappDlg::OnBnClickedButton5)
+	//ON_BN_CLICKED(IDC_BUTTON5, &CRETEmultinodeappDlg::OnBnClickedButton5)
 	ON_BN_CLICKED(IDC_BUTTON_INSERT_CQ, &CRETEmultinodeappDlg::OnBnClickedButtonInsertCq)
 	ON_BN_CLICKED(IDC_BUTTON_INSERT_CEP, &CRETEmultinodeappDlg::OnBnClickedButtonInsertCep)
 	ON_BN_CLICKED(IDC_RULES_50, &CRETEmultinodeappDlg::OnBnClickedRules50)
@@ -116,6 +129,8 @@ BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_STOP_SIM2, &CRETEmultinodeappDlg::OnBnClickedButtonStopSim2)
 	ON_BN_CLICKED(IDC_BUTTON7, &CRETEmultinodeappDlg::OnBnClickedButton7)
 //	ON_NOTIFY(BCN_DROPDOWN, IDC_BUTTON_VESSEL, &CRETEmultinodeappDlg::OnDropdownButtonVessel)
+	ON_BN_CLICKED(IDC_BUTTON_INSERT_COOR, &CRETEmultinodeappDlg::SetCoordinate_new)
+
 ON_BN_CLICKED(IDC_BUTTON9, &CRETEmultinodeappDlg::OnBnClickedButton9)
 ON_BN_CLICKED(IDC_BUTTON10, &CRETEmultinodeappDlg::OnBnClickedButton10)
 ON_BN_CLICKED(IDC_BUTTON6, &CRETEmultinodeappDlg::OnBnClickedButton6)
@@ -394,25 +409,99 @@ void CRETEmultinodeappDlg::OnEnChangeEdit1()
 	// TODO:  Add your control notification handler code here
 }
 
-void CRETEmultinodeappDlg::OnBnClickedButton5()
-{
-	m_alpha_nodes.clear();
-	m_beta_nodes.clear();
-	ReteNet::getAllNodes(m_alpha_nodes, m_beta_nodes);
-	wstring rule_content = L"";
+void CRETEmultinodeappDlg::SetCoordinate_new() {
+	UpdateData(TRUE);
 
-	m_alpha_tree.DeleteAllItems();
-	for (int index = 0; index < m_alpha_nodes.size(); index++) {
-		rule_content = wstring(m_alpha_nodes[index].begin(), m_alpha_nodes[index].end());
-		m_alpha_tree.InsertItem(index, rule_content.c_str());
+	//vector<POINT> coordList;
+
+	vector<pair<int, int>> coordList;
+	if (m_coordinate_0 != L"") {
+		CT2CA pszConvertedAnsiString(m_coordinate_0);
+		std::string strStd(pszConvertedAnsiString);
+		size_t comma = strStd.find(',');
+		coordList.push_back({atoi(strStd.substr(0, comma).c_str()), atoi(strStd.substr(comma+1, strStd.length() - comma).c_str()) });
 	}
-	
-	m_beta_tree.DeleteAllItems();
-	for (int index = 0; index < m_beta_nodes.size(); index++) {
-		rule_content = wstring(m_beta_nodes[index].begin(), m_beta_nodes[index].end());
-		m_beta_tree.InsertItem(index, rule_content.c_str());
+
+	if (m_coordinate_1 != L"") {
+		CT2CA pszConvertedAnsiString(m_coordinate_1);
+		std::string strStd(pszConvertedAnsiString);
+		size_t comma = strStd.find(',');
+		coordList.push_back({ atoi(strStd.substr(0, comma).c_str()), atoi(strStd.substr(comma + 1, strStd.length() - comma).c_str()) });
 	}
+
+	if (m_coordinate_2 != L"") {
+		CT2CA pszConvertedAnsiString(m_coordinate_2);
+		std::string strStd(pszConvertedAnsiString);
+		size_t comma = strStd.find(',');
+		coordList.push_back({ atoi(strStd.substr(0, comma).c_str()), atoi(strStd.substr(comma + 1, strStd.length() - comma).c_str()) });
+	}
+
+	if (m_coordinate_3 != L"") {
+		CT2CA pszConvertedAnsiString(m_coordinate_3);
+		std::string strStd(pszConvertedAnsiString);
+		size_t comma = strStd.find(',');
+		coordList.push_back({ atoi(strStd.substr(0, comma).c_str()), atoi(strStd.substr(comma + 1, strStd.length() - comma).c_str()) });
+	}
+
+	if (m_coordinate_4 != L"") {
+		CT2CA pszConvertedAnsiString(m_coordinate_4);
+		std::string strStd(pszConvertedAnsiString);
+		size_t comma = strStd.find(',');
+		coordList.push_back({ atoi(strStd.substr(0, comma).c_str()), atoi(strStd.substr(comma + 1, strStd.length() - comma).c_str()) });
+	}
+
+	//num of object
+	int obj_num = -1;
+	if (m_coord_obj_num != L"") {
+		CT2CA pszConvertedAnsiString(m_coord_obj_num);
+		std::string strStd(pszConvertedAnsiString);
+		obj_num = atoi(strStd.c_str());
+	}
+	else {
+		MessageBox(L"PLEASE insert the number of object", 0, MB_OK);
+		return;
+	}
+
+	//length of time
+	int time_len = -1;
+	if (m_coord_time != L"") {
+		CT2CA pszConvertedAnsiString(m_coord_time);
+		std::string strStd(pszConvertedAnsiString);
+		time_len = atoi(strStd.c_str());
+	}
+	else {
+		MessageBox(L"PLEASE insert the time length", 0, MB_OK);
+		return;
+	}
+
+	GenerateData::Generate(coordList, obj_num, time_len);
+	//int a = 10;
+	fixed_data_num_of_obj = obj_num;
+
+	MessageBox(L"Data generated sucessfully", L"Congrats", MB_OK);
+
+	UpdateData(FALSE);
 }
+
+//void CRETEmultinodeappDlg::OnBnClickedButton5()
+//{
+//	m_alpha_nodes.clear();
+//	m_beta_nodes.clear();
+//	ReteNet::getAllNodes(m_alpha_nodes, m_beta_nodes);
+//	wstring rule_content = L"";
+//
+//	m_alpha_tree.DeleteAllItems();
+//	for (int index = 0; index < m_alpha_nodes.size(); index++) {
+//		rule_content = wstring(m_alpha_nodes[index].begin(), m_alpha_nodes[index].end());
+//		m_alpha_tree.InsertItem(index, rule_content.c_str());
+//	}
+//	
+//	m_beta_tree.DeleteAllItems();
+//	for (int index = 0; index < m_beta_nodes.size(); index++) {
+//		rule_content = wstring(m_beta_nodes[index].begin(), m_beta_nodes[index].end());
+//		m_beta_tree.InsertItem(index, rule_content.c_str());
+//	}
+//}
 
 
 void CRETEmultinodeappDlg::OnBnClickedButtonInsertCq()
@@ -2026,43 +2115,10 @@ void CRETEmultinodeappDlg::OnBnClickedButton10()
 			return;
 		}
 
-		fstream newfile;
-
-		newfile.open(filename, ios::in); //open a file to perform read operation using file object
-		if (newfile.is_open()) {   //checking whether the file is open
-			string tp;
-			int obj_id_counter = 0;
-			vector<pair<float, float>> collectedLatLong = {};
-			while (getline(newfile, tp)) { //read data from file object and put it into string.
-
-				std::size_t found = tp.find(",");
-
-				if (found > 0 && found < tp.length()) {
-					float lat = atof(tp.substr(0, found).c_str());
-					float lon = atof(tp.substr(found + 1, tp.length()).c_str());
-
-					collectedLatLong.push_back({ lat, lon });
-				}
-				else {
-					if (collectedLatLong.size() == 0)
-						continue;
-
-					MFC_FixedMultiThread::setupData(obj_id_counter, collectedLatLong);
-					//MFC_MultiThread::setupEventLatLong(obj_id_counter, collectedLatLong);
-
-					obj_id_counter++;
-					collectedLatLong = {};
-				}
-
-				cout << tp << "\n"; //print the data of the string
-			}
-
-			//last line has to be manually recognized
-			MFC_FixedMultiThread::setupData(obj_id_counter, collectedLatLong);
-
-			fixed_data_num_of_obj = obj_id_counter;
-			newfile.close(); //close the file object.
-		}
+		CT2CA pszStr(filename);
+		string filename_str(pszStr);
+		
+		fixed_data_num_of_obj = GenerateData::ReadFromFile(filename_str);
 	}
 	catch (const std::string& e)
 	{

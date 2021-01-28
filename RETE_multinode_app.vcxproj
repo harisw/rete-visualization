@@ -187,8 +187,13 @@
     <ClInclude Include="AlphaNodeDlg.h" />
     <ClInclude Include="BetaNode.h" />
     <ClInclude Include="BetaNodeDlg.h" />
+    <ClInclude Include="CQObject.h" />
+    <ClInclude Include="CQUtil.h" />
+    <ClInclude Include="curve_bezier.h" />
+    <ClInclude Include="curve_spline.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GenerateData.h" />
     <ClInclude Include="MFC_FixedMultiThread.h" />
     <ClInclude Include="MFC_MultiThread.h" />
     <ClInclude Include="MultiNodeIndexing.h" />
@@ -215,7 +220,10 @@
     <ClCompile Include="AlphaNodeDlg.cpp" />
     <ClCompile Include="BetaNode.cpp" />
     <ClCompile Include="BetaNodeDlg.cpp" />
+    <ClCompile Include="CQObject.cpp" />
+    <ClCompile Include="CQUtil.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="GenerateData.cpp" />
     <ClCompile Include="MFC_FixedMultiThread.cpp" />
     <ClCompile Include="MFC_MultiThread.cpp" />
     <ClCompile Include="MultiNodeIndexing.cpp" />

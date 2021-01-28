@@ -10,6 +10,7 @@
 #include "MFC_FixedMultiThread.h"
 #include "RulesVisualDlg.h"
 #include "ObjectVisualization.h"
+#include "GenerateData.h"
 
 using namespace std;
 
@@ -50,7 +51,7 @@ public:
 	afx_msg void OnBnClickedButtonInsertRule();
 	CEdit m_rule_content_edit;
 	afx_msg void OnEnChangeEdit1();
-	afx_msg void OnBnClickedButton5();
+	//afx_msg void OnBnClickedButton5();
 	CListCtrl m_alpha_tree;
 	CListCtrl m_beta_tree;
 	vector<string> m_alpha_nodes;
@@ -87,4 +88,12 @@ public:
 	afx_msg void OnBnClickedButton9();
 	afx_msg void OnBnClickedButton10();
 	afx_msg void OnBnClickedButton6();
+	afx_msg void SetCoordinate_new();
+	CString m_coordinate_0;
+	CString m_coordinate_1;
+	CString m_coordinate_2;
+	CString m_coordinate_3;
+	CString m_coordinate_4;
+	CString m_coord_obj_num;
+	CString m_coord_time;
 };
