@@ -189,7 +189,12 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 
 
 
-	
+	SetDlgItemText(IDC_EDITCOOR_0, L"0,0");
+	SetDlgItemText(IDC_EDITCOOR_1, L"400,200");
+	SetDlgItemText(IDC_EDITCOOR_2, L"0,400");
+
+	SetDlgItemText(IDC_EDITCOOR_5, L"10");
+	SetDlgItemText(IDC_EDITCOOR_6, L"70");
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -239,12 +244,20 @@ void CRETEmultinodeappDlg::OnPaint()
 		int xStart = 0;
 		int yAlpha = 0;
 		int rad = 60;
+
+		HBRUSH blackBrush = CreateSolidBrush(0x00000000);
 		HBRUSH redBrush = CreateSolidBrush(0x000000FF);
 		HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
 		HRGN hRgn;
 
 		hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, rad, rad);
 		HINSTANCE hIns = AfxGetInstanceHandle();
+		DeleteObject(hIns);
+		FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, blackBrush);
+		
+		yAlpha += 70;
+		hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, rad, rad);
+		hIns = AfxGetInstanceHandle();
 		DeleteObject(hIns);
 		FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, redBrush);
 
@@ -2137,7 +2150,7 @@ void CRETEmultinodeappDlg::OnBnClickedButton6()
 	if (fixed_data_num_of_obj > 0)
 		MFC_FixedMultiThread::start(fixed_data_num_of_obj);
 	ObjectVisualization f = new ObjectVisualization();
-
+	
 	f.DoModal();
 	// TODO: Add your control notification handler code here
 }

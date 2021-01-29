@@ -9,10 +9,10 @@
 
 // ObjectVisualization dialog
 
-IMPLEMENT_DYNAMIC(ObjectVisualization, CDialogEx)
+IMPLEMENT_DYNAMIC(ObjectVisualization, CDialog)
 
 ObjectVisualization::ObjectVisualization(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_ObjectVisualization, pParent)
+	: CDialog(IDD_ObjectVisualization, pParent)
 {
 
 }
@@ -23,11 +23,11 @@ ObjectVisualization::~ObjectVisualization()
 
 void ObjectVisualization::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialog::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(ObjectVisualization, CDialogEx)
+BEGIN_MESSAGE_MAP(ObjectVisualization, CDialog)
 	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
@@ -35,132 +35,11 @@ END_MESSAGE_MAP()
 // ObjectVisualization message handlers
 
 
-void ObjectVisualization::OnPaint()
-{
-	CPaintDC dc(this); // device context for painting
-					   // TODO: Add your message handler code here
-					   // Do not call CDialogEx::OnPaint() for painting messages
-
-	int global_itt = 0;
-	int rad = 10;
-
-	CPen pen_green, pen_blue, pen_red;
-	CBrush brush;
-	// Magenta pen
-	//pen.CreatePen()
-	pen_green.CreatePen(PS_SOLID, 1, 0x00008000);
-	pen_blue.CreatePen(PS_SOLID, 1, 0x00FFFF00);
-	pen_red.CreatePen(PS_SOLID, 1, 0x000000FF);
-	//pen.CreatePen(PS_SOLID, 1, );
-	// "transparent" brush
-	brush.CreateStockObject(HOLLOW_BRUSH);
-
-	// select brush and pen
-	dc.SelectObject(&pen_green);
-	dc.SelectObject(&brush);
-
-	//try polygon----------------------------------
-	//CPoint pts[4];
-	//CRect rect;
-	//GetClientRect(rect);
-	//pts[0].x = rect.left + rect.Width() / 2;
-	//pts[0].y = rect.top;
-
-	//pts[1].x = rect.right;
-	//pts[1].y = rect.top + rect.Height() / 2;
-
-	//pts[2].x = pts[0].x;
-	//pts[2].y = rect.bottom;
-
-	//pts[3].x = rect.left;
-	//pts[3].y = pts[1].y;
-	//dc.Polygon(pts, 4);
-
-	//fetch polygon from registered rules
-	//for (int i = 0; i < spatialNodePolygon.size(); i++) {
-	for (auto snp : spatialNodePolygon) {
-		polygon p = snp.second;
-		//vector<CPoint> pts = {};
-
-		CPoint* pts = new CPoint[p.outer().size() + 1];
-		int start_x, start_y;
-		//CPoint pts[p.outer().size()];
-		for (int j = 0; j < p.outer().size(); j++) {
-			point pt = p.outer().at(j);
-			float x = pt.get<0>();
-			float y = pt.get<1>();
-			//CPoint cpt = { x, y };
-			//pts.push_back(cpt);
-
-			/*if (j == 0) {
-				start_x = x;
-				start_y = y;
-			}*/
-
-			//cout << "x : " << x << " and y :" << y <<" id: " << snp.first << endl;
-			pts[j].x = x;
-			pts[j].y = y;
-		}
-
-		//pts[p.outer().size() + 1].x = start_x;
-		//pts[p.outer().size() + 1].y = start_y;
-
-		dc.Polygon(pts, p.outer().size());
-		//point pt = p.outer().at(0);
-	}
-
-	char buff[10];
-	//int a = 01;
-	if (!has_drawn) {
-		if (m_object_location.size() > 0) {
-			while (global_itt < m_object_location[0].size()) {
-
-				for (int i = 0; i < m_object_location.size(); i++) {
-					//float first_loc = m_object_location[i][global_itt].first * x_norm - (max_first - max_w);
-					//float second_loc = m_object_location[i][global_itt].second * y_norm - (max_second - max_h);
-
-					float first_loc = m_object_location[i][global_itt].first;
-					float second_loc = m_object_location[i][global_itt].second;
-
-					if (i == 0) {
-						//pen.CreatePen(PS_SOLID, 1, color_hex_map["Aqua"]);
-						//pen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
-						dc.SelectObject(&pen_blue);
-						if (global_itt % 10 == 0) {
-							CString cs(_itoa(global_itt, buff, 10));
-							dc.TextOutW(first_loc + 20, second_loc, cs);
-						}
-
-						rad = 2;
-					}
-					else {
-						//pen.CreatePen(PS_SOLID, 1, color_hex_map["Red"]);
-						//pen.CreatePen(PS_SOLID, 1, 0x000000FF);
-						dc.SelectObject(&pen_red);
-						rad = 2;
-					}
-
-					// rectangle with magenta frame and "transparent" background
-					dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
-					//dc.Rectangle(0, 0, m_object_location[0]., 20);
-
-					Invalidate();
-					Sleep(50);
-				}
-
-				global_itt++;
-			}
-
-			has_drawn = true;
-		}
-	}
-}
-
-
 BOOL ObjectVisualization::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CDialog::OnInitDialog();
 
+	// TODO:  Add extra initialization here
 	// TODO:  Add extra initialization here
 	m_object_location = MFC_FixedMultiThread::objectLocationMap;
 
@@ -210,7 +89,103 @@ BOOL ObjectVisualization::OnInitDialog()
 	color_hex_map["White"] = 0x00FFFFFF;
 
 	has_drawn = false;
-
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+
+void ObjectVisualization::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+					   // TODO: Add your message handler code here
+					   // Do not call CDialog::OnPaint() for painting messages
+	int rad = 10;
+
+	CPen pen_blue, pen_red;
+	CBrush brush;
+	// Magenta pen
+	//pen.CreatePen()
+
+	pen_blue.CreatePen(PS_SOLID, 1, 0x00FFFF00);
+	pen_red.CreatePen(PS_SOLID, 1, 0x000000FF);
+	//pen.CreatePen(PS_SOLID, 1, );
+	// "transparent" brush
+	brush.CreateStockObject(HOLLOW_BRUSH);
+	dc.SelectObject(&brush);
+
+
+	drawCQVessel(dc);
+
+	char buff[10];
+	//int a = 01;
+	int counter = 0;
+	if (!has_drawn) {
+		if (m_object_location.size() > 0) {
+			while (global_itt < m_object_location[0].size() && counter < cycle_step) {
+
+				for (int i = 0; i < m_object_location.size(); i++) {
+					//float first_loc = m_object_location[i][global_itt].first * x_norm - (max_first - max_w);
+					//float second_loc = m_object_location[i][global_itt].second * y_norm - (max_second - max_h);
+
+					float first_loc = m_object_location[i][global_itt].first;
+					float second_loc = m_object_location[i][global_itt].second;
+
+					if (i == 0) {
+						//pen.CreatePen(PS_SOLID, 1, color_hex_map["Aqua"]);
+						//pen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
+						dc.SelectObject(&pen_blue);
+						if (global_itt % 10 == 0) {
+							CString cs(_itoa(global_itt, buff, 10));
+							dc.TextOutW(first_loc + 20, second_loc, cs);
+						}
+
+						rad = 2;
+					}
+					else {
+						//pen.CreatePen(PS_SOLID, 1, color_hex_map["Red"]);
+						//pen.CreatePen(PS_SOLID, 1, 0x000000FF);
+						dc.SelectObject(&pen_red);
+						rad = 2;
+					}
+
+					// rectangle with magenta frame and "transparent" background
+					dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
+					//dc.Rectangle(0, 0, m_object_location[0]., 20);
+
+					Invalidate();
+					Sleep(20);
+				}
+
+				global_itt++;
+				counter++;
+			}
+
+			has_drawn = true;
+		}
+	}
+}
+
+void ObjectVisualization::drawCQVessel(CPaintDC& dc)
+{
+	CPen pen_green;
+	pen_green.CreatePen(PS_SOLID, 1, 0x00008000);
+	dc.SelectObject(&pen_green);
+	for (auto snp : spatialNodePolygon) {
+		polygon p = snp.second;
+
+		CPoint* pts = new CPoint[p.outer().size() + 1];
+		int start_x, start_y;
+		//CPoint pts[p.outer().size()];
+		for (int j = 0; j < p.outer().size(); j++) {
+			point pt = p.outer().at(j);
+			float x = pt.get<0>();
+			float y = pt.get<1>();
+
+			pts[j].x = x;
+			pts[j].y = y;
+		}
+
+		dc.Polygon(pts, p.outer().size());
+		//point pt = p.outer().at(0);
+	}
 }

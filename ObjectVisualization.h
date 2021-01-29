@@ -12,7 +12,7 @@
 
 // ObjectVisualization dialog
 
-class ObjectVisualization : public CDialogEx
+class ObjectVisualization : public CDialog
 {
 	DECLARE_DYNAMIC(ObjectVisualization)
 
@@ -29,6 +29,10 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
+public:
+	int mode;
+	virtual BOOL OnInitDialog();
+	afx_msg void OnPaint();
 private:
 	typedef bg::model::point<float, 2, bg::cs::cartesian> point;
 	typedef bg::model::polygon<point, false, false> polygon; // ccw, open polygon
@@ -45,9 +49,7 @@ private:
 	bool has_drawn;
 	unordered_map<string, int> color_hex_map;
 	unordered_map<int, polygon> spatialNodePolygon;
-public:
-	afx_msg void OnPaint();
-	virtual BOOL OnInitDialog();
-	int mode;
-
+	int global_itt = 0;
+	int cycle_step = 10;
+	void drawCQVessel(CPaintDC& dc);
 };
