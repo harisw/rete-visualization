@@ -104,8 +104,14 @@ void RulesVisualDlg::OnPaint()
 			currNode->visualPosition = make_pair(xStart, yAlpha);
 			nodePositions.push_back(make_pair(xStart, currNode));
 
-
 			unconnectedNodes.push_back(currNode);
+
+			pair<string, Node*> prevNode = dynamic_cast<AlphaNode*>(currNode)->getPrevNode();
+			if (prevNode.second == NULL) { //CONNECT TO WM
+				dc.MoveTo(wmPos.x, wmPos.y);		//DRAWING LINE
+				dc.LineTo(xStart + 40, yAlpha + 40);
+			}
+
 			xStart += distance;
 		}
 		else {
@@ -169,6 +175,8 @@ void RulesVisualDlg::connectNodes(Node* &currNode, vector<Node*> &unconnectedNod
 			Node* unconnNode = unconnectedNodes[j];
 			vector<Node*> targetNodes = unconnNode->getNextPairs();
 			for (int k = 0; k < targetNodes.size(); k++) {	//CONNECTING WITH NEXT PAIRS
+				if (targetNodes[k]->visualPosition == make_pair(0, 0))
+					continue;
 				dc.MoveTo(unconnNode->visualPosition.first + 25, unconnNode->visualPosition.second + 40);		//DRAWING LINE
 				dc.LineTo(targetNodes[k]->visualPosition.first + 40, targetNodes[k]->visualPosition.second + 40);
 			}

@@ -147,6 +147,11 @@ vector<Node*> AlphaNode::getNextPairs()
 	return this->listOfNextPair;
 }
 
+pair<string, Node*> AlphaNode::getPrevNode()
+{
+	return this->prevNode;
+}
+
 int AlphaNode::checkExistPair(Node* pairs)
 {
 	for (int i = 0; i < listOfNextPair.size(); i++) {

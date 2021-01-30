@@ -70,6 +70,7 @@ public:
 	void setWindow(int len = -1, int step = -1);
 	long long getExecutionEstimated();
 	vector<Node*> getNextPairs();
+	pair<string, Node*> getPrevNode();
 private:
 	//int id;
 	//bool canExecute = false;
