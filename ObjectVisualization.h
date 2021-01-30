@@ -51,5 +51,7 @@ private:
 	unordered_map<int, polygon> spatialNodePolygon;
 	int global_itt = 0;
 	int cycle_step = 10;
+	float xCorrection = 30;
+	float yCorrection = 30;
 	void drawCQVessel(CPaintDC& dc);
 };

@@ -54,6 +54,9 @@ BOOL ObjectVisualization::OnInitDialog()
 				min_second = m_object_location[i][j].second;
 			if (m_object_location[i][j].second > max_second)
 				max_second = m_object_location[i][j].second;
+
+			m_object_location[i][j].first += xCorrection;
+			m_object_location[i][j].second += yCorrection;
 		}
 	}
 
@@ -89,6 +92,7 @@ BOOL ObjectVisualization::OnInitDialog()
 	color_hex_map["White"] = 0x00FFFFFF;
 
 	has_drawn = false;
+	MoveWindow(100, 100, 1200, 900);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -121,8 +125,8 @@ void ObjectVisualization::OnPaint()
 	int counter = 0;
 	if (!has_drawn) {
 		if (m_object_location.size() > 0) {
-			while (global_itt < m_object_location[0].size() && counter < cycle_step) {
-
+			//while (global_itt < m_object_location[0].size() && counter < cycle_step) {
+				while (global_itt < m_object_location[0].size()) {
 				for (int i = 0; i < m_object_location.size(); i++) {
 					//float first_loc = m_object_location[i][global_itt].first * x_norm - (max_first - max_w);
 					//float second_loc = m_object_location[i][global_itt].second * y_norm - (max_second - max_h);
