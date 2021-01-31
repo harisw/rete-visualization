@@ -2147,8 +2147,8 @@ void CRETEmultinodeappDlg::OnBnClickedButton10()
 
 void CRETEmultinodeappDlg::OnBnClickedButton6()
 {
-	CRETEmultinodeappDlg::OnBnClickedButton9();
-	CRETEmultinodeappDlg::SetCoordinate_new();
+	/*CRETEmultinodeappDlg::OnBnClickedButton9();
+	CRETEmultinodeappDlg::SetCoordinate_new();*/
 
 	if (fixed_data_num_of_obj > 0)
 		MFC_FixedMultiThread::start(fixed_data_num_of_obj);
