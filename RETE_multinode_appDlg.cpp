@@ -194,7 +194,7 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	SetDlgItemText(IDC_EDITCOOR_2, L"0,400");
 
 	SetDlgItemText(IDC_EDITCOOR_5, L"10");
-	SetDlgItemText(IDC_EDITCOOR_6, L"50");
+	SetDlgItemText(IDC_EDITCOOR_6, L"30");
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -2147,8 +2147,8 @@ void CRETEmultinodeappDlg::OnBnClickedButton10()
 
 void CRETEmultinodeappDlg::OnBnClickedButton6()
 {
-	/*CRETEmultinodeappDlg::OnBnClickedButton9();
-	CRETEmultinodeappDlg::SetCoordinate_new();*/
+	CRETEmultinodeappDlg::OnBnClickedButton9();
+	CRETEmultinodeappDlg::SetCoordinate_new();
 
 	if (fixed_data_num_of_obj > 0)
 		MFC_FixedMultiThread::start(fixed_data_num_of_obj);

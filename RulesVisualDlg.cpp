@@ -115,25 +115,39 @@ void RulesVisualDlg::OnPaint()
 			xStart += distance;
 		}
 		else {
-			vector<int> inputIndexes;
+			if (currNode->visualPosition != make_pair(0, 0))
+				continue;
+
+			vector<Node*> inputNodes;
 			vector<Node*> nextPairs;
 			//DRAWING BETA
-			for (int index = 0; index < unconnectedNodes.size(); index++) {		//CHECK FOR CONNECTED ALPHA NODES
-				nextPairs = unconnectedNodes[index]->getNextPairs();
+			//for (int index = 0; index < unconnectedNodes.size(); index++) {		//CHECK FOR CONNECTED ALPHA NODES
+			//	nextPairs = unconnectedNodes[index]->getNextPairs();
+			//	if ((nextPairs.size() == 1 && nextPairs[0] == currNode) ||
+			//		find(nextPairs.begin(), nextPairs.end(), currNode) != nextPairs.end()) {
+			//		inputIndexes.push_back(index);
+			//	}
+			//}
+
+			vector<pair<int, Node*>>::iterator itt;
+			for (itt = nodePositions.begin(); itt != nodePositions.end(); itt++) {
+				nextPairs = itt->second->getNextPairs();
 				if ((nextPairs.size() == 1 && nextPairs[0] == currNode) ||
 					find(nextPairs.begin(), nextPairs.end(), currNode) != nextPairs.end()) {
-					inputIndexes.push_back(index);
+					inputNodes.push_back(itt->second);
 				}
 			}
+
 			
-
+			if (inputNodes.empty())
+				cout << "sini" << endl;
 			//GET x position for BetaNodes FROM connected node's X
-			if (inputIndexes.size() == 2)
-				xBeta = (unconnectedNodes[inputIndexes.front()]->visualPosition.first + unconnectedNodes[inputIndexes.back()]->visualPosition.first) / 2;
+			if (inputNodes.size() >= 2)
+				xBeta = (inputNodes.front()->visualPosition.first + inputNodes[1]->visualPosition.first) / 2;
 			else
-				xBeta = unconnectedNodes[inputIndexes.front()]->visualPosition.first;
+				xBeta = inputNodes.front()->visualPosition.first;
 
-			yBeta = max(unconnectedNodes[inputIndexes.front()]->visualPosition.second, unconnectedNodes[inputIndexes.back()]->visualPosition.second) + distance;
+			yBeta = max(inputNodes.front()->visualPosition.second, inputNodes.back()->visualPosition.second) + distance;
 
 			/*CPoint pointCandidate(xBeta, yBeta);
 
@@ -228,7 +242,7 @@ Node* RulesVisualDlg::findClickedNode(CPoint point)
 	int xMin, xMax, yMin, yMax;
 	float windowH = WIND_HEIGHT; float windowW = WIND_WIDTH;
 	float xDist = 2.5 * rad * (windowH / windowW);
-	float yDist = 2.5 * rad * (windowW / (windowH * 2));
+	float yDist = 2.5 * rad * (windowW / (windowH * 5));
 
 
 	while (l <= r) {

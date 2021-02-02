@@ -80,6 +80,8 @@ public:
 
 	static unordered_map<int, polygon> getExistingPolygons();
 
+	static vector<pair<int, Node*>> getStaticCQ_collectedNode();
+
 	//static vector<pair<int, Node*>> dynamicCQ_collected_Node;
 };
 

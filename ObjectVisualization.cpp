@@ -29,6 +29,7 @@ void ObjectVisualization::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(ObjectVisualization, CDialog)
 	ON_WM_PAINT()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -167,6 +168,7 @@ void ObjectVisualization::OnPaint()
 			has_drawn = true;
 		}
 	}
+	cout << "Finish" << endl;
 }
 
 void ObjectVisualization::drawCQVessel(CPaintDC& dc)
@@ -192,4 +194,81 @@ void ObjectVisualization::drawCQVessel(CPaintDC& dc)
 		dc.Polygon(pts, p.outer().size());
 		//point pt = p.outer().at(0);
 	}
+}
+
+
+void ObjectVisualization::visualizeRule(Node* inpNode)
+{
+	RulesVisualDlg dialog_visual;
+	dialog_visual.m_NodeList = this->m_NodeList;
+	dialog_visual.DoModal();
+}
+
+void ObjectVisualization::fillNodes(Node* currentNode)
+{
+	if (currentNode->getType() == "Alpha") {
+		Node* prevNode = dynamic_cast<AlphaNode*>(currentNode)->getPrevNode().second;
+		iteratePrevNode(prevNode);
+	}
+	else {
+		Node* leftSource = dynamic_cast<BetaNode*>(currentNode)->getLeftConnNode();
+		Node* rightSource = dynamic_cast<BetaNode*>(currentNode)->getRightConnNode();
+		iteratePrevNode(leftSource);
+		iteratePrevNode(rightSource);
+	}
+	cout << currentNode->justCondition << endl;
+	m_NodeList.push_back(currentNode);
+	vector<Node*> nextPairs = currentNode->getNextPairs();
+	for (int j = 0; j < nextPairs.size(); j++) {
+		iterateNextNode(nextPairs[j]);
+	}
+}
+
+void ObjectVisualization::iteratePrevNode(Node* currentNode)
+{
+	if (currentNode == NULL)
+		return;
+	if (currentNode->getType() == "Alpha") {
+		Node* prevNode = dynamic_cast<AlphaNode*>(currentNode)->getPrevNode().second;
+		iteratePrevNode(prevNode);
+	}
+	else {
+		Node* leftSource = dynamic_cast<BetaNode*>(currentNode)->getLeftConnNode();
+		Node* rightSource = dynamic_cast<BetaNode*>(currentNode)->getRightConnNode();
+		iteratePrevNode(leftSource);
+		iteratePrevNode(rightSource);
+	}
+	cout << currentNode->justCondition << endl;
+	m_NodeList.push_back(currentNode);
+}
+
+void ObjectVisualization::iterateNextNode(Node* currentNode)
+{
+	cout << currentNode->justCondition << endl;
+	m_NodeList.push_back(currentNode);
+	vector<Node*> nextPairs = currentNode->getNextPairs();
+	for (int j = 0; j < nextPairs.size(); j++) {
+		iterateNextNode(nextPairs[j]);
+	}
+}
+
+
+void ObjectVisualization::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	int x = point.x;
+	int y = point.y;
+	point_type touched(point.x, point.y);
+	unordered_map<int, polygon>::iterator itt;
+	for (itt = spatialNodePolygon.begin(); itt != spatialNodePolygon.end(); itt++) {
+		if (boost::geometry::covered_by(touched, itt->second)) {
+			Node* resultNode = ReteNet::getNodeFromId(itt->first);
+			if (resultNode != nullptr) {
+				fillNodes(resultNode);
+				visualizeRule(resultNode);
+				break;
+			}
+		}
+	}
+	CDialog::OnLButtonDown(nFlags, point);
 }

@@ -3,12 +3,15 @@
 #include <boost/geometry/geometries/point.hpp>
 #include <boost/geometry/geometries/box.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
+#include <boost/geometry/geometries/point_xy.hpp>
 
 #include "SpatialNodeIndexing.h"
 
 #include "MFC_FixedMultiThread.h"
+#include "RulesVisualDlg.h"
 #include <vector>
 #include <unordered_map>
+#define INF 10000 
 
 // ObjectVisualization dialog
 
@@ -34,6 +37,8 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 private:
+	typedef boost::geometry::model::d2::point_xy<double> point_type;
+
 	typedef bg::model::point<float, 2, bg::cs::cartesian> point;
 	typedef bg::model::polygon<point, false, false> polygon; // ccw, open polygon
 
@@ -54,4 +59,12 @@ private:
 	float xCorrection = 30;
 	float yCorrection = 30;
 	void drawCQVessel(CPaintDC& dc);
+	void visualizeRule(Node* inpNode);
+	vector<Node*> m_NodeList;
+	void fillNodes(Node* currentNode);
+	void iteratePrevNode(Node* currentNode);
+	void iterateNextNode(Node* currentNode);
+public:
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+
 };

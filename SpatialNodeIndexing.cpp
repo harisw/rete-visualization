@@ -356,8 +356,9 @@ int SpatialNodeIndexing::buildStaticTree()
 			polygon_dict[node.second->getID()] = decagon;
 			//int a = 11;
 		}
-	}
+		cout << "DONE " << endl;
 
+	}
 	return 1;
 }
 
@@ -437,4 +438,9 @@ int SpatialNodeIndexing::AddDynamicCQ(Node* n)
 unordered_map<int, polygon> SpatialNodeIndexing::getExistingPolygons()
 {
 	return polygon_dict;
+}
+
+vector<pair<int, Node*>> SpatialNodeIndexing::getStaticCQ_collectedNode()
+{
+	return staticCQ_collectedNode;
 }
