@@ -196,6 +196,8 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	SetDlgItemText(IDC_EDITCOOR_5, L"10");
 	SetDlgItemText(IDC_EDITCOOR_6, L"30");
 
+	SetDlgItemText(IDC_EDIT_VESSEL_X, L"400");
+	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"150");
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -1990,9 +1992,17 @@ void CRETEmultinodeappDlg::OnBnClickedButton9()
 
 	//ReteNet::growTheNodes(colMade);
 
+
+	CString xStr, yStr;
+	GetDlgItemText(IDC_EDIT_VESSEL_X, xStr);
+	GetDlgItemText(IDC_EDIT_VESSEL_Y, yStr);
+
 	//RADAR -------------------------------------
-	int x_int = VISUAL_W / 2;
-	int y_int = VISUAL_H / 2;
+	/*int x_int = VISUAL_W / 2;
+	int y_int = VISUAL_H / 2;*/
+
+	int x_int = _wtoi(xStr);
+	int y_int = _wtoi(yStr);
 
 	char buff[10];
 
@@ -2031,9 +2041,13 @@ void CRETEmultinodeappDlg::OnBnClickedButton9()
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
 
+
 	//SONAR -------------------------------------
-	x_int = VISUAL_W / 2;
-	y_int = VISUAL_H / 2;
+	/*x_int = VISUAL_W / 2;
+	y_int = VISUAL_H / 2;*/
+
+	x_int = _wtoi(xStr);
+	y_int = _wtoi(yStr);
 
 	x_int += 50;
 	x = _itoa(x_int, buff, 10);
