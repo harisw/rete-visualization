@@ -28,6 +28,7 @@ void BetaNodeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT2, m_right_edit);
 	DDX_Control(pDX, IDC_EDIT7, m_content_edit);
 	DDX_Control(pDX, IDC_EDIT8, m_output_edit);
+	DDX_Control(pDX, IDC_EDIT9, m_id_edit);
 }
 
 
@@ -43,6 +44,10 @@ BOOL BetaNodeDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// TODO:  Add extra initialization here
+	int id = currNode->getID();
+	wstring tempID = to_wstring(id);
+	m_id_edit.SetWindowTextW(tempID.c_str());
+
 	string lConn = currNode->getLeftConnName();
 	wstring tempL(lConn.begin(), lConn.end());
 	m_left_edit.SetWindowTextW(tempL.c_str());

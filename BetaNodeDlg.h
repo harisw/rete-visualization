@@ -27,4 +27,5 @@ public:
 	CEdit m_content_edit;
 	CEdit m_output_edit;
 	virtual BOOL OnInitDialog();
+	CEdit m_id_edit;
 };
