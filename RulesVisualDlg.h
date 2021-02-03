@@ -61,6 +61,7 @@ public:
 
 private:
 	CPoint wmPos;
+	vector<Node*> visualizedNode;
 	void showAlphaWindow(AlphaNode* nodeInput);
 	void showBetaWindow(BetaNode* nodeInput);
 public:

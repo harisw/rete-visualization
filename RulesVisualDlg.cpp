@@ -115,8 +115,6 @@ void RulesVisualDlg::OnPaint()
 			xStart += distance;
 		}
 		else {
-			if (currNode->visualPosition != make_pair(0, 0))
-				continue;
 
 			vector<Node*> inputNodes;
 			vector<Node*> nextPairs;
@@ -174,6 +172,7 @@ void RulesVisualDlg::OnPaint()
 		else
 			FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, blueBrush);
 
+		visualizedNode.push_back(currNode);
 	}
 
 	CDialog::OnPaint();

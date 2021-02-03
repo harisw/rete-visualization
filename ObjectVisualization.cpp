@@ -199,6 +199,7 @@ void ObjectVisualization::drawCQVessel(CPaintDC& dc)
 
 void ObjectVisualization::visualizeRule(Node* inpNode)
 {
+	fillNodes(inpNode);
 	RulesVisualDlg dialog_visual;
 	dialog_visual.m_NodeList = this->m_NodeList;
 	dialog_visual.DoModal();
@@ -206,6 +207,7 @@ void ObjectVisualization::visualizeRule(Node* inpNode)
 
 void ObjectVisualization::fillNodes(Node* currentNode)
 {
+	this->m_NodeList.clear();
 	if (currentNode->getType() == "Alpha") {
 		Node* prevNode = dynamic_cast<AlphaNode*>(currentNode)->getPrevNode().second;
 		iteratePrevNode(prevNode);
@@ -260,15 +262,27 @@ void ObjectVisualization::OnLButtonDown(UINT nFlags, CPoint point)
 	int y = point.y;
 	point_type touched(point.x, point.y);
 	unordered_map<int, polygon>::iterator itt;
+	vector<pair<float, Node*>> resultNodes;
 	for (itt = spatialNodePolygon.begin(); itt != spatialNodePolygon.end(); itt++) {
 		if (boost::geometry::covered_by(touched, itt->second)) {
-			Node* resultNode = ReteNet::getNodeFromId(itt->first);
-			if (resultNode != nullptr) {
-				fillNodes(resultNode);
-				visualizeRule(resultNode);
+			Node* result = ReteNet::getNodeFromId(itt->first);
+
+			if (result != nullptr) {
+				resultNodes.push_back(make_pair(bg::area(itt->second), result));
 				break;
 			}
 		}
 	}
+	if (resultNodes.empty())
+		return;
+	Node* currentNode = nullptr;
+	float smallestArea = 1000000;
+	for (int j = 0; j < resultNodes.size(); j++) {
+		if (resultNodes[j].first < smallestArea) {
+			currentNode = resultNodes[j].second;
+			smallestArea = resultNodes[j].first;
+		}
+	}
+	visualizeRule(currentNode);
 	CDialog::OnLButtonDown(nFlags, point);
 }

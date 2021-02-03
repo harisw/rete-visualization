@@ -26,6 +26,7 @@ void AlphaNodeDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_content_edit);
 	DDX_Control(pDX, IDC_EDIT2, m_output_edit);
+	DDX_Control(pDX, IDC_EDIT7, m_input_edit);
 }
 
 
@@ -41,6 +42,12 @@ BOOL AlphaNodeDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// TODO:  Add extra initialization here
+	Node* prevNode = currNode->getPrevNode().second;
+	if (prevNode != NULL) {
+		wstring tempInp(prevNode->justCondition.begin(), prevNode->justCondition.end());
+		m_input_edit.SetWindowTextW(tempInp.c_str());
+	}
+
 	wstring temp(currNode->justCondition.begin(), currNode->justCondition.end());
 	m_content_edit.SetWindowTextW(temp.c_str());
 
