@@ -38,7 +38,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnPaint();
-	void connectNodes(Node*& currNode, vector<Node*>& unconnectedNodes, CPaintDC& dc);
+	void connectNodes(Node*& currNode, vector<Node*>& unconnectedNodes, CClientDC& dc);
 	void addNodePosition(Node* nodeInput);
 	vector<Node*> m_NodeList;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -62,6 +62,8 @@ public:
 private:
 	CPoint wmPos;
 	vector<Node*> visualizedNode;
+	CPen m_oPen;
+	CPen* oldPen;
 	void showAlphaWindow(AlphaNode* nodeInput);
 	void showBetaWindow(BetaNode* nodeInput);
 public:

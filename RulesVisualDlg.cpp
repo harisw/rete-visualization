@@ -40,13 +40,14 @@ END_MESSAGE_MAP()
 
 void RulesVisualDlg::OnPaint()
 {
-	CPaintDC dc(this); // device context for painting
+	//CPaintDC dc(this); // device context for painting
 					   // TODO: Add your message handler code here
 					   // Do not call CDialog::OnPaint() for painting messages
-	CWnd* pImage = GetDlgItem(IDC_STATIC);
+	CClientDC dc(GetDlgItem(IDC_STATIC));
+	/*CWnd* pImage = GetDlgItem(IDC_STATIC);
 	CRect rc;
-	pImage->GetWindowRect(rc);
-
+	pImage->GetWindowRect(rc);*/
+	//CPen* oldPen;
 
 	int wmRad;
 	int xWM;
@@ -84,13 +85,13 @@ void RulesVisualDlg::OnPaint()
 	vector<Node*> unconnectedNodes;
 	Node* currNode;
 
-	
-	hRgn = CreateRoundRectRgn(xWM, yAlpha, xWM + wmRad, yAlpha + wmRad, wmRad, wmRad);
+
+	dc.SelectObject(blackBrush);
+	dc.Ellipse(xWM, yAlpha, xWM + wmRad, yAlpha + wmRad);
+	//hRgn = CreateRoundRectRgn(xWM, yAlpha, xWM + wmRad, yAlpha + wmRad, wmRad, wmRad);
 
 	wmPos = CPoint(xWM + wmRad, yAlpha+wmRad);
-	HINSTANCE hIns = AfxGetInstanceHandle();
-	DeleteObject(hIns);
-	FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, blackBrush);
+	
 
 	yAlpha += distance;
 
@@ -98,7 +99,10 @@ void RulesVisualDlg::OnPaint()
 		currNode = m_NodeList[i];
 
 		if (currNode->getType() == "Alpha") {
-			hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, rad, rad);
+			dc.SelectObject(redBrush);
+
+			dc.Ellipse(xStart, yAlpha, xStart + rad, yAlpha + rad);
+//			hRgn = CreateRoundRectRgn(xStart, yAlpha, xStart + rad, yAlpha + rad, rad, rad);
 			
 			//STORING POSITION
 			currNode->visualPosition = make_pair(xStart, yAlpha);
@@ -108,24 +112,20 @@ void RulesVisualDlg::OnPaint()
 
 			pair<string, Node*> prevNode = dynamic_cast<AlphaNode*>(currNode)->getPrevNode();
 			if (prevNode.second == NULL) { //CONNECT TO WM
-				dc.MoveTo(wmPos.x, wmPos.y);		//DRAWING LINE
-				dc.LineTo(xStart + 40, yAlpha + 40);
+				oldPen = (CPen*)dc.SelectObject(&m_oPen);
+				dc.MoveTo(wmPos.x - (rad/2), wmPos.y - (rad/2));		//DRAWING LINE
+				dc.LineTo(xStart + (rad/2), yAlpha + (rad/2));
+				dc.SelectObject(oldPen);
 			}
 
 			xStart += distance;
 		}
 		else {
+			dc.SelectObject(blueBrush);
 
 			vector<Node*> inputNodes;
 			vector<Node*> nextPairs;
 			//DRAWING BETA
-			//for (int index = 0; index < unconnectedNodes.size(); index++) {		//CHECK FOR CONNECTED ALPHA NODES
-			//	nextPairs = unconnectedNodes[index]->getNextPairs();
-			//	if ((nextPairs.size() == 1 && nextPairs[0] == currNode) ||
-			//		find(nextPairs.begin(), nextPairs.end(), currNode) != nextPairs.end()) {
-			//		inputIndexes.push_back(index);
-			//	}
-			//}
 
 			vector<pair<int, Node*>>::iterator itt;
 			for (itt = nodePositions.begin(); itt != nodePositions.end(); itt++) {
@@ -139,7 +139,6 @@ void RulesVisualDlg::OnPaint()
 			
 			if (inputNodes.empty())
 				cout << "sini" << endl;
-			//GET x position for BetaNodes FROM connected node's X
 			if (inputNodes.size() >= 2)
 				xBeta = (inputNodes.front()->visualPosition.first + inputNodes[1]->visualPosition.first) / 2;
 			else
@@ -154,8 +153,8 @@ void RulesVisualDlg::OnPaint()
 				pointCandidate =  CPoint(xBeta, yBeta);
 			}*/
 
-
-			hRgn = CreateRoundRectRgn(xBeta, yBeta, xBeta + rad, yBeta + rad, rad, rad);
+			dc.Ellipse(xBeta, yBeta, xBeta + rad, yBeta + rad);
+			//hRgn = CreateRoundRectRgn(xBeta, yBeta, xBeta + rad, yBeta + rad, rad, rad);
 			///// END OF DRAWING
 		
 			currNode->visualPosition = make_pair(xBeta, yBeta);
@@ -165,12 +164,12 @@ void RulesVisualDlg::OnPaint()
 		}
 
 
-		HINSTANCE hIns = AfxGetInstanceHandle();
+		/*HINSTANCE hIns = AfxGetInstanceHandle();
 		DeleteObject(hIns);
 		if (currNode->getType() == "Alpha")
 			FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, redBrush);
 		else
-			FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, blueBrush);
+			FillRgn(pImage->GetDC()->GetSafeHdc(), hRgn, blueBrush);*/
 
 		visualizedNode.push_back(currNode);
 	}
@@ -178,12 +177,13 @@ void RulesVisualDlg::OnPaint()
 	CDialog::OnPaint();
 }
 
-void RulesVisualDlg::connectNodes(Node* &currNode, vector<Node*> &unconnectedNodes, CPaintDC &dc)
+void RulesVisualDlg::connectNodes(Node* &currNode, vector<Node*> &unconnectedNodes, CClientDC &dc)
 {
 	///// CONNECTING NODES
 	if (currNode->getNextPairs().size() > 0)
 		unconnectedNodes.push_back(currNode);
 	else {
+		oldPen = (CPen*)dc.SelectObject(&m_oPen);
 		for (int j = 0; j < unconnectedNodes.size(); j++) {
 			Node* unconnNode = unconnectedNodes[j];
 			vector<Node*> targetNodes = unconnNode->getNextPairs();
@@ -194,6 +194,7 @@ void RulesVisualDlg::connectNodes(Node* &currNode, vector<Node*> &unconnectedNod
 				dc.LineTo(targetNodes[k]->visualPosition.first + 40, targetNodes[k]->visualPosition.second + 40);
 			}
 		}
+		dc.SelectObject(oldPen);
 		unconnectedNodes.clear();
 	}
 }
@@ -307,6 +308,8 @@ BOOL RulesVisualDlg::OnInitDialog()
 	//m_vbar.ShowWindow(false);  //Hide Vertical Scroll Bar
 	m_hbar.ShowWindow(false);  //Hide Horizontal Scroll Bar
 	MoveWindow(100, 100, WIND_WIDTH, WIND_HEIGHT);
+	m_oPen.CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
