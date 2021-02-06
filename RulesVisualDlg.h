@@ -9,7 +9,7 @@
 #define RULESVISUAL_H
 #define NODE_SIZE 25
 #define WIND_WIDTH 1700
-#define WIND_HEIGHT 800
+#define WIND_HEIGHT 1000
 #define RAD_CONST 1.25
 #define DIST_CONST 0.8
 // RulesVisualDlg dialog
@@ -41,6 +41,7 @@ public:
 	void connectNodes(Node*& currNode, vector<Node*>& unconnectedNodes, CClientDC& dc);
 	void addNodePosition(Node* nodeInput);
 	vector<Node*> m_NodeList;
+	vector<BetaNode*> visualizedBeta;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg
 	//void displayAlphaDetail(int x);
@@ -56,20 +57,21 @@ public:
 
 	//TRYING SCROLLBAR
 	SCROLLINFO horz, vert;
-	int sourcex, sourcey, offsetx, offsety;
 	CDC m_dcMem;
-
+	int sqrtRad;
 private:
 	CPoint wmPos;
 	vector<Node*> visualizedNode;
 	CPen m_oPen;
 	CPen* oldPen;
+	int xCorrection;
+	int yCorrection;
 	void showAlphaWindow(AlphaNode* nodeInput);
 	void showBetaWindow(BetaNode* nodeInput);
+	CPoint getPosition(int x, int y);
 public:
 	CScrollBar m_hbar;
 	virtual BOOL OnInitDialog();
-	afx_msg void OnBnClickedButton1();
 };
 
 #endif // !RULESVISUAL_H
