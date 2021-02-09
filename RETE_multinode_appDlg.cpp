@@ -2161,14 +2161,16 @@ void CRETEmultinodeappDlg::OnBnClickedButton10()
 
 void CRETEmultinodeappDlg::OnBnClickedButton6()
 {
-	CRETEmultinodeappDlg::OnBnClickedButton9();
+	//CRETEmultinodeappDlg::OnBnClickedButton9();
 
 	//CRETEmultinodeappDlg::SetCoordinate_new();
 
-	if (fixed_data_num_of_obj > 0)
-		MFC_FixedMultiThread::start(fixed_data_num_of_obj);
-	else
-		CRETEmultinodeappDlg::SetCoordinate_new();
+	if (fixed_data_num_of_obj == 0) {
+		MessageBox(L"Please choose a Data source or insert the coordinate",
+			L"Rules Insertion Error", MB_OK | MB_ICONERROR);
+		return;
+	}
+	MFC_FixedMultiThread::start(fixed_data_num_of_obj);
 
 	ObjectVisualization f = new ObjectVisualization();
 	

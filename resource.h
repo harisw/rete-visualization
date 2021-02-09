@@ -70,6 +70,7 @@
 #define IDC_EDITCOOR_1                  1046
 #define IDC_EDIT_VESSEL_X               1047
 #define IDC_EDIT_VESSEL_Y               1048
+#define IDC_EDITCOOR_7                  1049
 
 // Next default values for new objects
 // 
