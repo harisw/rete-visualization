@@ -104,6 +104,8 @@ void ObjectVisualization::OnPaint()
 	CPaintDC dc(this); // device context for painting
 					   // TODO: Add your message handler code here
 					   // Do not call CDialog::OnPaint() for painting messages
+	//CClientDC dc(GetDlgItem(IDC_STATIC));
+
 	int rad = 10;
 
 	CPen pen_blue, pen_red;
@@ -134,11 +136,12 @@ void ObjectVisualization::OnPaint()
 
 					float first_loc = m_object_location[i][global_itt].first;
 					float second_loc = m_object_location[i][global_itt].second;
+					dc.SelectObject(&pen_red);
 
 					if (i == 0) {
 						//pen.CreatePen(PS_SOLID, 1, color_hex_map["Aqua"]);
 						//pen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
-						dc.SelectObject(&pen_blue);
+						//dc.SelectObject(&pen_blue);
 						if (global_itt % 10 == 0) {
 							CString cs(_itoa(global_itt, buff, 10));
 							dc.TextOutW(first_loc + 20, second_loc, cs);
@@ -149,7 +152,7 @@ void ObjectVisualization::OnPaint()
 					else {
 						//pen.CreatePen(PS_SOLID, 1, color_hex_map["Red"]);
 						//pen.CreatePen(PS_SOLID, 1, 0x000000FF);
-						dc.SelectObject(&pen_red);
+						//dc.SelectObject(&pen_red);
 						rad = 2;
 					}
 
@@ -157,8 +160,8 @@ void ObjectVisualization::OnPaint()
 					dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
 					//dc.Rectangle(0, 0, m_object_location[0]., 20);
 
-					Invalidate();
-					Sleep(20);
+					//Invalidate();
+					Sleep(10);
 				}
 
 				global_itt++;
@@ -168,7 +171,8 @@ void ObjectVisualization::OnPaint()
 			has_drawn = true;
 		}
 	}
-	cout << "Finish" << endl;
+	
+	//cout << "Finish" << endl;
 }
 
 void ObjectVisualization::drawCQVessel(CPaintDC& dc)

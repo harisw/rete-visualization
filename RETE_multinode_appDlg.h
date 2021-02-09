@@ -83,7 +83,7 @@ public:
 	queue<EventPtr> generatedEvent;
 	afx_msg void OnBnClickedButton7();
 	CMFCEditBrowseCtrl dataFileCtrl;
-	int fixed_data_num_of_obj;
+	int fixed_data_num_of_obj = 0;
 //	afx_msg void OnDropdownButtonVessel(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedButton9();
 	afx_msg void OnBnClickedButton10();

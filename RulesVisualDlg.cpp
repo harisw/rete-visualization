@@ -94,6 +94,8 @@ void RulesVisualDlg::OnPaint()
 		wmRad = rad + 5;
 		xWM = (WIND_WIDTH / 2);
 
+		xCorrection = 10;
+		yCorrection = 20;
 		m_oPen.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 	}
 	sqrtRad = sqrt(rad);
