@@ -24,7 +24,6 @@ RulesVisualDlg::~RulesVisualDlg()
 void RulesVisualDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_SCROLLBAR2, m_hbar);
 }
 
 
@@ -42,9 +41,7 @@ BOOL RulesVisualDlg::OnInitDialog()
 
 	// TODO:  Add extra initialization here
 	CClientDC dc(this);
-	m_dcMem.CreateCompatibleDC(&dc);
-	//m_vbar.ShowWindow(false);  //Hide Vertical Scroll Bar
-	m_hbar.ShowWindow(false);  //Hide Horizontal Scroll Bar
+
 	MoveWindow(100, 30, WIND_WIDTH, WIND_HEIGHT);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -96,7 +93,6 @@ void RulesVisualDlg::OnPaint()
 
 		m_oPen.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 	}
-	sqrtRad = sqrt(rad);
 	int xStart = 0;
 	int yAlpha = 0;
 	int yBeta = 100;
@@ -274,9 +270,6 @@ void RulesVisualDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 	CDialog::OnLButtonDown(nFlags, point);
 }
-
-
-
 
 bool comparator(pair<int, Node*> a, pair<int, Node*> b) {
 	return a.second->visualPosition.first < b.second->visualPosition.first;

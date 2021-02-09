@@ -39,13 +39,11 @@ protected:
 public:
 	afx_msg void OnPaint();
 	void connectNodes(Node*& currNode, vector<Node*>& unconnectedNodes, CClientDC& dc);
-	void addNodePosition(Node* nodeInput);
+	//void addNodePosition(Node* nodeInput);
 	vector<Node*> m_NodeList;
 	vector<BetaNode*> visualizedBeta;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg
-	//void displayAlphaDetail(int x);
-	//void displayBetaDetail(CPoint point);
 
 	void OnLButtonDown(UINT nFlags, CPoint point);
 	vector<pair<int, Node*>> nodePositions;
@@ -55,10 +53,6 @@ public:
 	int rad;
 	int distance;
 
-	//TRYING SCROLLBAR
-	SCROLLINFO horz, vert;
-	CDC m_dcMem;
-	int sqrtRad;
 private:
 	CPoint wmPos;
 	vector<Node*> visualizedNode;
@@ -70,7 +64,6 @@ private:
 	void showBetaWindow(BetaNode* nodeInput);
 	CPoint getPosition(int x, int y);
 public:
-	CScrollBar m_hbar;
 	virtual BOOL OnInitDialog();
 };
 

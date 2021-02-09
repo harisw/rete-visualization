@@ -70,6 +70,7 @@
 #define IDC_EDITCOOR_1                  1046
 #define IDC_EDIT_VESSEL_X               1047
 #define IDC_EDIT_VESSEL_Y               1048
+#define IDC_PICT_CTRL                   1049
 
 // Next default values for new objects
 // 
@@ -77,7 +78,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        140
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1049
+#define _APS_NEXT_CONTROL_VALUE         1050
 #define _APS_NEXT_SYMED_VALUE           112
 #endif
 #endif
