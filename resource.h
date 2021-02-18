@@ -11,12 +11,14 @@
 #define IDD_BetaNodeDlg                 105
 #define IDD_RulesHelpDlg                106
 #define IDD_ObjectVisualization         108
+#define IDD_SimulationDlg               112
 #define IDR_MAINFRAME                   128
 #define IDC_COMBO1                      1001
 #define IDC_EDIT1                       1002
 #define IDC_EDIT2                       1003
 #define IDC_BUTTON1                     1004
 #define IDC_EDIT7                       1004
+#define IDC_SIMU1                       1004
 #define IDC_BUTTON2                     1005
 #define IDC_EDIT9                       1005
 #define IDC_LIST1                       1006
@@ -28,7 +30,9 @@
 #define IDC_EDITCOOR_2                  1009
 #define IDC_BUTTON5                     1010
 #define IDC_BUTTON_INSERT_COOR          1010
+#define IDC_LIST3                       1010
 #define IDC_EDIT3                       1011
+#define IDC_LIST4                       1011
 #define IDC_EDIT4                       1012
 #define IDC_BUTTON_FIND_CQ              1013
 #define IDC_BUTTON_INSERT_CQ            1014
@@ -76,9 +80,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        140
+#define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1049
-#define _APS_NEXT_SYMED_VALUE           112
+#define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

@@ -107,7 +107,7 @@ BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CRETEmultinodeappDlg::OnBnClickedOk)
-	ON_BN_CLICKED(IDC_BUTTON1, &CRETEmultinodeappDlg::OnBnClickedButton1)
+	//ON_BN_CLICKED(IDC_BUTTON1, &CRETEmultinodeappDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CRETEmultinodeappDlg::OnBnClickedButtonInsertRule)
 	ON_EN_CHANGE(IDC_EDIT1, &CRETEmultinodeappDlg::OnEnChangeEdit1)
 	//ON_BN_CLICKED(IDC_BUTTON5, &CRETEmultinodeappDlg::OnBnClickedButton5)
@@ -134,6 +134,7 @@ BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
 ON_BN_CLICKED(IDC_BUTTON9, &CRETEmultinodeappDlg::OnBnClickedButton9)
 ON_BN_CLICKED(IDC_BUTTON10, &CRETEmultinodeappDlg::OnBnClickedButton10)
 ON_BN_CLICKED(IDC_BUTTON6, &CRETEmultinodeappDlg::OnBnClickedButton6)
+ON_BN_CLICKED(IDC_SIMU1, &CRETEmultinodeappDlg::OnBnClickedSimu1)
 END_MESSAGE_MAP()
 
 
@@ -194,7 +195,7 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	SetDlgItemText(IDC_EDITCOOR_2, L"0,400");
 
 	SetDlgItemText(IDC_EDITCOOR_5, L"10");
-	SetDlgItemText(IDC_EDITCOOR_6, L"50");
+	SetDlgItemText(IDC_EDITCOOR_6, L"30");
 
 	SetDlgItemText(IDC_EDIT_VESSEL_X, L"400");
 	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"150");
@@ -2176,4 +2177,14 @@ void CRETEmultinodeappDlg::OnBnClickedButton6()
 	
 	f.DoModal();
 	// TODO: Add your control notification handler code here
+}
+
+
+void CRETEmultinodeappDlg::OnBnClickedSimu1()
+{
+	SimulationDlg dlg;
+	dlg.m_NodeList = ReteNet::getCopyNodes();
+	MFC_FixedMultiThread::start(fixed_data_num_of_obj);
+	dlg.num_of_obj = fixed_data_num_of_obj;
+	dlg.DoModal();
 }

@@ -6,7 +6,6 @@
 #include "SpatialOp.h"
 
 #include "Utilities.h"
-
 #include <string>
 #include <queue>
 //#include "../execution/EventProcess.h"

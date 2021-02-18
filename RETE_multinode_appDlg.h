@@ -11,6 +11,7 @@
 #include "RulesVisualDlg.h"
 #include "ObjectVisualization.h"
 #include "GenerateData.h"
+#include "SimulationDlg.h"
 
 using namespace std;
 
@@ -96,4 +97,6 @@ public:
 	CString m_coordinate_4;
 	CString m_coord_obj_num;
 	CString m_coord_time;
+	
+	afx_msg void OnBnClickedSimu1();
 };

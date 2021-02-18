@@ -107,7 +107,12 @@ public:
 		return NodeList;
 	}
 	static priority_queue < Node*, vector<Node*>, CustomCompare> p_queue, temp_p_queue;
+	static queue< string > triggered_ev;
 
+	/*static void pushTriggeredEvent(string inpEvent) {
+		triggered_ev.push_back(inpEvent);
+		return;
+	}*/
 	static std::recursive_mutex mutexOfReteProcess;//mutex lock among threads
 
 private:

@@ -45,8 +45,7 @@ BOOL RulesVisualDlg::OnInitDialog()
 	m_dcMem.CreateCompatibleDC(&dc);
 	//m_vbar.ShowWindow(false);  //Hide Vertical Scroll Bar
 	m_hbar.ShowWindow(false);  //Hide Horizontal Scroll Bar
-	MoveWindow(100, 30, WIND_WIDTH, WIND_HEIGHT);
-
+	
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }

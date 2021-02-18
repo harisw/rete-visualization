@@ -19,6 +19,8 @@ vector<int>ReteNet::betaListIDDictionary;
 vector<int>ReteNet::termListIDDictionary;
 vector<Node*> ReteNet::NodeList;
 
+queue< string > ReteNet::triggered_ev;
+
 //this is spatial node indexing
 vector<int> ReteNet::staticCQNodeId;
 

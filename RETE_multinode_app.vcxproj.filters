@@ -114,6 +114,9 @@
     <ClInclude Include="ObjectVisualization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SimulationDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RETE_multinode_app.cpp">
@@ -189,6 +192,9 @@
       <Filter>Source Files\DatGeneration</Filter>
     </ClCompile>
     <ClCompile Include="ObjectVisualization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulationDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
