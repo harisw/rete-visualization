@@ -23,11 +23,14 @@
 #define IDC_EDIT9                       1005
 #define IDC_LIST1                       1006
 #define IDC_EDIT8                       1006
+#define IDC_EDIT10                      1006
 #define IDC_BUTTON3                     1007
+#define IDC_EDIT11                      1007
 #define IDC_BUTTON4                     1008
 #define IDC_BUTTON_DEL_EC               1008
 #define IDC_LIST2                       1009
 #define IDC_EDITCOOR_2                  1009
+#define IDC_EDIT12                      1009
 #define IDC_BUTTON5                     1010
 #define IDC_BUTTON_INSERT_COOR          1010
 #define IDC_LIST3                       1010
