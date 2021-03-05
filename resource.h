@@ -23,9 +23,7 @@
 #define IDC_EDIT9                       1005
 #define IDC_LIST1                       1006
 #define IDC_EDIT8                       1006
-#define IDC_EDIT10                      1006
 #define IDC_BUTTON3                     1007
-#define IDC_EDIT11                      1007
 #define IDC_BUTTON4                     1008
 #define IDC_BUTTON_DEL_EC               1008
 #define IDC_LIST2                       1009
@@ -78,6 +76,8 @@
 #define IDC_EDIT_VESSEL_X               1047
 #define IDC_EDIT_VESSEL_Y               1048
 #define IDC_EDITCOOR_7                  1049
+#define IDC_STATIC_OBJECT               1049
+#define IDC_STATIC_NODE                 1050
 
 // Next default values for new objects
 // 
@@ -85,7 +85,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1049
+#define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

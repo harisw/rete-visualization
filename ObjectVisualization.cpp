@@ -41,7 +41,6 @@ BOOL ObjectVisualization::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// TODO:  Add extra initialization here
-	// TODO:  Add extra initialization here
 	m_object_location = MFC_FixedMultiThread::objectLocationMap;
 
 	for (int i = 0; i < m_object_location.size(); i++) {
@@ -109,12 +108,10 @@ void ObjectVisualization::OnPaint()
 	int rad = 10;
 
 	CPen pen_blue, pen_red;
-	CBrush brush;
-	// Magenta pen
-	//pen.CreatePen()
-
 	pen_blue.CreatePen(PS_SOLID, 1, 0x00FFFF00);
 	pen_red.CreatePen(PS_SOLID, 1, 0x000000FF);
+	CBrush brush;
+
 	//pen.CreatePen(PS_SOLID, 1, );
 	// "transparent" brush
 	brush.CreateStockObject(HOLLOW_BRUSH);

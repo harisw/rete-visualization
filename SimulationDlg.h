@@ -1,23 +1,33 @@
 #pragma once
 #include "Node.h"
 #include "ReteNet.h"
-//#include "BetaNode.h"
-//#include "AlphaNodeDlg.h"
-//#include "BetaNodeDlg.h"
-//#include "RulesVisualDlg.h"
-//#include "MFC_FixedMultiThread.h"
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/point.hpp>
+#include <boost/geometry/geometries/box.hpp>
+#include <boost/geometry/geometries/polygon.hpp>
+#include <boost/geometry/geometries/point_xy.hpp>
+
+#include "SpatialNodeIndexing.h"
+
+#include "MFC_FixedMultiThread.h"
+#include "RulesVisualDlg.h"
+#include <vector>
+#include <unordered_map>
 #include <algorithm>
 //#ifndef SIMUDLG_H
 //#define SIMUDLG_H
 
+#define INF 10000 
 #define NODE_SIZE 25
 #define WIND_WIDTH 1800
 #define WIND_HEIGHT 1000
 #define RAD_CONST 1.25
 #define DIST_CONST 0.8
 #define IDT_TIMER_0 WM_USER + 200
+#define IDT_TIMER_OBJ_SIMU WM_USER + 201
 // SimulationDlg dialog
 
+typedef map<string, Node*> nodeMap;
 class SimulationDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(SimulationDlg)
@@ -37,15 +47,53 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
 	CPoint wmPos;
+	int wmRad, xWM;
+
 	vector<Node*> visualizedNode;
 	CPen m_oPen;
 	CPen* oldPen;
-	int xCorrection;
-	int yCorrection;
+	CPen greenPen;
+	CPen bluePen;
+	CPen redPen;
+	CPen thinPen;
+	CPen thickPen;
+	CBrush hollowBrush;
+	CRect objRect;
+	CRect nodesRect;
+
+	//vector<Node*> triggeredNodes;
+	int paintMode;
+	typedef boost::geometry::model::d2::point_xy<double> point_type;
+
+	typedef bg::model::point<float, 2, bg::cs::cartesian> point;
+	typedef bg::model::polygon<point, false, false> polygon; // ccw, open polygon
+
+	unordered_map<int, vector<pair<float, float>>> m_object_location;
+	float max_first = -999, min_first = 999;
+	float max_second = -999, min_second = 999;
+
+	float max_w = 400, min_w = 0;
+	float max_h = 300, min_h = 0;
+
+	float x_norm, y_norm;
+
+	bool has_drawn;
+	unordered_map<string, int> color_hex_map;
+	unordered_map<int, polygon> spatialNodePolygon;
+	int global_itt = 0;
+	int cycle_step = 10;
+	float xCorrection = 30;
+	float yCorrection = 30;
+
 	void showAlphaWindow(AlphaNode* nodeInput);
 	void showBetaWindow(BetaNode* nodeInput);
+	//void findSizeScaling();
+	void paintObjectVisual();
+	void initObjectVisualization();
+	void drawObjects(CPaintDC& dc);
 	CPoint getPosition(int x, int y);
 	void connectNodes(Node*& currNode, vector<Node*>& unconnectedNodes, CClientDC& dc);
+	void drawCQVessel(CPaintDC& dc);
 
 public:
 	virtual BOOL OnInitDialog();
@@ -69,6 +117,11 @@ public:
 	
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnPaint();
+	void paintWMNode(CClientDC& dc);
+	void paintNodeVisual(CClientDC& dc);
+	void updateListCtrl();
+	void populateNodes();
+	void findSizeScaling(CClientDC& dc);
 };
 
 //#endif // !SIMUDLG_H

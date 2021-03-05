@@ -335,12 +335,18 @@ int AlphaNode::justTest(int TimeSlice)
 		}
 	}
 
+	if (EventResult.size() > 0)
+		ReteNet::triggered_node.insert(make_pair(justCondition, this));
+
 	//PUSH TO PROCEEDING NODE .-.
 	std::lock_guard<std::recursive_mutex> lg(ReteNet::mutexOfReteProcess);//mutex lock
 	for (Node* n : listOfNextPair) {
 
 		//std::lock_guard<std::recursive_mutex> lg(ReteNet::mutexOfReteProcess);//mutex lock
 		n->pushResult(EventResult, this);
+		//ReteNet::triggered_ev.push(justCondition);
+		ReteNet::triggered_node.insert(make_pair(n->justCondition, n));
+		
 	}
 
 	if (EventResult.size() > 0) {

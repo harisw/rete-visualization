@@ -46,46 +46,52 @@ BOOL SimulationDlg::OnInitDialog()
 
 	// TODO:  Add extra initialization here
 	MoveWindow(50, 30, WIND_WIDTH, WIND_HEIGHT);
-	m_alpha_list_ctrl.InsertColumn(0, _T("ID"), LVCFMT_LEFT, 90);
-	m_alpha_list_ctrl.InsertColumn(1, _T("Condition"), LVCFMT_LEFT, 380);
-	m_beta_list_ctrl.InsertColumn(0, _T("ID"), LVCFMT_LEFT, 90);
-	m_beta_list_ctrl.InsertColumn(1, _T("Condition"), LVCFMT_LEFT, 400);
+	//m_alpha_list_ctrl.InsertColumn(0, _T("ID"), LVCFMT_LEFT, 90);
+	m_alpha_list_ctrl.InsertColumn(0, _T("AlphaNode Rules"), LVCFMT_LEFT, 600);
+	//m_beta_list_ctrl.InsertColumn(0, _T("ID"), LVCFMT_LEFT, 90);
+	m_beta_list_ctrl.InsertColumn(0, _T("BetaNode Rules"), LVCFMT_LEFT, 1000);
 
-	Node* currNode;
-	int aIndex = 0;
-	int bIndex = 0;
-	int nIndex;
-	wstring ID, condition;
-	for (int j = 0; j < m_NodeList.size(); j++)
-	{
-		currNode = m_NodeList[j];
-		if (currNode->getType() == "Alpha") {
-			ID = to_wstring(currNode->getID());
-			condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
-			nIndex = m_alpha_list_ctrl.InsertItem(0, ID.c_str());
-			m_alpha_list_ctrl.SetItemText(nIndex, 1, condition.c_str());
-		}
-		else {
-			ID = to_wstring(currNode->getID());
-			condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
-			nIndex = m_beta_list_ctrl.InsertItem(0, ID.c_str());
-			m_beta_list_ctrl.SetItemText(nIndex, 1, condition.c_str());
-		}
-	}
+	DWORD dwStyle;
+	dwStyle = GetDlgItem(IDC_LIST4)->SendMessage(LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0);
+	dwStyle |= LVS_EX_FULLROWSELECT|LVS_REPORT|LVS_EX_GRIDLINES;
+	GetDlgItem(IDC_LIST4)->SendMessage(LVM_SETEXTENDEDLISTVIEWSTYLE, 0, dwStyle);
+	
+	dwStyle = GetDlgItem(IDC_LIST3)->SendMessage(LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0);
+	dwStyle |= LVS_EX_FULLROWSELECT | LVS_REPORT | LVS_EX_GRIDLINES;
+	GetDlgItem(IDC_LIST3)->SendMessage(LVM_SETEXTENDEDLISTVIEWSTYLE, 0, dwStyle);
+
+
+	//updateListCtrl();
 	
 	CClientDC dc(this);
 	m_dcMem.CreateCompatibleDC(&dc);
+	initObjectVisualization();
 
-	SetTimer(IDT_TIMER_0, 1000, NULL);
+	bluePen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
+	redPen.CreatePen(PS_SOLID, 1, 0x000000FF);
+	thickPen.CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+	thinPen.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+	hollowBrush.CreateStockObject(HOLLOW_BRUSH);
+	greenPen.CreatePen(PS_SOLID, 1, 0x00008000);
+
+	CWnd* objWnd = GetDlgItem(IDC_STATIC_OBJECT);
+	objWnd->GetClientRect(&objRect);
+	objRect.top += 30;
+	objRect.left += 1095;
+	objRect.right += 1095;
+
+	CWnd* nodeWnd = GetDlgItem(IDC_STATIC_NODE);
+	nodeWnd->GetClientRect(&nodesRect);
+	nodesRect.top += 30;
+	nodesRect.left += 1095;
+	nodesRect.right += 1095;
+	
+
+	SetTimer(IDT_TIMER_0, 3000, NULL);
+	paintMode = 3;
+	//SetTimer(IDT_TIMER_OBJ_SIMU, 1000, NULL);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
-}
-
-
-void SimulationDlg::OnBnClickedOk()
-{
-	// TODO: Add your control notification handler code here
-	CDialogEx::OnOK();
 }
 
 void SimulationDlg::appendTextToEditCtrl(string pszText)
@@ -109,15 +115,37 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: Add your message handler code here and/or call default
 	string output;
+
+
 	switch (nIDEvent)
 	{
 	case IDT_TIMER_0:
-		
+		 
 		while (!ReteNet::triggered_ev.empty()) {
+			
 			output = ReteNet::triggered_ev.front();
 			appendTextToEditCtrl(output);
 			ReteNet::triggered_ev.pop();
+			paintMode = 1;
 		}
+		if (paintMode == 1) {
+			populateNodes();
+			updateListCtrl();
+			InvalidateRect(nodesRect);
+		}
+
+		return;
+	case IDT_TIMER_OBJ_SIMU:
+		if (global_itt >= m_object_location[0].size()) {
+			//Invalidate(false);
+			KillTimer(IDT_TIMER_OBJ_SIMU);
+			return;
+		}
+
+		//if (has_drawn)
+		paintMode = 2;
+		InvalidateRect(objRect);
+
 		return;
 	default:
 		break;
@@ -128,56 +156,39 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 
 void SimulationDlg::OnPaint()
 {
-	CClientDC dc(GetDlgItem(IDC_STATIC));
-	/*CWnd* pImage = GetDlgItem(IDC_STATIC);
-	CRect rc;
-	pImage->GetWindowRect(rc);*/
-	//CPen* oldPen;
+	CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
+	if (paintMode == 1) {
+		findSizeScaling(nodesDC);
 
-	int wmRad, xWM;
+		paintWMNode(nodesDC);
 
-	//rad = WIND_WIDTH / (m_NodeList.size() * RAD_CONST);
-	//distance = (WIND_WIDTH / m_NodeList.size()) * DIST_CONST;
-	if (m_NodeList.size() < 70) {
-		rad = 47;
-		distance = 70;
-		wmRad = rad + 20;
-		xWM = (WIND_WIDTH / 2) - 450;
-		xCorrection = 25;
-		yCorrection = 40;
-
-		m_oPen.CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
-
+		paintNodeVisual(nodesDC);
 	}
-	else if (m_NodeList.size() < 100) {
-		rad = 40;
-		distance = 55;
-		wmRad = rad + 10;
-		xWM = (WIND_WIDTH / 2) - 150;
-		xCorrection = 15;
-		yCorrection = 30;
+	else if(paintMode == 2)
+		paintObjectVisual();
 
-		m_oPen.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+	else if (paintMode == 3) {
+		findSizeScaling(nodesDC);
 
+		paintWMNode(nodesDC);
+
+		//paintNodeVisual(nodesDC);
+		//paintObjectVisual();
 	}
-	else {
-		rad = 35;
-		distance = 50;
-		wmRad = rad + 5;
-		xWM = (WIND_WIDTH / 2);
+	paintMode = 0;
+	CDialog::OnPaint();
+	// TODO: Add your message handler code here
+					   // Do not call CDialogEx::OnPaint() for painting messages
+	
+}
 
-		xCorrection = 10;
-		yCorrection = 20;
-		m_oPen.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-	}
+void SimulationDlg::paintWMNode(CClientDC &dc)
+{
+	
 	int xStart = 0;
 	int yAlpha = 0;
 	int yBeta = 100;
 	int xBeta = 0;
-
-
-	HBRUSH redBrush = CreateSolidBrush(0x000000FF);
-	HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
 	HBRUSH blackBrush = CreateSolidBrush(0x00000000);
 	HRGN hRgn;
 
@@ -190,15 +201,27 @@ void SimulationDlg::OnPaint()
 
 	wmPos = CPoint(xWM + wmRad, yAlpha + wmRad);
 
+}
+
+void SimulationDlg::paintNodeVisual(CClientDC &dc)
+{
+	findSizeScaling(dc);
+	int xStart = 0;
+	int yAlpha = 0;
+	int yBeta = 100;
+	int xBeta = 0;
+	HBRUSH redBrush = CreateSolidBrush(0x000000FF);
+	HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
+	HRGN hRgn;
+
+	vector<Node*> unconnectedNodes;
+	Node* currNode;
+
 
 	yAlpha += distance;
 
 	for (int i = 0; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
-
-		//std::cout << i << endl;
-		if (i >= 30)
-			std::cout << "sini" << endl;
 
 		if (currNode->getType() == "Alpha") {
 			dc.SelectObject(redBrush);
@@ -247,10 +270,6 @@ void SimulationDlg::OnPaint()
 				}
 			}
 
-
-
-
-
 			if (inputNodes.size() >= 2)
 				xBeta = (inputNodes.front()->visualPosition.first + inputNodes[1]->visualPosition.first) / 2;
 			else
@@ -264,21 +283,246 @@ void SimulationDlg::OnPaint()
 			yBeta = pointCandidate.y;
 
 			dc.Ellipse(xBeta, yBeta, xBeta + rad, yBeta + rad);
-			///// END OF DRAWING
 
 			currNode->visualPosition = make_pair(xBeta, yBeta);
 			nodePositions.push_back(make_pair(xBeta, currNode));
-
 			connectNodes(currNode, unconnectedNodes, dc);
-
-			cout << i + 1 << ".  Beta" << endl;
-
 		}
 
 		visualizedNode.push_back(currNode);
-	}					   // TODO: Add your message handler code here
-					   // Do not call CDialogEx::OnPaint() for painting messages
-	CDialog::OnPaint();
+	}
+}
+
+void SimulationDlg::updateListCtrl()
+{
+	Node* currNode;
+	int aIndex = 0;
+	int bIndex = 0;
+	int nIndex;
+	wstring ID, condition;
+	m_alpha_list_ctrl.DeleteAllItems();
+	m_beta_list_ctrl.DeleteAllItems();
+
+	for (int j = 0; j < m_NodeList.size(); j++)
+	{
+		currNode = m_NodeList[j];
+		if (currNode->getType() == "Alpha") {
+			//ID = to_wstring(currNode->getID());
+			condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
+			/*nIndex = m_alpha_list_ctrl.InsertItem(0, ID.c_str());
+			m_alpha_list_ctrl.SetItemText(nIndex, 1, condition.c_str());*/
+			m_alpha_list_ctrl.InsertItem(0, condition.c_str());
+		}
+		else {
+			//ID = to_wstring(currNode->getID());
+			condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
+			/*nIndex = m_beta_list_ctrl.InsertItem(0, ID.c_str());
+			m_beta_list_ctrl.SetItemText(nIndex, 1, condition.c_str());*/
+			m_beta_list_ctrl.InsertItem(0, condition.c_str());
+		}
+	}
+}
+
+void SimulationDlg::populateNodes()
+{
+	m_NodeList.clear();
+	for (nodeMap::iterator it = ReteNet::triggered_node.begin(); it != ReteNet::triggered_node.end(); ++it) {
+		m_NodeList.push_back(it->second);
+	}
+}
+
+//void SimulationDlg::fillNodes(Node* currentNode)
+//{
+//	this->m_NodeList.clear();
+//	if (currentNode->getType() == "Alpha") {
+//		Node* prevNode = dynamic_cast<AlphaNode*>(currentNode)->getPrevNode().second;
+//		iteratePrevNode(prevNode);
+//	}
+//	else {
+//		Node* leftSource = dynamic_cast<BetaNode*>(currentNode)->getLeftConnNode();
+//		Node* rightSource = dynamic_cast<BetaNode*>(currentNode)->getRightConnNode();
+//		iteratePrevNode(leftSource);
+//		iteratePrevNode(rightSource);
+//	}
+//	cout << currentNode->justCondition << endl;
+//	m_NodeList.push_back(currentNode);
+//	vector<Node*> nextPairs = currentNode->getNextPairs();
+//	for (int j = 0; j < nextPairs.size(); j++) {
+//		iterateNextNode(nextPairs[j]);
+//	}
+//}
+//
+//void SimulationDlg::iteratePrevNode(Node* currentNode)
+//{
+//	if (currentNode == NULL)
+//		return;
+//	if (currentNode->getType() == "Alpha") {
+//		Node* prevNode = dynamic_cast<AlphaNode*>(currentNode)->getPrevNode().second;
+//		iteratePrevNode(prevNode);
+//	}
+//	else {
+//		Node* leftSource = dynamic_cast<BetaNode*>(currentNode)->getLeftConnNode();
+//		Node* rightSource = dynamic_cast<BetaNode*>(currentNode)->getRightConnNode();
+//		iteratePrevNode(leftSource);
+//		iteratePrevNode(rightSource);
+//	}
+//	cout << currentNode->justCondition << endl;
+//	m_NodeList.push_back(currentNode);
+//}
+
+void SimulationDlg::findSizeScaling(CClientDC &dc)
+{
+	if (m_NodeList.size() < 70) {
+		rad = 47;
+		distance = 70;
+		wmRad = rad + 20;
+		xWM = (WIND_WIDTH / 2) - 450;
+		xCorrection = 25;
+		yCorrection = 40;
+		dc.SelectObject(thickPen);
+	}
+	else if (m_NodeList.size() < 100) {
+		rad = 40;
+		distance = 55;
+		wmRad = rad + 10;
+		xWM = (WIND_WIDTH / 2) - 150;
+		xCorrection = 15;
+		yCorrection = 30;
+		dc.SelectObject(thinPen);
+	}
+	else {
+		rad = 35;
+		distance = 50;
+		wmRad = rad + 5;
+		xWM = (WIND_WIDTH / 2);
+		xCorrection = 10;
+		yCorrection = 20;
+		dc.SelectObject(thinPen);
+	}
+}
+
+void SimulationDlg::paintObjectVisual()
+{
+	CPaintDC dc(GetDlgItem(IDC_STATIC_OBJECT));
+	
+	drawObjects(dc);
+}
+
+void SimulationDlg::drawCQVessel(CPaintDC& dc)
+{
+	dc.SelectObject(&hollowBrush);
+	dc.SelectObject(&greenPen);
+	for (auto snp : spatialNodePolygon) {
+		polygon p = snp.second;
+
+		CPoint* pts = new CPoint[p.outer().size() + 1];
+		int start_x, start_y;
+		//CPoint pts[p.outer().size()];
+		for (int j = 0; j < p.outer().size(); j++) {
+			point pt = p.outer().at(j);
+			float x = pt.get<0>();
+			float y = pt.get<1>();
+
+			pts[j].x = x;
+			pts[j].y = y;
+		}
+
+		dc.Polygon(pts, p.outer().size());
+		//point pt = p.outer().at(0);
+	}
+}
+
+void SimulationDlg::initObjectVisualization()
+{
+	m_object_location = MFC_FixedMultiThread::objectLocationMap;
+
+	for (int i = 0; i < m_object_location.size(); i++) {
+		for (int j = 0; j < m_object_location[i].size(); j++) {
+			if (m_object_location[i][j].first < min_first)
+				min_first = m_object_location[i][j].first;
+			if (m_object_location[i][j].first > max_first)
+				max_first = m_object_location[i][j].first;
+
+			if (m_object_location[i][j].second < min_second)
+				min_second = m_object_location[i][j].second;
+			if (m_object_location[i][j].second > max_second)
+				max_second = m_object_location[i][j].second;
+
+			m_object_location[i][j].first += xCorrection;
+			m_object_location[i][j].second += yCorrection;
+		}
+	}
+
+	float delta_first = max_first - min_first;
+	float scale_first = (max_w - min_w) / delta_first;
+
+	float delta_second = max_second - min_second;
+	float scale_second = (max_h - min_h) / delta_second;
+
+	x_norm = scale_first;
+	y_norm = scale_second;
+
+	ReteNet::buildNetNode();
+
+	spatialNodePolygon = SpatialNodeIndexing::getExistingPolygons();
+
+	has_drawn = false;
+	return;
+}
+
+void SimulationDlg::drawObjects(CPaintDC& dc)
+{
+	drawCQVessel(dc);
+
+	char buff[10];
+	//int a = 01;
+	int counter = 0;
+	dc.SelectObject(&hollowBrush);
+	//dc.SelectObject(&redPen);
+	//if (!has_drawn) {
+		if (m_object_location.size() > 0) {
+			//while (global_itt < m_object_location[0].size() && counter < cycle_step) {
+			while (global_itt < m_object_location[0].size()) {
+				for (int i = 0; i < m_object_location.size(); i++) {
+					//float first_loc = m_object_location[i][global_itt].first * x_norm - (max_first - max_w);
+					//float second_loc = m_object_location[i][global_itt].second * y_norm - (max_second - max_h);
+
+					float first_loc = m_object_location[i][global_itt].first;
+					float second_loc = m_object_location[i][global_itt].second;
+					
+
+					if (i == 0) {
+						//pen.CreatePen(PS_SOLID, 1, color_hex_map["Aqua"]);
+						//pen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
+						dc.SelectObject(&bluePen);
+						if (global_itt % 10 == 0) {
+							CString cs(_itoa(global_itt, buff, 10));
+							dc.TextOutW(first_loc + 20, second_loc, cs);
+						}
+
+						rad = 2;
+					}
+					else {
+						//pen.CreatePen(PS_SOLID, 1, color_hex_map["Red"]);
+						//pen.CreatePen(PS_SOLID, 1, 0x000000FF);
+						dc.SelectObject(&redPen);
+						rad = 2;
+					}
+
+					// rectangle with magenta frame and "transparent" background
+					dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
+					//dc.Rectangle(0, 0, m_object_location[0]., 20);
+					InvalidateRect(objRect);
+					Sleep(5);
+				}
+
+				global_itt++;
+				counter++;
+			}
+
+			has_drawn = true;
+		}
+	//}
 }
 
 CPoint SimulationDlg::getPosition(int x, int y)

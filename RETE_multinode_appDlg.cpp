@@ -190,9 +190,9 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 
 
 
-	SetDlgItemText(IDC_EDITCOOR_0, L"0,0");
-	SetDlgItemText(IDC_EDITCOOR_1, L"400,200");
-	SetDlgItemText(IDC_EDITCOOR_2, L"0,400");
+	SetDlgItemText(IDC_EDITCOOR_0, L"50,50");
+	SetDlgItemText(IDC_EDITCOOR_1, L"300,200");
+	SetDlgItemText(IDC_EDITCOOR_2, L"50,400");
 
 	SetDlgItemText(IDC_EDITCOOR_5, L"10");
 	SetDlgItemText(IDC_EDITCOOR_6, L"30");
@@ -2183,7 +2183,7 @@ void CRETEmultinodeappDlg::OnBnClickedButton6()
 void CRETEmultinodeappDlg::OnBnClickedSimu1()
 {
 	SimulationDlg dlg;
-	dlg.m_NodeList = ReteNet::getCopyNodes();
+	//dlg.m_NodeList = ReteNet::getCopyNodes();
 	MFC_FixedMultiThread::start(fixed_data_num_of_obj);
 	dlg.num_of_obj = fixed_data_num_of_obj;
 	dlg.DoModal();
