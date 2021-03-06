@@ -12,6 +12,8 @@
 #define IDD_RulesHelpDlg                106
 #define IDD_ObjectVisualization         108
 #define IDD_SimulationDlg               112
+#define IDD_AlphaNodeDlg2               113
+#define IDD_NodeDetailDlg               114
 #define IDR_MAINFRAME                   128
 #define IDC_COMBO1                      1001
 #define IDC_EDIT1                       1002
@@ -28,7 +30,6 @@
 #define IDC_BUTTON_DEL_EC               1008
 #define IDC_LIST2                       1009
 #define IDC_EDITCOOR_2                  1009
-#define IDC_EDIT12                      1009
 #define IDC_BUTTON5                     1010
 #define IDC_BUTTON_INSERT_COOR          1010
 #define IDC_LIST3                       1010
@@ -86,6 +87,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1051
-#define _APS_NEXT_SYMED_VALUE           114
+#define _APS_NEXT_SYMED_VALUE           116
 #endif
 #endif

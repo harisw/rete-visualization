@@ -34,6 +34,7 @@ void SimulationDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(SimulationDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_WM_PAINT()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -180,6 +181,35 @@ void SimulationDlg::OnPaint()
 	// TODO: Add your message handler code here
 					   // Do not call CDialogEx::OnPaint() for painting messages
 	
+}
+
+void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	Node* currentNode = findClickedNode(point);
+
+	if (currentNode == nullptr)
+		return;
+
+	
+	if (currentNode->getType() == "Alpha") {
+		AlphaNodeDlg* alpha_detail = new AlphaNodeDlg(this);
+		alpha_detail->currNode = dynamic_cast<AlphaNode*>(currentNode);
+		m_alphaDlgs.push_back(alpha_detail);
+
+		alpha_detail->Create(IDD_AlphaNodeDlg);
+		alpha_detail->ShowWindow(SW_SHOW);
+	}
+	else {
+		BetaNodeDlg* beta_detail = new BetaNodeDlg(this);
+		beta_detail->currNode = dynamic_cast<BetaNode*>(currentNode);
+
+		m_betaDlgs.push_back(beta_detail);
+
+		beta_detail->Create(IDD_BetaNodeDlg);
+		beta_detail->ShowWindow(SW_SHOW);
+	}
+	CDialog::OnLButtonDown(nFlags, point);
 }
 
 void SimulationDlg::paintWMNode(CClientDC &dc)
