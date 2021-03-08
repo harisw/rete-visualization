@@ -66,7 +66,7 @@ BOOL SimulationDlg::OnInitDialog()
 	
 	CClientDC dc(this);
 	m_dcMem.CreateCompatibleDC(&dc);
-	initObjectVisualization();
+	//initObjectVisualization();
 
 	bluePen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
 	redPen.CreatePen(PS_SOLID, 1, 0x000000FF);
@@ -136,18 +136,18 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 
 		return;
-	case IDT_TIMER_OBJ_SIMU:
-		if (global_itt >= m_object_location[0].size()) {
-			//Invalidate(false);
-			KillTimer(IDT_TIMER_OBJ_SIMU);
-			return;
-		}
+	//case IDT_TIMER_OBJ_SIMU:
+	//	if (global_itt >= m_object_location[0].size()) {
+	//		//Invalidate(false);
+	//		KillTimer(IDT_TIMER_OBJ_SIMU);
+	//		return;
+	//	}
 
-		//if (has_drawn)
-		paintMode = 2;
-		InvalidateRect(objRect);
+	//	//if (has_drawn)
+	//	paintMode = 2;
+	//	InvalidateRect(objRect);
 
-		return;
+	//	return;
 	default:
 		break;
 	}
@@ -165,8 +165,8 @@ void SimulationDlg::OnPaint()
 
 		paintNodeVisual(nodesDC);
 	}
-	else if(paintMode == 2)
-		paintObjectVisual();
+	/*else if(paintMode == 2)
+		paintObjectVisual();*/
 
 	else if (paintMode == 3) {
 		findSizeScaling(nodesDC);
@@ -175,6 +175,9 @@ void SimulationDlg::OnPaint()
 
 		//paintNodeVisual(nodesDC);
 		//paintObjectVisual();
+		m_objVisualDlg = new ObjVisualDlg();
+		m_objVisualDlg->Create(IDD_ObjVisualDlg);
+		m_objVisualDlg->ShowWindow(SW_SHOW);
 	}
 	paintMode = 0;
 	CDialog::OnPaint();

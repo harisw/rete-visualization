@@ -10,32 +10,35 @@
 #include "MFC_FixedMultiThread.h"
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
+// ObjVisualDlg dialog
+
 #define INF 10000 
 
-// ObjectVisualization dialog
-
-class ObjectVisualization : public CDialog
+class ObjVisualDlg : public CDialogEx
 {
-	DECLARE_DYNAMIC(ObjectVisualization)
+	DECLARE_DYNAMIC(ObjVisualDlg)
 
 public:
-	ObjectVisualization(CWnd* pParent = nullptr);   // standard constructor
-	virtual ~ObjectVisualization();
+	ObjVisualDlg(CWnd* pParent = nullptr);   // standard constructor
+	virtual ~ObjVisualDlg();
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_ObjectVisualization };
+	enum { IDD = IDD_ObjVisualDlg };
 #endif
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
-public:
-	int mode;
-	virtual BOOL OnInitDialog();
-	afx_msg void OnPaint();
 private:
+	CPen* oldPen;
+	CPen greenPen;
+	CPen bluePen;
+	CPen redPen;
+	CBrush hollowBrush;
+	CRect objRect;
 	typedef boost::geometry::model::d2::point_xy<double> point_type;
 
 	typedef bg::model::point<float, 2, bg::cs::cartesian> point;
@@ -47,7 +50,8 @@ private:
 
 	float max_w = 400, min_w = 0;
 	float max_h = 300, min_h = 0;
-
+	int rad;
+	int distance;
 	float x_norm, y_norm;
 
 	bool has_drawn;
@@ -57,13 +61,12 @@ private:
 	int cycle_step = 10;
 	float xCorrection = 30;
 	float yCorrection = 30;
-	void drawCQVessel(CPaintDC& dc);
-	void visualizeRule(Node* inpNode);
-	vector<Node*> m_NodeList;
-	void fillNodes(Node* currentNode);
-	void iteratePrevNode(Node* currentNode);
-	void iterateNextNode(Node* currentNode);
 public:
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 
+	afx_msg void OnPaint();
+	virtual BOOL OnInitDialog();
+	void paintObjectVisual();
+	void drawCQVessel(CPaintDC& dc);
+	void initObjectVisualization();
+	void drawObjects(CPaintDC& dc);
 };

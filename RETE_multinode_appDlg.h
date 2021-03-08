@@ -8,7 +8,6 @@
 #include "ReteNet.h"
 #include "MFC_MultiThread.h"
 #include "MFC_FixedMultiThread.h"
-#include "RulesVisualDlg.h"
 #include "ObjectVisualization.h"
 #include "GenerateData.h"
 #include "SimulationDlg.h"

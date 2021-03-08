@@ -2,6 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by RETEmultinodeapp.rc
 //
+#define IDCANCEL                        2
 #define IDM_ABOUTBOX                    0x0010
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
@@ -13,6 +14,7 @@
 #define IDD_ObjectVisualization         108
 #define IDD_SimulationDlg               112
 #define IDD_AlphaNodeDlg2               113
+#define IDD_ObjVisualDlg                116
 #define IDR_MAINFRAME                   128
 #define IDC_COMBO1                      1001
 #define IDC_EDIT1                       1002
@@ -86,6 +88,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1051
-#define _APS_NEXT_SYMED_VALUE           116
+#define _APS_NEXT_SYMED_VALUE           117
 #endif
 #endif

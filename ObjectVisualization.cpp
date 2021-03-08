@@ -201,9 +201,7 @@ void ObjectVisualization::drawCQVessel(CPaintDC& dc)
 void ObjectVisualization::visualizeRule(Node* inpNode)
 {
 	fillNodes(inpNode);
-	RulesVisualDlg dialog_visual;
-	dialog_visual.m_NodeList = this->m_NodeList;
-	dialog_visual.DoModal();
+	
 }
 
 void ObjectVisualization::fillNodes(Node* currentNode)

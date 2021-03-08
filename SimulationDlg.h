@@ -10,7 +10,7 @@
 #include "SpatialNodeIndexing.h"
 
 #include "MFC_FixedMultiThread.h"
-#include "RulesVisualDlg.h"
+#include "ObjVisualDlg.h"
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
@@ -86,6 +86,9 @@ private:
 	int cycle_step = 10;
 	float xCorrection = 30;
 	float yCorrection = 30;
+	int rad;
+	int distance;
+	ObjVisualDlg* m_objVisualDlg;
 	vector<AlphaNodeDlg*> m_alphaDlgs;
 	vector<BetaNodeDlg*> m_betaDlgs;
 
@@ -105,10 +108,6 @@ public:
 	void OnLButtonDown(UINT nFlags, CPoint point);
 	vector<pair<int, Node*>> nodePositions;
 	Node* findClickedNode(CPoint point);
-
-	//SIZE CONSTANTS
-	int rad;
-	int distance;
 
 	CDC m_dcMem;
 	void appendTextToEditCtrl(string pszText);

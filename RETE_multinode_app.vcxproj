@@ -201,13 +201,13 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeDetailDlg.h" />
     <ClInclude Include="ObjectVisualization.h" />
+    <ClInclude Include="ObjVisualDlg.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ReteNet.h" />
     <ClInclude Include="RETE_multinode_app.h" />
     <ClInclude Include="RETE_multinode_appDlg.h" />
     <ClInclude Include="RTree.h" />
-    <ClInclude Include="RulesVisualDlg.h" />
     <ClInclude Include="SimulationDlg.h" />
     <ClInclude Include="SlidingWindow.h" />
     <ClInclude Include="SpatialNodeIndexing.h" />
@@ -231,6 +231,7 @@
     <ClCompile Include="MultiThread.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="ObjectVisualization.cpp" />
+    <ClCompile Include="ObjVisualDlg.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -240,7 +241,6 @@
     <ClCompile Include="ReteNet.cpp" />
     <ClCompile Include="RETE_multinode_app.cpp" />
     <ClCompile Include="RETE_multinode_appDlg.cpp" />
-    <ClCompile Include="RulesVisualDlg.cpp" />
     <ClCompile Include="SimulationDlg.cpp" />
     <ClCompile Include="SlidingWindow.cpp" />
     <ClCompile Include="SpatialNodeIndexing.cpp" />
