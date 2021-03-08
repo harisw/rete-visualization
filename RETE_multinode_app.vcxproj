@@ -230,7 +230,6 @@
     <ClCompile Include="MultiNodeIndexing.cpp" />
     <ClCompile Include="MultiThread.cpp" />
     <ClCompile Include="Node.cpp" />
-    <ClCompile Include="NodeDetailDlg.cpp" />
     <ClCompile Include="ObjectVisualization.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

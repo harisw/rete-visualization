@@ -13,7 +13,6 @@
 #define IDD_ObjectVisualization         108
 #define IDD_SimulationDlg               112
 #define IDD_AlphaNodeDlg2               113
-#define IDD_NodeDetailDlg               114
 #define IDR_MAINFRAME                   128
 #define IDC_COMBO1                      1001
 #define IDC_EDIT1                       1002
