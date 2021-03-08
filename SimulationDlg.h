@@ -11,6 +11,7 @@
 
 #include "MFC_FixedMultiThread.h"
 #include "ObjVisualDlg.h"
+#include "SimulationThreadDlg.h"
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
@@ -117,7 +118,8 @@ public:
 	vector<Node*> m_NodeList;
 
 	CEdit m_output_ctrl;
-	
+	SimulationThreadDlg* mp_threadDlg;
+
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnPaint();
 	void paintWMNode(CClientDC& dc);
@@ -125,6 +127,7 @@ public:
 	void updateListCtrl();
 	void populateNodes();
 	void findSizeScaling(CClientDC& dc);
+	afx_msg void OnDestroy();
 };
 
 //#endif // !SIMUDLG_H

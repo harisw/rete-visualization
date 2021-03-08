@@ -209,6 +209,7 @@
     <ClInclude Include="RETE_multinode_appDlg.h" />
     <ClInclude Include="RTree.h" />
     <ClInclude Include="SimulationDlg.h" />
+    <ClInclude Include="SimulationThreadDlg.h" />
     <ClInclude Include="SlidingWindow.h" />
     <ClInclude Include="SpatialNodeIndexing.h" />
     <ClInclude Include="SpatialOp.h" />
@@ -242,6 +243,7 @@
     <ClCompile Include="RETE_multinode_app.cpp" />
     <ClCompile Include="RETE_multinode_appDlg.cpp" />
     <ClCompile Include="SimulationDlg.cpp" />
+    <ClCompile Include="SimulationThreadDlg.cpp" />
     <ClCompile Include="SlidingWindow.cpp" />
     <ClCompile Include="SpatialNodeIndexing.cpp" />
     <ClCompile Include="SpatialOp.cpp" />

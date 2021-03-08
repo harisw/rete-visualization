@@ -176,7 +176,7 @@ void ObjVisualDlg::drawObjects(CPaintDC& dc)
 				dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
 				//dc.Rectangle(0, 0, m_object_location[0]., 20);
 				//Invalidate();
-				Sleep(45);
+				Sleep(30);
 			}
 
 			global_itt++;

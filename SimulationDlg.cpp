@@ -35,6 +35,7 @@ BEGIN_MESSAGE_MAP(SimulationDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_WM_PAINT()
 	ON_WM_LBUTTONDOWN()
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -135,19 +136,13 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 			InvalidateRect(nodesRect);
 		}
 
-		return;
+		break;
 	//case IDT_TIMER_OBJ_SIMU:
-	//	if (global_itt >= m_object_location[0].size()) {
-	//		//Invalidate(false);
-	//		KillTimer(IDT_TIMER_OBJ_SIMU);
-	//		return;
-	//	}
-
-	//	//if (has_drawn)
-	//	paintMode = 2;
-	//	InvalidateRect(objRect);
-
-	//	return;
+	//	/*mp_threadDlg = (SimulationThreadDlg*)AfxBeginThread(RUNTIME_CLASS(SimulationThreadDlg),
+	//		0, 0, CREATE_SUSPENDED);*/
+	//	//mp_threadDlg->Setup(m_objVisualDlg, IDD_ObjVisualDlg, SW_SHOW);
+	//	mp_threadDlg->ResumeThread();		KillTimer(IDT_TIMER_OBJ_SIMU);
+	//	break;
 	default:
 		break;
 	}
@@ -176,8 +171,13 @@ void SimulationDlg::OnPaint()
 		//paintNodeVisual(nodesDC);
 		//paintObjectVisual();
 		m_objVisualDlg = new ObjVisualDlg();
-		m_objVisualDlg->Create(IDD_ObjVisualDlg);
-		m_objVisualDlg->ShowWindow(SW_SHOW);
+		mp_threadDlg = (SimulationThreadDlg*)AfxBeginThread(RUNTIME_CLASS(SimulationThreadDlg),
+			0, 0, CREATE_SUSPENDED);
+		mp_threadDlg->Setup(m_objVisualDlg, IDD_ObjVisualDlg, SW_SHOW);
+		mp_threadDlg->ResumeThread();
+
+		/*m_objVisualDlg->Create(IDD_ObjVisualDlg);
+		m_objVisualDlg->ShowWindow(SW_SHOW);*/
 	}
 	paintMode = 0;
 	CDialog::OnPaint();
@@ -287,7 +287,6 @@ void SimulationDlg::paintNodeVisual(CClientDC &dc)
 			}
 
 			xStart += distance;
-			cout << i + 1 << ".  Alpha" << endl;
 		}
 		else {
 			dc.SelectObject(blueBrush);
@@ -659,4 +658,12 @@ Node* SimulationDlg::findClickedNode(CPoint point)
 			r = m - 1;
 	}
 	return nullptr;
+}
+
+void SimulationDlg::OnDestroy()
+{
+	m_objVisualDlg->PostMessage(WM_QUIT);
+	CDialogEx::OnDestroy();
+
+	// TODO: Add your message handler code here
 }
