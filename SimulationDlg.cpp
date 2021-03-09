@@ -91,7 +91,7 @@ BOOL SimulationDlg::OnInitDialog()
 
 	SetTimer(IDT_TIMER_0, 3000, NULL);
 	paintMode = 3;
-	//SetTimer(IDT_TIMER_OBJ_SIMU, 1000, NULL);
+	SetTimer(IDT_TIMER_OBJ_SIMU, 1000, NULL);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -137,12 +137,13 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 
 		break;
-	//case IDT_TIMER_OBJ_SIMU:
-	//	/*mp_threadDlg = (SimulationThreadDlg*)AfxBeginThread(RUNTIME_CLASS(SimulationThreadDlg),
-	//		0, 0, CREATE_SUSPENDED);*/
-	//	//mp_threadDlg->Setup(m_objVisualDlg, IDD_ObjVisualDlg, SW_SHOW);
-	//	mp_threadDlg->ResumeThread();		KillTimer(IDT_TIMER_OBJ_SIMU);
-	//	break;
+	case IDT_TIMER_OBJ_SIMU:
+		/*mp_threadDlg = (SimulationThreadDlg*)AfxBeginThread(RUNTIME_CLASS(SimulationThreadDlg),
+			0, 0, CREATE_SUSPENDED);*/
+		//mp_threadDlg->Setup(m_objVisualDlg, IDD_ObjVisualDlg, SW_SHOW);
+		mp_threadDlg->ResumeThread();
+		KillTimer(IDT_TIMER_OBJ_SIMU);
+		break;
 	default:
 		break;
 	}
@@ -170,11 +171,16 @@ void SimulationDlg::OnPaint()
 
 		//paintNodeVisual(nodesDC);
 		//paintObjectVisual();
+		
+
 		m_objVisualDlg = new ObjVisualDlg();
+		m_objVisualDlg->m_object_location = MFC_FixedMultiThread::objectLocationMap;
+		ReteNet::buildNetNode();
+
 		mp_threadDlg = (SimulationThreadDlg*)AfxBeginThread(RUNTIME_CLASS(SimulationThreadDlg),
 			0, 0, CREATE_SUSPENDED);
 		mp_threadDlg->Setup(m_objVisualDlg, IDD_ObjVisualDlg, SW_SHOW);
-		mp_threadDlg->ResumeThread();
+		/*mp_threadDlg->ResumeThread();*/
 
 		/*m_objVisualDlg->Create(IDD_ObjVisualDlg);
 		m_objVisualDlg->ShowWindow(SW_SHOW);*/

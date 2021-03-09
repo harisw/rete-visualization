@@ -63,14 +63,6 @@ BOOL ObjVisualDlg::OnInitDialog()
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-
-void ObjVisualDlg::paintObjectVisual()
-{
-	CPaintDC dc(this);
-
-	drawObjects(dc);
-}
-
 void ObjVisualDlg::drawCQVessel(CPaintDC& dc)
 {
 	dc.SelectObject(&hollowBrush);
@@ -97,7 +89,7 @@ void ObjVisualDlg::drawCQVessel(CPaintDC& dc)
 
 void ObjVisualDlg::initObjectVisualization()
 {
-	m_object_location = MFC_FixedMultiThread::objectLocationMap;
+	/*m_object_location = MFC_FixedMultiThread::objectLocationMap;*/
 
 	for (int i = 0; i < m_object_location.size(); i++) {
 		for (int j = 0; j < m_object_location[i].size(); j++) {
@@ -125,7 +117,7 @@ void ObjVisualDlg::initObjectVisualization()
 	x_norm = scale_first;
 	y_norm = scale_second;
 
-	ReteNet::buildNetNode();
+	//ReteNet::buildNetNode();
 
 	spatialNodePolygon = SpatialNodeIndexing::getExistingPolygons();
 
@@ -176,7 +168,7 @@ void ObjVisualDlg::drawObjects(CPaintDC& dc)
 				dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
 				//dc.Rectangle(0, 0, m_object_location[0]., 20);
 				//Invalidate();
-				Sleep(30);
+				Sleep(74);
 			}
 
 			global_itt++;

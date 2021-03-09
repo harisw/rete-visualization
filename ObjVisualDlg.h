@@ -44,7 +44,6 @@ private:
 	typedef bg::model::point<float, 2, bg::cs::cartesian> point;
 	typedef bg::model::polygon<point, false, false> polygon; // ccw, open polygon
 
-	unordered_map<int, vector<pair<float, float>>> m_object_location;
 	float max_first = -999, min_first = 999;
 	float max_second = -999, min_second = 999;
 
@@ -62,6 +61,7 @@ private:
 	float xCorrection = 30;
 	float yCorrection = 30;
 public:
+	unordered_map<int, vector<pair<float, float>>> m_object_location;
 
 	afx_msg void OnPaint();
 	virtual BOOL OnInitDialog();
