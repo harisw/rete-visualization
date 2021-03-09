@@ -41,8 +41,13 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+private:
+	wstring vectToWstr(vector<string>* inp);
+	int ruleCount = 0;
+	void updateRuleList();
 public:
 
+	vector<string> m_rulesString;
 	bool is_processing;
 
 	afx_msg void OnBnClickedOk();
@@ -52,10 +57,7 @@ public:
 	CEdit m_rule_content_edit;
 	afx_msg void OnEnChangeEdit1();
 	//afx_msg void OnBnClickedButton5();
-	CListCtrl m_alpha_tree;
-	CListCtrl m_beta_tree;
-	vector<string> m_alpha_nodes;
-	vector<string> m_beta_nodes;
+
 	CEdit m_cq_content_edit;
 	CEdit m_cep_content_edit;
 	afx_msg void OnBnClickedButtonInsertCq();
@@ -98,4 +100,7 @@ public:
 	CString m_coord_time;
 	
 	afx_msg void OnBnClickedSimu1();
+	afx_msg void OnEnChangeEdit6();
+	afx_msg void OnBnClickedButton12();
+	CListCtrl m_rule_listctrl;
 };

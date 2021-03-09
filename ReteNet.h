@@ -28,6 +28,7 @@ private:
 class ReteNet
 {
 public:
+	static queue<string> rulesQueue;
 	static vector<vector<pair<string, string>>> parseConditionOriginal(vector<string> condList);
 	static void tokenizeMultiExpCEP(string input, vector<pair<string, string>>& res);
 
