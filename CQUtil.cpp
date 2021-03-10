@@ -117,19 +117,23 @@ void CQUtil::generateBezierCurvePath(vector<POINT_GEN>& ptArray, int nTimeStamp,
 void CQUtil::generateSplineCurvePath(vector<POINT_GEN>& ptArray, int nTimeStamp, vector<POINT_GEN>& path)
 {
 	//vector<POINT_GEN, POINT_GEN> pts;
-	//int size = (int)path.size();
-	//if (size < 2)	return;
-	//for (auto t : path)
-	//	pts.push_back(t);
+	vector<POINT_GEN> pts;
+	int size = (int)path.size();
+	if (size < 2)	return;
+	for (auto t : path)
+		pts.push_back(t);
+	
+	Spline sp(pts, size);
+	sp.Generate();
 
-	//Spline sp(pts, size);
-	//sp.Generate();
+	ptArray.clear();
+	ptArray.resize(nTimeStamp);
 
-	//ptArray.clear();
-	//ptArray.resize(nTimeStamp);
-
-	//int cnt = 0;
-	//sp.GetCurve(ptArray, cnt, nTimeStamp);
+	int cnt = 0;
+	POINT_GEN* tempPTArray = new POINT_GEN[nTimeStamp];
+	sp.GetCurve(tempPTArray, cnt, nTimeStamp);
+	copy(tempPTArray, tempPTArray + nTimeStamp, ptArray.begin());
+	
 }
 
 // 기준경로를 따라 저장된 객체의 좌표를 랜덤 경로가 되도록 좌표를 재생성한다.

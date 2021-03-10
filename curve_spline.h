@@ -130,6 +130,29 @@ public:
 		}
 	}
 
+	Spline(vector<POINT_GEN> pt, int np)
+	{
+		NP = np;
+		Px = new float[NP];
+		Py = new float[NP];
+		Ax = new float[NP];
+		Ay = new float[NP];
+		Bx = new float[NP];
+		By = new float[NP];
+		Cx = new float[NP];
+		Cy = new float[NP];
+		k = new float[NP];
+		Mat[0] = new float[NP];
+		Mat[1] = new float[NP];
+		Mat[2] = new float[NP];
+
+		for (int i = 0; i < NP; i++)
+		{
+			Px[i] = (float)pt[i].x;
+			Py[i] = (float)pt[i].y;
+		}
+	}
+
 	Spline(float px[], float py[], int np)
 	{
 		NP = np;
@@ -271,7 +294,7 @@ public:
 	void GetCurve(POINT_GEN points[], int& PointCount, int nTimeStamp)
 	{
 		int cnt = nTimeStamp / (NP - 1) - 1;
-
+		
 		Curve c;
 		for (int i = 0; i < NP - 1; i++)
 		{

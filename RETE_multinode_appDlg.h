@@ -45,6 +45,9 @@ private:
 	wstring vectToWstr(vector<string>* inp);
 	int ruleCount = 0;
 	void updateRuleList();
+	map<CString, int> curveTypes = { {L"LINE", 0}, 
+		{L"BEZIER", 1},
+		{L"CURVE", 2 } };
 public:
 
 	vector<string> m_rulesString;
@@ -103,4 +106,6 @@ public:
 	afx_msg void OnEnChangeEdit6();
 	afx_msg void OnBnClickedButton12();
 	CListCtrl m_rule_listctrl;
+	afx_msg void OnEnChangeEditcoor1();
+	CComboBox m_trajectoryCombo;
 };

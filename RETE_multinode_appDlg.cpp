@@ -99,6 +99,7 @@ void CRETEmultinodeappDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDITCOOR_5, m_coord_obj_num);
 	DDX_Text(pDX, IDC_EDITCOOR_6, m_coord_time);
 	DDX_Control(pDX, IDC_LIST1, m_rule_listctrl);
+	DDX_Control(pDX, IDC_COMBO1, m_trajectoryCombo);
 }
 
 BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
@@ -136,6 +137,7 @@ ON_BN_CLICKED(IDC_BUTTON6, &CRETEmultinodeappDlg::OnBnClickedButton6)
 ON_BN_CLICKED(IDC_SIMU1, &CRETEmultinodeappDlg::OnBnClickedSimu1)
 ON_EN_CHANGE(IDC_EDIT6, &CRETEmultinodeappDlg::OnEnChangeEdit6)
 ON_BN_CLICKED(IDC_BUTTON12, &CRETEmultinodeappDlg::OnBnClickedButton12)
+ON_EN_CHANGE(IDC_EDITCOOR_1, &CRETEmultinodeappDlg::OnEnChangeEditcoor1)
 END_MESSAGE_MAP()
 
 
@@ -195,11 +197,15 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	m_cq_content_edit.SetWindowTextW(L"IF plot_dist(rect(123,33,127,35), enemyvessel) & enemyvessel.type=recon\r\nWINDOW range=3, trigger=2\r\nTHEN vesselisinside");
 	m_cep_content_edit.SetWindowTextW(L"IF exist(vesselisinside)\r\nWINDOW range=5, trigger=3\r\nTHEN navalresponse");
 #endif // SHOW_RULE_EXAMPLE
+	
+	m_trajectoryCombo.AddString(L"LINE");
+	m_trajectoryCombo.AddString(L"BEZIER");
+	m_trajectoryCombo.AddString(L"CURVE");
 
-
+	m_trajectoryCombo.SetCurSel(0);
 
 	SetDlgItemText(IDC_EDITCOOR_0, L"50,50");
-	SetDlgItemText(IDC_EDITCOOR_1, L"300,200");
+	SetDlgItemText(IDC_EDITCOOR_1, L"350,200");
 	SetDlgItemText(IDC_EDITCOOR_2, L"50,400");
 
 	SetDlgItemText(IDC_EDITCOOR_5, L"10");
@@ -496,7 +502,9 @@ void CRETEmultinodeappDlg::SetCoordinate_new() {
 		return;
 	}
 
-	GenerateData::Generate(coordList, obj_num, time_len);
+	CString curveSel;
+	m_trajectoryCombo.GetLBText(m_trajectoryCombo.GetCurSel(), curveSel);
+	GenerateData::Generate(coordList, obj_num, time_len, curveTypes[curveSel]);
 	//int a = 10;
 	fixed_data_num_of_obj = obj_num;
 
@@ -2234,4 +2242,15 @@ void CRETEmultinodeappDlg::OnEnChangeEdit6()
 void CRETEmultinodeappDlg::OnBnClickedButton12()
 {
 	// TODO: Add your control notification handler code here
+}
+
+
+void CRETEmultinodeappDlg::OnEnChangeEditcoor1()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
 }
