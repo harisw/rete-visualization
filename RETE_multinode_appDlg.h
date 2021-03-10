@@ -8,7 +8,7 @@
 #include "ReteNet.h"
 #include "MFC_MultiThread.h"
 #include "MFC_FixedMultiThread.h"
-#include "ObjectVisualization.h"
+
 #include "GenerateData.h"
 #include "SimulationDlg.h"
 
@@ -92,7 +92,6 @@ public:
 //	afx_msg void OnDropdownButtonVessel(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedButton9();
 	afx_msg void OnBnClickedButton10();
-	afx_msg void OnBnClickedButton6();
 	afx_msg void SetCoordinate_new();
 	CString m_coordinate_0;
 	CString m_coordinate_1;

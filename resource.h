@@ -6,11 +6,8 @@
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
 #define IDD_RETE_MULTINODE_APP_DIALOG   102
-#define IDD_RulesVisualDlg              103
 #define IDD_AlphaNodeDlg                104
 #define IDD_BetaNodeDlg                 105
-#define IDD_RulesHelpDlg                106
-#define IDD_ObjectVisualization         108
 #define IDD_SimulationDlg               112
 #define IDD_AlphaNodeDlg2               113
 #define IDD_ObjVisualDlg                116
@@ -64,7 +61,6 @@
 #define IDC_EDITCOOR_4                  1035
 #define IDC_BUTTON7                     1036
 #define IDC_EDITCOOR_5                  1037
-#define IDC_SCROLLBAR2                  1038
 #define IDC_EDITCOOR_6                  1038
 #define IDC_GUIDE_GROUP                 1039
 #define IDC_GUIDE_IMG                   1040

@@ -133,7 +133,6 @@ BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
 
 ON_BN_CLICKED(IDC_BUTTON9, &CRETEmultinodeappDlg::OnBnClickedButton9)
 ON_BN_CLICKED(IDC_BUTTON10, &CRETEmultinodeappDlg::OnBnClickedButton10)
-ON_BN_CLICKED(IDC_BUTTON6, &CRETEmultinodeappDlg::OnBnClickedButton6)
 ON_BN_CLICKED(IDC_SIMU1, &CRETEmultinodeappDlg::OnBnClickedSimu1)
 ON_EN_CHANGE(IDC_EDIT6, &CRETEmultinodeappDlg::OnEnChangeEdit6)
 ON_BN_CLICKED(IDC_BUTTON12, &CRETEmultinodeappDlg::OnBnClickedButton12)
@@ -2196,27 +2195,6 @@ void CRETEmultinodeappDlg::OnBnClickedButton10()
 
 	UpdateData(FALSE);
 }
-
-
-void CRETEmultinodeappDlg::OnBnClickedButton6()
-{
-	//CRETEmultinodeappDlg::OnBnClickedButton9();
-
-	//CRETEmultinodeappDlg::SetCoordinate_new();
-
-	if (fixed_data_num_of_obj == 0) {
-		MessageBox(L"Please choose a Data source or insert the coordinate",
-			L"Rules Insertion Error", MB_OK | MB_ICONERROR);
-		return;
-	}
-	MFC_FixedMultiThread::start(fixed_data_num_of_obj);
-
-	ObjectVisualization f = new ObjectVisualization();
-	
-	f.DoModal();
-	// TODO: Add your control notification handler code here
-}
-
 
 void CRETEmultinodeappDlg::OnBnClickedSimu1()
 {

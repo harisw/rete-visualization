@@ -200,7 +200,6 @@
     <ClInclude Include="MultiThread.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeDetailDlg.h" />
-    <ClInclude Include="ObjectVisualization.h" />
     <ClInclude Include="ObjVisualDlg.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -231,7 +230,6 @@
     <ClCompile Include="MultiNodeIndexing.cpp" />
     <ClCompile Include="MultiThread.cpp" />
     <ClCompile Include="Node.cpp" />
-    <ClCompile Include="ObjectVisualization.cpp" />
     <ClCompile Include="ObjVisualDlg.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
