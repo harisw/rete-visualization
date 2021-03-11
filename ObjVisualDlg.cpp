@@ -57,6 +57,8 @@ BOOL ObjVisualDlg::OnInitDialog()
 	bluePen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
 	redPen.CreatePen(PS_SOLID, 1, 0x000000FF);
 	MoveWindow(1143, 68, 700, 625);
+	CMenu* pSysMenu = GetSystemMenu(FALSE);
+	pSysMenu->RemoveMenu(SC_MOVE, MF_BYCOMMAND);
 	initObjectVisualization();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -135,6 +137,8 @@ void ObjVisualDlg::drawObjects(CPaintDC& dc)
 	dc.SelectObject(&hollowBrush);
 	//dc.SelectObject(&redPen);
 	//if (!has_drawn) {
+	float first_loc = 0;
+	float second_loc = 0;
 	if (m_object_location.size() > 0) {
 		//while (global_itt < m_object_location[0].size() && counter < cycle_step) {
 		while (global_itt < m_object_location[0].size()) {
@@ -142,8 +146,8 @@ void ObjVisualDlg::drawObjects(CPaintDC& dc)
 				//float first_loc = m_object_location[i][global_itt].first * x_norm - (max_first - max_w);
 				//float second_loc = m_object_location[i][global_itt].second * y_norm - (max_second - max_h);
 
-				float first_loc = m_object_location[i][global_itt].first;
-				float second_loc = m_object_location[i][global_itt].second;
+				first_loc = m_object_location[i][global_itt].first;
+				second_loc = m_object_location[i][global_itt].second;
 
 
 				if (i == 0) {
@@ -168,13 +172,16 @@ void ObjVisualDlg::drawObjects(CPaintDC& dc)
 				dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
 				//dc.Rectangle(0, 0, m_object_location[0]., 20);
 				//Invalidate();
-				//Sleep(74);
-				Sleep(24);
+				Sleep(64);
+				//Sleep(24);
 			}
 
 			global_itt++;
 			counter++;
 		}
+
+		CString cs(_itoa(global_itt, buff, 10));
+		dc.TextOutW(first_loc + 20, second_loc, cs);
 
 		has_drawn = true;
 	}
