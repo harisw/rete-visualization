@@ -87,7 +87,7 @@ BOOL SimulationDlg::OnInitDialog()
 	nodesRect.right += 1095;
 	
 
-	SetTimer(IDT_TIMER_0, 3000, NULL);
+	SetTimer(IDT_TIMER_0, 100, NULL);
 	paintMode = 3;
 	SetTimer(IDT_TIMER_OBJ_SIMU, 1000, NULL);
 	return TRUE;  // return TRUE unless you set the focus to a control

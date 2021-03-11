@@ -14,7 +14,7 @@
 // ObjVisualDlg dialog
 
 #define INF 10000 
-
+//#define DEBUGGING_MODE 1
 class ObjVisualDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(ObjVisualDlg)
@@ -58,8 +58,8 @@ private:
 	unordered_map<int, polygon> spatialNodePolygon;
 	int global_itt = 0;
 	int cycle_step = 10;
-	float xCorrection = 30;
-	float yCorrection = 30;
+	float xCorrection = 0;
+	float yCorrection = 0;
 public:
 	unordered_map<int, vector<pair<float, float>>> m_object_location;
 

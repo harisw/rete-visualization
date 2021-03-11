@@ -149,15 +149,21 @@ void ObjVisualDlg::drawObjects(CPaintDC& dc)
 				first_loc = m_object_location[i][global_itt].first;
 				second_loc = m_object_location[i][global_itt].second;
 
-
 				if (i == 0) {
+
 					//pen.CreatePen(PS_SOLID, 1, color_hex_map["Aqua"]);
 					//pen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
 					dc.SelectObject(&bluePen);
-					if (global_itt % 10 == 0) {
-						CString cs(_itoa(global_itt, buff, 10));
-						dc.TextOutW(first_loc + 20, second_loc, cs);
-					}
+#ifdef DEBUGGING_MODE
+					CString cs(_itoa(global_itt, buff, 10));
+					dc.TextOutW(first_loc + 20, second_loc, cs);
+#endif // DEBUGGING_MODE
+#ifndef DEBUGGING_MODE
+	if (global_itt % 10 == 0) {
+		CString cs(_itoa(global_itt, buff, 10));
+		dc.TextOutW(first_loc + 20, second_loc, cs);
+	}
+#endif // !DEBUGGING_MODE
 
 					rad = 2;
 				}
@@ -172,7 +178,7 @@ void ObjVisualDlg::drawObjects(CPaintDC& dc)
 				dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
 				//dc.Rectangle(0, 0, m_object_location[0]., 20);
 				//Invalidate();
-				Sleep(64);
+				Sleep(84);
 				//Sleep(24);
 			}
 
