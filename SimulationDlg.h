@@ -97,16 +97,16 @@ private:
 	void showAlphaWindow(AlphaNode* nodeInput);
 	void showBetaWindow(BetaNode* nodeInput);
 	//void findSizeScaling();
-	void paintObjectVisual();
-	void initObjectVisualization();
-	void drawObjects(CPaintDC& dc);
 	CPoint getPosition(int x, int y);
 	void connectNodes(Node*& currNode, vector<Node*>& unconnectedNodes, CClientDC& dc);
-	void drawCQVessel(CPaintDC& dc);
+
+	
+
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedOk();
 	void OnLButtonDown(UINT nFlags, CPoint point);
+	void paintNodeVisual(CPaintDC& dc);
 	vector<pair<int, Node*>> nodePositions;
 	Node* findClickedNode(CPoint point);
 
@@ -122,11 +122,22 @@ public:
 
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnPaint();
-	void paintWMNode(CClientDC& dc);
 	void paintNodeVisual(CClientDC& dc);
 	void updateListCtrl();
 	void populateNodes();
+	void getNodesPosition();
+
+	void findSizeScaling(CPaintDC& dc);
+	void paintWMNode(CPaintDC& dc);
+	void drawConnections(CPaintDC& dc);
+	void drawNodes(CPaintDC& dc);
+	
 	void findSizeScaling(CClientDC& dc);
+	void paintWMNode(CClientDC& dc);
+	void drawConnections(CClientDC& dc);
+	void drawNodes(CClientDC& dc);
+	
+
 	afx_msg void OnDestroy();
 };
 

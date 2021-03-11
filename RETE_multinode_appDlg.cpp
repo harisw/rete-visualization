@@ -204,13 +204,13 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	m_trajectoryCombo.SetCurSel(0);
 
 	SetDlgItemText(IDC_EDITCOOR_0, L"50,50");
-	SetDlgItemText(IDC_EDITCOOR_1, L"350,200");
-	SetDlgItemText(IDC_EDITCOOR_2, L"50,400");
+	SetDlgItemText(IDC_EDITCOOR_1, L"400,100");
+	SetDlgItemText(IDC_EDITCOOR_2, L"100,300");
 
 	SetDlgItemText(IDC_EDITCOOR_5, L"10");
-	SetDlgItemText(IDC_EDITCOOR_6, L"50");
+	SetDlgItemText(IDC_EDITCOOR_6, L"30");
 
-	SetDlgItemText(IDC_EDIT_VESSEL_X, L"400");
+	SetDlgItemText(IDC_EDIT_VESSEL_X, L"300");
 	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"150");
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }

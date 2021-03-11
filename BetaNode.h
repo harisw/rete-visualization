@@ -76,6 +76,7 @@ public:
 	long long getExecutionEstimated();
 	vector<Node*> getNextPairs();
 
+	pair<string, Node*> leftSourcePair, rightSourcePair, termPair;
 private:
 	//int id;
 	string thisCondition; //AND OR
@@ -83,7 +84,6 @@ private:
 	string specialOperation, specialOperationLeft, specialOperationRight;
 	string key = "id";
 
-	pair<string, Node*> leftSourcePair, rightSourcePair, termPair;
 	pair<queue<EventPtr>, Node*> leftInputQueue, rightInputQueue;
 
 	queue<EventPtr> EventResult;

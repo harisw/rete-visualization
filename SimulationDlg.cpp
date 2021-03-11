@@ -133,7 +133,8 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 		if (paintMode == 1) {
 			populateNodes();
 			updateListCtrl();
-			InvalidateRect(nodesRect);
+			Invalidate();
+			//InvalidateRect(nodesRect);
 		}
 
 		break;
@@ -153,26 +154,18 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 
 void SimulationDlg::OnPaint()
 {
-	CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
-	if (paintMode == 1) {
-		findSizeScaling(nodesDC);
+	//CPaintDC nodesDC(this);
+	//CPaintDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
+	//CClientDC nodesDC(this);
+	CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));		//GOOD but sometimes inaccurate/messy
 
-		paintWMNode(nodesDC);
+	CDialog::OnPaint();
 
-		paintNodeVisual(nodesDC);
-	}
-	/*else if(paintMode == 2)
-		paintObjectVisual();*/
+	findSizeScaling(nodesDC);
+	paintWMNode(nodesDC);
+	paintNodeVisual(nodesDC);
 
-	else if (paintMode == 3) {
-		findSizeScaling(nodesDC);
-
-		paintWMNode(nodesDC);
-
-		//paintNodeVisual(nodesDC);
-		//paintObjectVisual();
-		
-
+	if (paintMode == 3) {
 		m_objVisualDlg = new ObjVisualDlg();
 		m_objVisualDlg->m_object_location = MFC_FixedMultiThread::objectLocationMap;
 		ReteNet::buildNetNode();
@@ -180,15 +173,9 @@ void SimulationDlg::OnPaint()
 		mp_threadDlg = (SimulationThreadDlg*)AfxBeginThread(RUNTIME_CLASS(SimulationThreadDlg),
 			0, 0, CREATE_SUSPENDED);
 		mp_threadDlg->Setup(m_objVisualDlg, IDD_ObjVisualDlg, SW_SHOW);
-		/*mp_threadDlg->ResumeThread();*/
-
-		/*m_objVisualDlg->Create(IDD_ObjVisualDlg);
-		m_objVisualDlg->ShowWindow(SW_SHOW);*/
 	}
+
 	paintMode = 0;
-	CDialog::OnPaint();
-	// TODO: Add your message handler code here
-					   // Do not call CDialogEx::OnPaint() for painting messages
 	
 }
 
@@ -221,15 +208,35 @@ void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	CDialog::OnLButtonDown(nFlags, point);
 }
 
-void SimulationDlg::paintWMNode(CClientDC &dc)
+void SimulationDlg::paintWMNode(CPaintDC& dc)
 {
-	
+
 	int xStart = 0;
 	int yAlpha = 0;
 	int yBeta = 100;
 	int xBeta = 0;
 	HBRUSH blackBrush = CreateSolidBrush(0x00000000);
-	HRGN hRgn;
+
+
+	vector<Node*> unconnectedNodes;
+	Node* currNode;
+
+
+	dc.SelectObject(blackBrush);
+	dc.Ellipse(xWM, yAlpha, xWM + wmRad, yAlpha + wmRad);
+
+	wmPos = CPoint(xWM + wmRad, yAlpha + wmRad);
+
+}
+void SimulationDlg::paintWMNode(CClientDC &dc)
+{
+
+	int xStart = 0;
+	int yAlpha = 0;
+	int yBeta = 100;
+	int xBeta = 0;
+	HBRUSH blackBrush = CreateSolidBrush(0x00000000);
+
 
 	vector<Node*> unconnectedNodes;
 	Node* currNode;
@@ -242,93 +249,22 @@ void SimulationDlg::paintWMNode(CClientDC &dc)
 
 }
 
+void SimulationDlg::paintNodeVisual(CPaintDC& dc)
+{
+
+	findSizeScaling(dc);
+	getNodesPosition();
+	drawConnections(dc);
+	drawNodes(dc);
+}
+
 void SimulationDlg::paintNodeVisual(CClientDC &dc)
 {
+	
 	findSizeScaling(dc);
-	int xStart = 0;
-	int yAlpha = 0;
-	int yBeta = 100;
-	int xBeta = 0;
-	HBRUSH redBrush = CreateSolidBrush(0x000000FF);
-	HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
-	HRGN hRgn;
-
-	vector<Node*> unconnectedNodes;
-	Node* currNode;
-
-
-	yAlpha += distance;
-
-	for (int i = 0; i < m_NodeList.size(); i++) {
-		currNode = m_NodeList[i];
-
-		if (currNode->getType() == "Alpha") {
-			dc.SelectObject(redBrush);
-
-			dc.Ellipse(xStart, yAlpha, xStart + rad, yAlpha + rad);
-
-			//STORING POSITION
-			currNode->visualPosition = make_pair(xStart, yAlpha);
-			nodePositions.push_back(make_pair(xStart, currNode));
-
-			unconnectedNodes.push_back(currNode);
-
-			Node* prevNode = dynamic_cast<AlphaNode*>(currNode)->getPrevNode().second;
-			if (prevNode == NULL) { //CONNECT TO WM
-				oldPen = (CPen*)dc.SelectObject(&m_oPen);
-				dc.MoveTo(wmPos.x - (rad / 2), wmPos.y - (rad / 2));		//DRAWING LINE
-				dc.LineTo(xStart + (rad / 2), yAlpha + (rad / 2));
-				dc.SelectObject(oldPen);
-			}
-
-
-			else {
-				BetaNode* prevBeta = dynamic_cast<BetaNode*>(prevNode);
-				if (prevBeta->visualPosition != make_pair(0, 0)) {
-					oldPen = (CPen*)dc.SelectObject(&m_oPen);
-					dc.MoveTo(xStart + xCorrection, yAlpha + yCorrection);		//DRAWING LINE
-					dc.LineTo(prevBeta->visualPosition.first + xCorrection, prevBeta->visualPosition.second + yCorrection);		//DRAWING LINE
-					dc.SelectObject(oldPen);
-				}
-			}
-
-			xStart += distance;
-		}
-		else {
-			dc.SelectObject(blueBrush);
-
-			vector<Node*> inputNodes;
-			vector<Node*> nextPairs;
-			vector<pair<int, Node*>>::iterator itt;
-			for (itt = nodePositions.begin(); itt != nodePositions.end(); itt++) {
-				nextPairs = itt->second->getNextPairs();
-				if ((nextPairs.size() == 1 && nextPairs[0] == currNode) ||
-					find(nextPairs.begin(), nextPairs.end(), currNode) != nextPairs.end()) {
-					inputNodes.push_back(itt->second);
-				}
-			}
-
-			if (inputNodes.size() >= 2)
-				xBeta = (inputNodes.front()->visualPosition.first + inputNodes[1]->visualPosition.first) / 2;
-			else
-				xBeta = inputNodes.front()->visualPosition.first;
-
-			yBeta = max(inputNodes.front()->visualPosition.second, inputNodes.back()->visualPosition.second) + distance;
-
-
-			CPoint pointCandidate = getPosition(xBeta, yBeta);
-			xBeta = pointCandidate.x;
-			yBeta = pointCandidate.y;
-
-			dc.Ellipse(xBeta, yBeta, xBeta + rad, yBeta + rad);
-
-			currNode->visualPosition = make_pair(xBeta, yBeta);
-			nodePositions.push_back(make_pair(xBeta, currNode));
-			connectNodes(currNode, unconnectedNodes, dc);
-		}
-
-		visualizedNode.push_back(currNode);
-	}
+	getNodesPosition();
+	drawConnections(dc);
+	drawNodes(dc);
 }
 
 void SimulationDlg::updateListCtrl()
@@ -369,45 +305,36 @@ void SimulationDlg::populateNodes()
 	}
 }
 
-//void SimulationDlg::fillNodes(Node* currentNode)
-//{
-//	this->m_NodeList.clear();
-//	if (currentNode->getType() == "Alpha") {
-//		Node* prevNode = dynamic_cast<AlphaNode*>(currentNode)->getPrevNode().second;
-//		iteratePrevNode(prevNode);
-//	}
-//	else {
-//		Node* leftSource = dynamic_cast<BetaNode*>(currentNode)->getLeftConnNode();
-//		Node* rightSource = dynamic_cast<BetaNode*>(currentNode)->getRightConnNode();
-//		iteratePrevNode(leftSource);
-//		iteratePrevNode(rightSource);
-//	}
-//	cout << currentNode->justCondition << endl;
-//	m_NodeList.push_back(currentNode);
-//	vector<Node*> nextPairs = currentNode->getNextPairs();
-//	for (int j = 0; j < nextPairs.size(); j++) {
-//		iterateNextNode(nextPairs[j]);
-//	}
-//}
-//
-//void SimulationDlg::iteratePrevNode(Node* currentNode)
-//{
-//	if (currentNode == NULL)
-//		return;
-//	if (currentNode->getType() == "Alpha") {
-//		Node* prevNode = dynamic_cast<AlphaNode*>(currentNode)->getPrevNode().second;
-//		iteratePrevNode(prevNode);
-//	}
-//	else {
-//		Node* leftSource = dynamic_cast<BetaNode*>(currentNode)->getLeftConnNode();
-//		Node* rightSource = dynamic_cast<BetaNode*>(currentNode)->getRightConnNode();
-//		iteratePrevNode(leftSource);
-//		iteratePrevNode(rightSource);
-//	}
-//	cout << currentNode->justCondition << endl;
-//	m_NodeList.push_back(currentNode);
-//}
-
+void SimulationDlg::findSizeScaling(CPaintDC& dc)
+{
+	if (m_NodeList.size() < 70) {
+		rad = 47;
+		distance = 70;
+		wmRad = rad + 20;
+		xWM = (WIND_WIDTH / 2) - 450;
+		xCorrection = 25;
+		yCorrection = 40;
+		dc.SelectObject(thickPen);
+	}
+	else if (m_NodeList.size() < 100) {
+		rad = 40;
+		distance = 55;
+		wmRad = rad + 10;
+		xWM = (WIND_WIDTH / 2) - 150;
+		xCorrection = 15;
+		yCorrection = 30;
+		dc.SelectObject(thinPen);
+	}
+	else {
+		rad = 35;
+		distance = 50;
+		wmRad = rad + 5;
+		xWM = (WIND_WIDTH / 2);
+		xCorrection = 10;
+		yCorrection = 20;
+		dc.SelectObject(thinPen);
+	}
+}
 void SimulationDlg::findSizeScaling(CClientDC &dc)
 {
 	if (m_NodeList.size() < 70) {
@@ -439,128 +366,222 @@ void SimulationDlg::findSizeScaling(CClientDC &dc)
 	}
 }
 
-void SimulationDlg::paintObjectVisual()
+void SimulationDlg::getNodesPosition()
 {
-	CPaintDC dc(GetDlgItem(IDC_STATIC_OBJECT));
-	
-	drawObjects(dc);
-}
+	int xStart = 0;
+	int yAlpha = distance;
+	int yBeta = 100;
+	int xBeta = 0;
 
-void SimulationDlg::drawCQVessel(CPaintDC& dc)
-{
-	dc.SelectObject(&hollowBrush);
-	dc.SelectObject(&greenPen);
-	for (auto snp : spatialNodePolygon) {
-		polygon p = snp.second;
+	Node* currNode = nullptr;
+	Node* leftInput = nullptr;
+	Node* rightInput = nullptr;
+	BetaNode* currentBeta = nullptr;
 
-		CPoint* pts = new CPoint[p.outer().size() + 1];
-		int start_x, start_y;
-		//CPoint pts[p.outer().size()];
-		for (int j = 0; j < p.outer().size(); j++) {
-			point pt = p.outer().at(j);
-			float x = pt.get<0>();
-			float y = pt.get<1>();
+	nodePositions.clear(); //Reset node position
+	for (int i = 0; i < m_NodeList.size(); i++) {
+		currNode = m_NodeList[i];
 
-			pts[j].x = x;
-			pts[j].y = y;
+		if (currNode->getType() == "Alpha") {
+
+			//STORING POSITION
+			currNode->visualPosition = make_pair(xStart, yAlpha);
+			nodePositions.push_back(make_pair(xStart, currNode));
+
+			xStart += distance;
+		}
+		else {
+			currentBeta = dynamic_cast<BetaNode*>(currNode); 
+			leftInput = currentBeta->leftSourcePair.second;
+			rightInput = currentBeta->rightSourcePair.second;
+
+			if (leftInput != nullptr && rightInput != nullptr)
+				xBeta = (leftInput->visualPosition.first + rightInput->visualPosition.first) / 2;
+			else
+				xBeta = leftInput != nullptr ? leftInput->visualPosition.first : rightInput->visualPosition.first;
+
+			yBeta = max(leftInput->visualPosition.second, rightInput->visualPosition.second) + distance;
+
+
+			CPoint pointCandidate = getPosition(xBeta, yBeta);
+			xBeta = pointCandidate.x;
+			yBeta = pointCandidate.y;
+
+
+			currNode->visualPosition = make_pair(xBeta, yBeta);
+			nodePositions.push_back(make_pair(xBeta, currNode));
+			
 		}
 
-		dc.Polygon(pts, p.outer().size());
-		//point pt = p.outer().at(0);
+		
+		leftInput = nullptr;
+		rightInput = nullptr;
 	}
 }
 
-void SimulationDlg::initObjectVisualization()
+void SimulationDlg::drawConnections(CPaintDC& dc)
 {
-	m_object_location = MFC_FixedMultiThread::objectLocationMap;
+	Node* currNode = nullptr;
+	Node* leftInput = nullptr;
+	Node* rightInput = nullptr;
+	Node* prevNode = nullptr;
+	AlphaNode* currentAlpha = nullptr;
+	BetaNode* currentBeta = nullptr;
+	vector<Node*> nextNodes;
+	oldPen = (CPen*)dc.SelectObject(&m_oPen);
 
-	for (int i = 0; i < m_object_location.size(); i++) {
-		for (int j = 0; j < m_object_location[i].size(); j++) {
-			if (m_object_location[i][j].first < min_first)
-				min_first = m_object_location[i][j].first;
-			if (m_object_location[i][j].first > max_first)
-				max_first = m_object_location[i][j].first;
+	for (int i = 0; i < m_NodeList.size(); i++) {
+		currNode = m_NodeList[i];
 
-			if (m_object_location[i][j].second < min_second)
-				min_second = m_object_location[i][j].second;
-			if (m_object_location[i][j].second > max_second)
-				max_second = m_object_location[i][j].second;
+		if (currNode->getType() == "Alpha") {
+			currentAlpha = dynamic_cast<AlphaNode*>(currNode);
 
-			m_object_location[i][j].first += xCorrection;
-			m_object_location[i][j].second += yCorrection;
-		}
-	}
-
-	float delta_first = max_first - min_first;
-	float scale_first = (max_w - min_w) / delta_first;
-
-	float delta_second = max_second - min_second;
-	float scale_second = (max_h - min_h) / delta_second;
-
-	x_norm = scale_first;
-	y_norm = scale_second;
-
-	ReteNet::buildNetNode();
-
-	spatialNodePolygon = SpatialNodeIndexing::getExistingPolygons();
-
-	has_drawn = false;
-	return;
-}
-
-void SimulationDlg::drawObjects(CPaintDC& dc)
-{
-	drawCQVessel(dc);
-
-	char buff[10];
-	//int a = 01;
-	int counter = 0;
-	dc.SelectObject(&hollowBrush);
-	//dc.SelectObject(&redPen);
-	//if (!has_drawn) {
-		if (m_object_location.size() > 0) {
-			//while (global_itt < m_object_location[0].size() && counter < cycle_step) {
-			while (global_itt < m_object_location[0].size()) {
-				for (int i = 0; i < m_object_location.size(); i++) {
-					//float first_loc = m_object_location[i][global_itt].first * x_norm - (max_first - max_w);
-					//float second_loc = m_object_location[i][global_itt].second * y_norm - (max_second - max_h);
-
-					float first_loc = m_object_location[i][global_itt].first;
-					float second_loc = m_object_location[i][global_itt].second;
-					
-
-					if (i == 0) {
-						//pen.CreatePen(PS_SOLID, 1, color_hex_map["Aqua"]);
-						//pen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
-						dc.SelectObject(&bluePen);
-						if (global_itt % 10 == 0) {
-							CString cs(_itoa(global_itt, buff, 10));
-							dc.TextOutW(first_loc + 20, second_loc, cs);
-						}
-
-						rad = 2;
-					}
-					else {
-						//pen.CreatePen(PS_SOLID, 1, color_hex_map["Red"]);
-						//pen.CreatePen(PS_SOLID, 1, 0x000000FF);
-						dc.SelectObject(&redPen);
-						rad = 2;
-					}
-
-					// rectangle with magenta frame and "transparent" background
-					dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
-					//dc.Rectangle(0, 0, m_object_location[0]., 20);
-					InvalidateRect(objRect);
-					Sleep(5);
-				}
-
-				global_itt++;
-				counter++;
+			prevNode = currentAlpha->getPrevNode().second;
+			if (prevNode != nullptr) {
+				dc.MoveTo(prevNode->visualPosition.first + xCorrection, prevNode->visualPosition.second + yCorrection);		//DRAWING LINE
+				dc.LineTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
 			}
-
-			has_drawn = true;
+			nextNodes = currentAlpha->getNextPairs();
+			for (int j = 0; j < nextNodes.size(); j++) {
+				if (nextNodes[j]->visualPosition == make_pair(0, 0))
+					continue;
+				dc.MoveTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
+				dc.LineTo(nextNodes[j]->visualPosition.first + xCorrection, nextNodes[j]->visualPosition.second + yCorrection);
+			}
 		}
-	//}
+		else {
+			currentBeta = dynamic_cast<BetaNode*>(currNode);
+			leftInput = currentBeta->leftSourcePair.second;
+			rightInput = currentBeta->rightSourcePair.second;
+
+			if (leftInput != nullptr) {
+				dc.MoveTo(leftInput->visualPosition.first + xCorrection, leftInput->visualPosition.second + yCorrection);
+				dc.LineTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
+			}
+			if (rightInput != nullptr) {
+				dc.MoveTo(rightInput->visualPosition.first + xCorrection, rightInput->visualPosition.second + yCorrection);
+				dc.LineTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
+			}
+			nextNodes = currentBeta->getNextPairs();
+			for (int j = 0; j < nextNodes.size(); j++) {
+				if (nextNodes[j]->visualPosition == make_pair(0, 0))
+					continue;
+				dc.MoveTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
+				dc.LineTo(nextNodes[j]->visualPosition.first + xCorrection, nextNodes[j]->visualPosition.second + yCorrection);
+			}
+		}
+
+		leftInput = nullptr;
+		rightInput = nullptr;
+		nextNodes = {};
+	}
+}
+
+void SimulationDlg::drawConnections(CClientDC& dc)
+{
+	Node* currNode = nullptr;
+	Node* leftInput = nullptr;
+	Node* rightInput = nullptr;
+	Node* prevNode = nullptr;
+	AlphaNode* currentAlpha = nullptr;
+	BetaNode* currentBeta = nullptr;
+	vector<Node*> nextNodes;
+	oldPen = (CPen*)dc.SelectObject(&m_oPen);
+
+	for (int i = 0; i < m_NodeList.size(); i++) {
+		currNode = m_NodeList[i];
+
+		if (currNode->getType() == "Alpha") {
+			currentAlpha = dynamic_cast<AlphaNode*>(currNode);
+
+			prevNode = currentAlpha->getPrevNode().second;
+			if (prevNode != nullptr && prevNode->isVisualized()) {
+				dc.MoveTo(prevNode->visualPosition.first + xCorrection, prevNode->visualPosition.second + yCorrection);		//DRAWING LINE
+				dc.LineTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
+			}
+			nextNodes = currentAlpha->getNextPairs();
+			for (int j = 0; j < nextNodes.size(); j++) {
+				if (nextNodes[j]->visualPosition == make_pair(0, 0))
+					continue;
+				dc.MoveTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
+				dc.LineTo(nextNodes[j]->visualPosition.first + xCorrection, nextNodes[j]->visualPosition.second + yCorrection);
+			}
+		}
+		else {
+			currentBeta = dynamic_cast<BetaNode*>(currNode);
+			leftInput = currentBeta->leftSourcePair.second;
+			rightInput = currentBeta->rightSourcePair.second;
+
+			if (leftInput != nullptr && leftInput->isVisualized()) {
+				dc.MoveTo(leftInput->visualPosition.first + xCorrection, leftInput->visualPosition.second + yCorrection);
+				dc.LineTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
+			}
+			if (rightInput != nullptr && rightInput->isVisualized()) {
+				dc.MoveTo(rightInput->visualPosition.first + xCorrection, rightInput->visualPosition.second + yCorrection);
+				dc.LineTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
+			}
+			nextNodes = currentBeta->getNextPairs();
+			for (int j = 0; j < nextNodes.size(); j++) {
+				if (nextNodes[j]->visualPosition == make_pair(0, 0))
+					continue;
+				dc.MoveTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
+				dc.LineTo(nextNodes[j]->visualPosition.first + xCorrection, nextNodes[j]->visualPosition.second + yCorrection);
+			}
+		}
+
+		leftInput = nullptr;
+		rightInput = nullptr;
+		nextNodes = {};
+	}
+}
+
+
+void SimulationDlg::drawNodes(CPaintDC& dc)
+{
+	HBRUSH redBrush = CreateSolidBrush(0x000000FF);
+	HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
+
+
+	Node* currNode = nullptr;
+	CPoint currPosition;
+	for (int i = 0; i < m_NodeList.size(); i++) {
+		currNode = m_NodeList[i];
+
+		if (currNode->getType() == "Alpha")
+			dc.SelectObject(redBrush);
+		else
+			dc.SelectObject(blueBrush);
+
+		currPosition = CPoint(currNode->visualPosition.first, currNode->visualPosition.second);
+
+		dc.Ellipse(currPosition.x, currPosition.y, currPosition.x + rad, currPosition.y + rad);
+
+		visualizedNode.push_back(currNode);
+	}
+}
+
+void SimulationDlg::drawNodes(CClientDC& dc)
+{
+	HBRUSH redBrush = CreateSolidBrush(0x000000FF);
+	HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
+
+
+	Node* currNode = nullptr;
+	CPoint currPosition;
+	for (int i = 0; i < m_NodeList.size(); i++) {
+		currNode = m_NodeList[i];
+
+		if (currNode->getType() == "Alpha")
+			dc.SelectObject(redBrush);
+		else
+			dc.SelectObject(blueBrush);
+		
+		currPosition = CPoint(currNode->visualPosition.first, currNode->visualPosition.second);
+
+		dc.Ellipse(currPosition.x, currPosition.y, currPosition.x + rad, currPosition.y + rad);
+
+		visualizedNode.push_back(currNode);
+	}
 }
 
 CPoint SimulationDlg::getPosition(int x, int y)

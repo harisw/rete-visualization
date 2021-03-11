@@ -56,7 +56,7 @@ BOOL ObjVisualDlg::OnInitDialog()
 	greenPen.CreatePen(PS_SOLID, 1, 0x00008000);
 	bluePen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
 	redPen.CreatePen(PS_SOLID, 1, 0x000000FF);
-	MoveWindow(1145, 68, 700, 600);
+	MoveWindow(1143, 68, 700, 625);
 	initObjectVisualization();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
