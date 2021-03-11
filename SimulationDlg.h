@@ -105,6 +105,7 @@ private:
 	void drawConnections(CClientDC& dc);
 	void drawNodes(CClientDC& dc);
 
+	int eventCounter = 0;
 	//void findSizeScaling(CPaintDC& dc);
 	//void paintWMNode(CPaintDC& dc);
 	//void drawConnections(CPaintDC& dc);

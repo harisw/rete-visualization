@@ -86,6 +86,7 @@ BOOL SimulationDlg::OnInitDialog()
 	nodesRect.left += 1095;
 	nodesRect.right += 1095;
 	
+	m_output_ctrl.ShowScrollBar(SB_VERT, TRUE);
 
 	SetTimer(IDT_TIMER_0, 100, NULL);
 	paintMode = 3;
@@ -100,10 +101,17 @@ void SimulationDlg::appendTextToEditCtrl(string pszText)
 	// add CR/LF to text
 	pszText = "\r\n" + pszText;
 	
+	eventCounter++;
+
+
 	wstring temp(pszText.begin(), pszText.end());
+	//wstring temp(to_wstring(eventCounter) + L"\r\n");
 	int nLength = m_output_ctrl.GetWindowTextLength();
 	m_output_ctrl.SetSel(nLength, nLength);
+	//temp = eventCounter + L" " + temp;
 	m_output_ctrl.ReplaceSel(temp.c_str());
+	/*if (eventCounter % 5 == 0)
+		cout << "Event : " << eventCounter << endl;*/
 }
 
 void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
@@ -129,6 +137,7 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 			Invalidate();
 			//InvalidateRect(nodesRect);
 		}
+
 
 		break;
 	case IDT_TIMER_OBJ_SIMU:

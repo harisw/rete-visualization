@@ -204,11 +204,11 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	m_trajectoryCombo.SetCurSel(0);
 
 	SetDlgItemText(IDC_EDITCOOR_0, L"50,50");
-	SetDlgItemText(IDC_EDITCOOR_1, L"400,100");
+	SetDlgItemText(IDC_EDITCOOR_1, L"600,150");
 	SetDlgItemText(IDC_EDITCOOR_2, L"100,300");
 
 	SetDlgItemText(IDC_EDITCOOR_5, L"10");
-	SetDlgItemText(IDC_EDITCOOR_6, L"30");
+	SetDlgItemText(IDC_EDITCOOR_6, L"100");
 
 	SetDlgItemText(IDC_EDIT_VESSEL_X, L"300");
 	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"150");
