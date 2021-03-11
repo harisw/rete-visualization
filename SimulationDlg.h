@@ -100,8 +100,15 @@ private:
 	CPoint getPosition(int x, int y);
 	void connectNodes(Node*& currNode, vector<Node*>& unconnectedNodes, CClientDC& dc);
 
-	
+	void findSizeScaling(CClientDC& dc);
+	void paintWMNode(CClientDC& dc);
+	void drawConnections(CClientDC& dc);
+	void drawNodes(CClientDC& dc);
 
+	//void findSizeScaling(CPaintDC& dc);
+	//void paintWMNode(CPaintDC& dc);
+	//void drawConnections(CPaintDC& dc);
+	//void drawNodes(CPaintDC& dc);
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedOk();
@@ -126,17 +133,6 @@ public:
 	void updateListCtrl();
 	void populateNodes();
 	void getNodesPosition();
-
-	void findSizeScaling(CPaintDC& dc);
-	void paintWMNode(CPaintDC& dc);
-	void drawConnections(CPaintDC& dc);
-	void drawNodes(CPaintDC& dc);
-	
-	void findSizeScaling(CClientDC& dc);
-	void paintWMNode(CClientDC& dc);
-	void drawConnections(CClientDC& dc);
-	void drawNodes(CClientDC& dc);
-	
 
 	afx_msg void OnDestroy();
 };
