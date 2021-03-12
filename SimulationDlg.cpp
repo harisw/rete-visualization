@@ -65,7 +65,10 @@ BOOL SimulationDlg::OnInitDialog()
 	
 	CClientDC dc(this);
 	m_dcMem.CreateCompatibleDC(&dc);
-	//initObjectVisualization();
+
+	m_object_location = MFC_FixedMultiThread::objectLocationMap;
+	ReteNet::buildNetNode();
+	initObjectVisualization();
 
 	bluePen.CreatePen(PS_SOLID, 1, 0x00FFFF00);
 	redPen.CreatePen(PS_SOLID, 1, 0x000000FF);
@@ -162,13 +165,13 @@ void SimulationDlg::OnPaint()
 	paintNodeVisual(nodesDC);
 
 	if (paintMode == 3) {
-		m_objVisualDlg = new ObjVisualDlg();
-		m_objVisualDlg->m_object_location = MFC_FixedMultiThread::objectLocationMap;
+		//m_objVisualDlg = new SimulationDlg();
+		//m_objVisualDlg->m_object_location = MFC_FixedMultiThread::objectLocationMap;
 		ReteNet::buildNetNode();
 
-		mp_threadDlg = (SimulationThreadDlg*)AfxBeginThread(RUNTIME_CLASS(SimulationThreadDlg),
-			0, 0, CREATE_SUSPENDED);
-		mp_threadDlg->Setup(m_objVisualDlg, IDD_ObjVisualDlg, SW_SHOW);
+		//mp_threadDlg = (SimulationThreadDlg*)AfxBeginThread(RUNTIME_CLASS(SimulationThreadDlg),
+		//	0, 0, CREATE_SUSPENDED);
+		//mp_threadDlg->Setup(m_objVisualDlg, IDD_SimulationDlg, SW_SHOW);
 	}
 
 	paintMode = 0;
@@ -536,13 +539,129 @@ Node* SimulationDlg::findClickedNode(CPoint point)
 
 void SimulationDlg::OnDestroy()
 {
-	m_objVisualDlg->PostMessage(WM_QUIT);
+	
 	CDialogEx::OnDestroy();
 
 	// TODO: Add your message handler code here
 }
 
+void SimulationDlg::drawCQVessel(CPaintDC& dc)
+{
+	dc.SelectObject(&hollowBrush);
+	dc.SelectObject(&greenPen);
+	for (auto snp : spatialNodePolygon) {
+		polygon p = snp.second;
 
+		CPoint* pts = new CPoint[p.outer().size() + 1];
+		int start_x, start_y;
+		//CPoint pts[p.outer().size()];
+		for (int j = 0; j < p.outer().size(); j++) {
+			point pt = p.outer().at(j);
+			float x = pt.get<0>();
+			float y = pt.get<1>();
+
+			pts[j].x = x;
+			pts[j].y = y;
+		}
+
+		dc.Polygon(pts, p.outer().size());
+		//point pt = p.outer().at(0);
+	}
+}
+
+void SimulationDlg::initObjectVisualization()
+{
+	/*m_object_location = MFC_FixedMultiThread::objectLocationMap;*/
+
+	for (int i = 0; i < m_object_location.size(); i++) {
+		for (int j = 0; j < m_object_location[i].size(); j++) {
+			if (m_object_location[i][j].first < min_first)
+				min_first = m_object_location[i][j].first;
+			if (m_object_location[i][j].first > max_first)
+				max_first = m_object_location[i][j].first;
+
+			if (m_object_location[i][j].second < min_second)
+				min_second = m_object_location[i][j].second;
+			if (m_object_location[i][j].second > max_second)
+				max_second = m_object_location[i][j].second;
+
+			m_object_location[i][j].first += xCorrection;
+			m_object_location[i][j].second += yCorrection;
+		}
+	}
+
+	float delta_first = max_first - min_first;
+	float scale_first = (max_w - min_w) / delta_first;
+
+	float delta_second = max_second - min_second;
+	float scale_second = (max_h - min_h) / delta_second;
+
+	x_norm = scale_first;
+	y_norm = scale_second;
+
+	//ReteNet::buildNetNode();
+
+	spatialNodePolygon = SpatialNodeIndexing::getExistingPolygons();
+
+	has_drawn = false;
+	return;
+}
+
+void SimulationDlg::drawObjects(CPaintDC& dc)
+{
+	drawCQVessel(dc);
+
+	char buff[10];
+	//int a = 01;
+	int counter = 0;
+	dc.SelectObject(&hollowBrush);
+	float first_loc = 0;
+	float second_loc = 0;
+	if (m_object_location.size() > 0) {
+		//while (global_itt < m_object_location[0].size() && counter < cycle_step) {
+		while (global_itt < m_object_location[0].size()) {
+			for (int i = 0; i < m_object_location.size(); i++) {
+				//float first_loc = m_object_location[i][global_itt].first * x_norm - (max_first - max_w);
+				//float second_loc = m_object_location[i][global_itt].second * y_norm - (max_second - max_h);
+
+				first_loc = m_object_location[i][global_itt].first;
+				second_loc = m_object_location[i][global_itt].second;
+
+				if (i == 0) {
+					dc.SelectObject(&bluePen);
+#ifdef DEBUGGING_MODE
+					CString cs(_itoa(global_itt, buff, 10));
+					dc.TextOutW(first_loc + 20, second_loc, cs);
+#endif // DEBUGGING_MODE
+#ifndef DEBUGGING_MODE
+					if (global_itt % 10 == 0) {
+						CString cs(_itoa(global_itt, buff, 10));
+						dc.TextOutW(first_loc + 20, second_loc, cs);
+					}
+#endif // !DEBUGGING_MODE
+
+					rad = 2;
+				}
+				else {
+					//pen.CreatePen(PS_SOLID, 1, color_hex_map["Red"]);
+					//pen.CreatePen(PS_SOLID, 1, 0x000000FF);
+					dc.SelectObject(&redPen);
+					rad = 2;
+				}
+				dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
+				//Invalidate();
+				Sleep(84);
+				//Sleep(24);
+			}
+			global_itt++;
+			counter++;
+		}
+
+		CString cs(_itoa(global_itt, buff, 10));
+		dc.TextOutW(first_loc + 20, second_loc, cs);
+		has_drawn = true;
+	}
+}
 
 
 

@@ -10,7 +10,7 @@
 #include "SpatialNodeIndexing.h"
 
 #include "MFC_FixedMultiThread.h"
-#include "ObjVisualDlg.h"
+//#include "ObjVisualDlg.h"
 #include "SimulationThreadDlg.h"
 #include <vector>
 #include <unordered_map>
@@ -89,7 +89,7 @@ private:
 	float yCorrection = 30;
 	int rad;
 	int distance;
-	ObjVisualDlg* m_objVisualDlg;
+	
 	vector<AlphaNodeDlg*> m_alphaDlgs;
 	vector<BetaNodeDlg*> m_betaDlgs;
 
@@ -106,6 +106,10 @@ private:
 	void drawNodes(CClientDC& dc);
 
 	int eventCounter = 0;
+	void drawCQVessel(CPaintDC& dc);
+	void initObjectVisualization();
+	void drawObjects(CPaintDC& dc);
+
 	//void findSizeScaling(CPaintDC& dc);
 	//void paintWMNode(CPaintDC& dc);
 	//void drawConnections(CPaintDC& dc);
