@@ -65,7 +65,6 @@ public:
 
 	afx_msg void OnPaint();
 	virtual BOOL OnInitDialog();
-	void paintObjectVisual();
 	void drawCQVessel(CPaintDC& dc);
 	void initObjectVisualization();
 	void drawObjects(CPaintDC& dc);

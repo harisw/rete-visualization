@@ -59,7 +59,7 @@ BOOL ObjVisualDlg::OnInitDialog()
 	MoveWindow(1143, 68, 700, 625);
 	CMenu* pSysMenu = GetSystemMenu(FALSE);
 	pSysMenu->RemoveMenu(SC_MOVE, MF_BYCOMMAND);
-	initObjectVisualization();
+	//nitObjectVisualization();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
@@ -119,8 +119,6 @@ void ObjVisualDlg::initObjectVisualization()
 	x_norm = scale_first;
 	y_norm = scale_second;
 
-	//ReteNet::buildNetNode();
-
 	spatialNodePolygon = SpatialNodeIndexing::getExistingPolygons();
 
 	has_drawn = false;
@@ -135,8 +133,6 @@ void ObjVisualDlg::drawObjects(CPaintDC& dc)
 	//int a = 01;
 	int counter = 0;
 	dc.SelectObject(&hollowBrush);
-	//dc.SelectObject(&redPen);
-	//if (!has_drawn) {
 	float first_loc = 0;
 	float second_loc = 0;
 	if (m_object_location.size() > 0) {

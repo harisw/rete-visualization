@@ -208,7 +208,7 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	SetDlgItemText(IDC_EDITCOOR_2, L"100,300");
 
 	SetDlgItemText(IDC_EDITCOOR_5, L"10");
-	SetDlgItemText(IDC_EDITCOOR_6, L"100");
+	SetDlgItemText(IDC_EDITCOOR_6, L"50");
 
 	SetDlgItemText(IDC_EDIT_VESSEL_X, L"300");
 	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"150");

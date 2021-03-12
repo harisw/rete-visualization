@@ -89,7 +89,12 @@ private:
 	float yCorrection = 30;
 	int rad;
 	int distance;
+	int xStart = 50;
+	bool initialRete = true;
+	bool nodeUpdate = false;
+	int lastUpdateIndex = 0;
 	
+
 	vector<AlphaNodeDlg*> m_alphaDlgs;
 	vector<BetaNodeDlg*> m_betaDlgs;
 
@@ -106,9 +111,9 @@ private:
 	void drawNodes(CClientDC& dc);
 
 	int eventCounter = 0;
-	void drawCQVessel(CPaintDC& dc);
+	void drawCQVessel(CClientDC& dc);
 	void initObjectVisualization();
-	void drawObjects(CPaintDC& dc);
+	void drawObjects();
 
 	//void findSizeScaling(CPaintDC& dc);
 	//void paintWMNode(CPaintDC& dc);
@@ -128,6 +133,7 @@ public:
 	CListCtrl m_alpha_list_ctrl;
 	CListCtrl m_beta_list_ctrl;
 	vector<Node*> m_NodeList;
+	vector<Node*> m_newNodes;
 
 	CEdit m_output_ctrl;
 	SimulationThreadDlg* mp_threadDlg;
@@ -136,7 +142,7 @@ public:
 	afx_msg void OnPaint();
 	void paintNodeVisual(CClientDC& dc);
 	void updateListCtrl();
-	void populateNodes();
+	void updateNodes();
 	void getNodesPosition();
 
 	afx_msg void OnDestroy();

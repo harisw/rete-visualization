@@ -91,9 +91,8 @@ BOOL SimulationDlg::OnInitDialog()
 	
 	m_output_ctrl.ShowScrollBar(SB_VERT, TRUE);
 
-	SetTimer(IDT_TIMER_0, 100, NULL);
+	SetTimer(IDT_TIMER_0, 500, NULL);
 	paintMode = 3;
-	SetTimer(IDT_TIMER_OBJ_SIMU, 1000, NULL);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -135,17 +134,29 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 			paintMode = 1;
 		}
 		if (paintMode == 1) {
-			populateNodes();
+			updateNodes();
+			if (!nodeUpdate && !initialRete)
+				break;
 			updateListCtrl();
-			Invalidate();
-			//InvalidateRect(nodesRect);
+			CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
+			paintNodeVisual(nodesDC);
+			initialRete = false;
+			//InvalidateRect(nodesRect); //right one
 		}
 
 
 		break;
 	case IDT_TIMER_OBJ_SIMU:
-		mp_threadDlg->ResumeThread();
-		KillTimer(IDT_TIMER_OBJ_SIMU);
+		if (global_itt >= m_object_location[0].size()) {
+			//Invalidate(false);
+			KillTimer(IDT_TIMER_OBJ_SIMU);
+			return;
+		}
+		drawObjects();
+		//if (has_drawn)
+		//paintMode = 2;
+		//Invalidate(objRect);
+		//KillTimer(IDT_TIMER_OBJ_SIMU);
 		break;
 	default:
 		break;
@@ -156,22 +167,11 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 
 void SimulationDlg::OnPaint()
 {
-	CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
-
 	CDialog::OnPaint();
 
-	findSizeScaling(nodesDC);
-	//paintWMNode(nodesDC);
-	paintNodeVisual(nodesDC);
 
 	if (paintMode == 3) {
-		//m_objVisualDlg = new SimulationDlg();
-		//m_objVisualDlg->m_object_location = MFC_FixedMultiThread::objectLocationMap;
-		ReteNet::buildNetNode();
-
-		//mp_threadDlg = (SimulationThreadDlg*)AfxBeginThread(RUNTIME_CLASS(SimulationThreadDlg),
-		//	0, 0, CREATE_SUSPENDED);
-		//mp_threadDlg->Setup(m_objVisualDlg, IDD_SimulationDlg, SW_SHOW);
+		SetTimer(IDT_TIMER_OBJ_SIMU, 100, NULL);
 	}
 
 	paintMode = 0;
@@ -228,11 +228,13 @@ void SimulationDlg::paintWMNode(CClientDC &dc)
 
 void SimulationDlg::paintNodeVisual(CClientDC &dc)
 {
-	
 	findSizeScaling(dc);
+	//paintWMNode(nodesDC);
 	getNodesPosition();
 	drawConnections(dc);
 	drawNodes(dc);
+	lastUpdateIndex = m_NodeList.size();
+	nodeUpdate = false;
 }
 
 void SimulationDlg::updateListCtrl()
@@ -242,10 +244,8 @@ void SimulationDlg::updateListCtrl()
 	int bIndex = 0;
 	int nIndex;
 	wstring ID, condition;
-	m_alpha_list_ctrl.DeleteAllItems();
-	m_beta_list_ctrl.DeleteAllItems();
 
-	for (int j = 0; j < m_NodeList.size(); j++)
+	for (int j = lastUpdateIndex; j < m_NodeList.size(); j++)
 	{
 		currNode = m_NodeList[j];
 		if (currNode->getType() == "Alpha") {
@@ -259,11 +259,18 @@ void SimulationDlg::updateListCtrl()
 	}
 }
 
-void SimulationDlg::populateNodes()
-{
-	m_NodeList.clear();
+void SimulationDlg::updateNodes()
+{	
 	for (nodeMap::iterator it = ReteNet::triggered_node.begin(); it != ReteNet::triggered_node.end(); ++it) {
-		m_NodeList.push_back(it->second);
+		if (!initialRete) {
+			if (find(m_NodeList.begin(), m_NodeList.end(), it->second) == m_NodeList.end()) {
+				nodeUpdate = true;
+				m_NodeList.push_back(it->second);
+			}
+		}
+		else {
+			m_NodeList.push_back(it->second);
+		}
 	}
 }
 
@@ -301,7 +308,6 @@ void SimulationDlg::findSizeScaling(CClientDC &dc)
 
 void SimulationDlg::getNodesPosition()
 {
-	int xStart = 50;
 	int yAlpha = distance;
 	int yBeta = 100;
 	int xBeta = 50;
@@ -312,7 +318,7 @@ void SimulationDlg::getNodesPosition()
 	BetaNode* currentBeta = nullptr;
 
 	nodePositions.clear(); //Reset node position
-	for (int i = 0; i < m_NodeList.size(); i++) {
+	for (int i = lastUpdateIndex; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
 		if (currNode->getType() == "Alpha") {
@@ -350,6 +356,7 @@ void SimulationDlg::getNodesPosition()
 		leftInput = nullptr;
 		rightInput = nullptr;
 	}
+
 }
 
 void SimulationDlg::drawConnections(CClientDC& dc)
@@ -363,7 +370,7 @@ void SimulationDlg::drawConnections(CClientDC& dc)
 	vector<Node*> nextNodes;
 	oldPen = (CPen*)dc.SelectObject(&m_oPen);
 
-	for (int i = 0; i < m_NodeList.size(); i++) {
+	for (int i = lastUpdateIndex; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
 		if (currNode->getType() == "Alpha") {
@@ -418,7 +425,7 @@ void SimulationDlg::drawNodes(CClientDC& dc)
 
 	Node* currNode = nullptr;
 	CPoint currPosition;
-	for (int i = 0; i < m_NodeList.size(); i++) {
+	for (int i = lastUpdateIndex; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
 		if (currNode->getType() == "Alpha")
@@ -545,7 +552,7 @@ void SimulationDlg::OnDestroy()
 	// TODO: Add your message handler code here
 }
 
-void SimulationDlg::drawCQVessel(CPaintDC& dc)
+void SimulationDlg::drawCQVessel(CClientDC& dc)
 {
 	dc.SelectObject(&hollowBrush);
 	dc.SelectObject(&greenPen);
@@ -607,8 +614,9 @@ void SimulationDlg::initObjectVisualization()
 	return;
 }
 
-void SimulationDlg::drawObjects(CPaintDC& dc)
+void SimulationDlg::drawObjects()
 {
+	CClientDC dc(GetDlgItem(IDC_STATIC_OBJECT));
 	drawCQVessel(dc);
 
 	char buff[10];
@@ -618,8 +626,8 @@ void SimulationDlg::drawObjects(CPaintDC& dc)
 	float first_loc = 0;
 	float second_loc = 0;
 	if (m_object_location.size() > 0) {
-		//while (global_itt < m_object_location[0].size() && counter < cycle_step) {
-		while (global_itt < m_object_location[0].size()) {
+		while (global_itt < m_object_location[0].size() && counter < cycle_step) {
+		//while (global_itt < m_object_location[0].size()) {
 			for (int i = 0; i < m_object_location.size(); i++) {
 				//float first_loc = m_object_location[i][global_itt].first * x_norm - (max_first - max_w);
 				//float second_loc = m_object_location[i][global_itt].second * y_norm - (max_second - max_h);
@@ -650,8 +658,8 @@ void SimulationDlg::drawObjects(CPaintDC& dc)
 				}
 				dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
 				//Invalidate();
-				Sleep(84);
-				//Sleep(24);
+				//Sleep(84);
+				Sleep(24);
 			}
 			global_itt++;
 			counter++;
