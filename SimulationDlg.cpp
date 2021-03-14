@@ -91,7 +91,7 @@ BOOL SimulationDlg::OnInitDialog()
 	
 	m_output_ctrl.ShowScrollBar(SB_VERT, TRUE);
 
-	SetTimer(IDT_TIMER_0, 500, NULL);
+	//SetTimer(IDT_TIMER_0, 500, NULL);
 	paintMode = 3;
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
@@ -124,28 +124,28 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 
 	switch (nIDEvent)
 	{
-	case IDT_TIMER_0:
-		 
-		while (!ReteNet::triggered_ev.empty()) {
-			
-			output = ReteNet::triggered_ev.front();
-			appendTextToEditCtrl(output);
-			ReteNet::triggered_ev.pop();
-			paintMode = 1;
-		}
-		if (paintMode == 1) {
-			updateNodes();
-			if (!nodeUpdate && !initialRete)
-				break;
-			updateListCtrl();
-			CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
-			paintNodeVisual(nodesDC);
-			initialRete = false;
-			//InvalidateRect(nodesRect); //right one
-		}
+	//case IDT_TIMER_0:
+	//	 
+	//	while (!ReteNet::triggered_ev.empty()) {
+	//		
+	//		output = ReteNet::triggered_ev.front();
+	//		appendTextToEditCtrl(output);
+	//		ReteNet::triggered_ev.pop();
+	//		paintMode = 1;
+	//	}
+	//	if (paintMode == 1) {
+	//		updateNodes();
+	//		if (!nodeUpdate && !initialRete)
+	//			break;
+	//		updateListCtrl();
+	//		CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
+	//		paintNodeVisual(nodesDC);
+	//		initialRete = false;
+	//		//InvalidateRect(nodesRect); //right one
+	//	}
 
 
-		break;
+	//	break;
 	case IDT_TIMER_OBJ_SIMU:
 		if (global_itt >= m_object_location[0].size()) {
 			//Invalidate(false);
@@ -625,6 +625,8 @@ void SimulationDlg::drawObjects()
 	dc.SelectObject(&hollowBrush);
 	float first_loc = 0;
 	float second_loc = 0;
+	string output;
+	CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
 	if (m_object_location.size() > 0) {
 		while (global_itt < m_object_location[0].size() && counter < cycle_step) {
 		//while (global_itt < m_object_location[0].size()) {
@@ -658,9 +660,28 @@ void SimulationDlg::drawObjects()
 				}
 				dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
 				//Invalidate();
-				//Sleep(84);
-				Sleep(24);
+				Sleep(84);
+				//Sleep(24);
 			}
+
+			while (!ReteNet::triggered_ev.empty()) {
+				
+				output = ReteNet::triggered_ev.front();
+				appendTextToEditCtrl(output);
+				ReteNet::triggered_ev.pop();
+				paintMode = 1;
+			}
+			if (paintMode == 1) {
+				updateNodes();
+				if (nodeUpdate || initialRete) {
+					updateListCtrl();
+					
+					paintNodeVisual(nodesDC);
+					initialRete = false;
+				}
+				//InvalidateRect(nodesRect); //right one
+			}
+
 			global_itt++;
 			counter++;
 		}
