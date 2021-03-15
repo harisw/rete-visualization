@@ -244,19 +244,28 @@ void SimulationDlg::updateListCtrl()
 	int bIndex = 0;
 	int nIndex;
 	wstring ID, condition;
+	vector<Node*> triggered_vect = ReteNet::triggered_node_vect;
+	for (int j = lastTriggeredVect; j < triggered_vect.size(); j++)
+	{
+		currNode = triggered_vect[j];
+		condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
 
-	for (int j = lastUpdateIndex; j < m_NodeList.size(); j++)
+		if (currNode->getType() == "Alpha")
+			m_alpha_list_ctrl.InsertItem(0, condition.c_str());
+		else
+			m_beta_list_ctrl.InsertItem(0, condition.c_str());
+	}
+	lastTriggeredVect = triggered_vect.size();
+	/*for (int j = 0; j < m_NodeList.size(); j++)
 	{
 		currNode = m_NodeList[j];
-		if (currNode->getType() == "Alpha") {
-			condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
+		condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
+
+		if (currNode->getType() == "Alpha")
 			m_alpha_list_ctrl.InsertItem(0, condition.c_str());
-		}
-		else {
-			condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
+		else
 			m_beta_list_ctrl.InsertItem(0, condition.c_str());
-		}
-	}
+	}*/
 }
 
 void SimulationDlg::updateNodes()
@@ -463,28 +472,6 @@ CPoint SimulationDlg::getPosition(int x, int y)
 	return CPoint(x, y);
 }
 
-void SimulationDlg::connectNodes(Node*& currNode, vector<Node*>& unconnectedNodes, CClientDC& dc)
-{
-	///// CONNECTING NODES
-	if (currNode->getNextPairs().size() > 0)
-		unconnectedNodes.push_back(currNode);
-	else {
-		oldPen = (CPen*)dc.SelectObject(&m_oPen);
-		for (int j = 0; j < unconnectedNodes.size(); j++) {
-			Node* unconnNode = unconnectedNodes[j];
-			vector<Node*> targetNodes = unconnNode->getNextPairs();
-			for (int k = 0; k < targetNodes.size(); k++) {	//CONNECTING WITH NEXT PAIRS
-				if (targetNodes[k]->visualPosition == make_pair(0, 0))
-					continue;
-				dc.MoveTo(unconnNode->visualPosition.first + xCorrection, unconnNode->visualPosition.second + yCorrection);		//DRAWING LINE
-				dc.LineTo(targetNodes[k]->visualPosition.first + xCorrection, targetNodes[k]->visualPosition.second + yCorrection);
-			}
-		}
-		dc.SelectObject(oldPen);
-		unconnectedNodes.clear();
-	}
-}
-
 bool comparator(pair<int, Node*> a, pair<int, Node*> b) {
 	return a.second->visualPosition.first < b.second->visualPosition.first;
 }
@@ -671,8 +658,8 @@ void SimulationDlg::drawObjects()
 			}
 			if (paintMode == 1) {
 				updateNodes();
+				updateListCtrl();
 				if (nodeUpdate || initialRete) {
-					updateListCtrl();
 					
 					paintNodeVisual(nodesDC);
 					initialRete = false;

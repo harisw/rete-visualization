@@ -787,6 +787,8 @@ int BetaNode::justTest(int TimeSlice)
 			<< " --- " << Utilities::translateTime(Utilities::getTimeSec()) << endl;
 		ReteNet::triggered_ev.push(output_stream.str());
 		ReteNet::triggered_node.insert(make_pair(justCondition, this));
+		ReteNet::triggered_node_vect.push_back(this);
+
 
 		cout << "-------------------> TRIGGERED event: " << thisProduct
 			<< " --- " << Utilities::translateTime(Utilities::getTimeSec()) << endl;

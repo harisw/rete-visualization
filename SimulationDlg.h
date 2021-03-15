@@ -92,7 +92,7 @@ private:
 	bool initialRete = true;
 	bool nodeUpdate = false;
 	int lastUpdateIndex = 0;
-	
+	int lastTriggeredVect = 0;
 
 	vector<AlphaNodeDlg*> m_alphaDlgs;
 	vector<BetaNodeDlg*> m_betaDlgs;
@@ -102,7 +102,6 @@ private:
 	void showBetaWindow(BetaNode* nodeInput);
 	//void findSizeScaling();
 	CPoint getPosition(int x, int y);
-	void connectNodes(Node*& currNode, vector<Node*>& unconnectedNodes, CClientDC& dc);
 
 	void findSizeScaling(CClientDC& dc);
 	void paintWMNode(CClientDC& dc);

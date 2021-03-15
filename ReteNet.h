@@ -110,6 +110,7 @@ public:
 	static priority_queue < Node*, vector<Node*>, CustomCompare> p_queue, temp_p_queue;
 	static queue< string > triggered_ev;
 	static map<string, Node*> triggered_node;
+	static vector<Node*> triggered_node_vect;
 	/*static void pushTriggeredEvent(string inpEvent) {
 		triggered_ev.push_back(inpEvent);
 		return;

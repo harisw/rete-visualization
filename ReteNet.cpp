@@ -21,6 +21,7 @@ vector<Node*> ReteNet::NodeList;
 
 queue< string > ReteNet::triggered_ev;
 map<string, Node*> ReteNet::triggered_node;
+vector<Node*> ReteNet::triggered_node_vect;
 
 //this is spatial node indexing
 vector<int> ReteNet::staticCQNodeId;

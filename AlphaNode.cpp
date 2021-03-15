@@ -335,8 +335,10 @@ int AlphaNode::justTest(int TimeSlice)
 		}
 	}
 
-	if (EventResult.size() > 0)
+	if (EventResult.size() > 0) {
 		ReteNet::triggered_node.insert(make_pair(justCondition, this));
+		ReteNet::triggered_node_vect.push_back(this);
+	}
 
 	//PUSH TO PROCEEDING NODE .-.
 	std::lock_guard<std::recursive_mutex> lg(ReteNet::mutexOfReteProcess);//mutex lock
@@ -346,7 +348,8 @@ int AlphaNode::justTest(int TimeSlice)
 		n->pushResult(EventResult, this);
 		//ReteNet::triggered_ev.push(justCondition);
 		ReteNet::triggered_node.insert(make_pair(n->justCondition, n));
-		
+		ReteNet::triggered_node_vect.push_back(n);
+
 	}
 
 	if (EventResult.size() > 0) {
