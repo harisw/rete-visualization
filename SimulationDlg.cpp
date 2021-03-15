@@ -653,8 +653,6 @@ void SimulationDlg::drawObjects()
 					rad = 2;
 				}
 				else {
-					//pen.CreatePen(PS_SOLID, 1, color_hex_map["Red"]);
-					//pen.CreatePen(PS_SOLID, 1, 0x000000FF);
 					dc.SelectObject(&redPen);
 					rad = 2;
 				}
