@@ -1,4 +1,4 @@
-#include "CQUtil.h"
+ï»¿#include "CQUtil.h"
 #include "curve_bezier.h"
 #include "curve_spline.h"
 
@@ -19,7 +19,7 @@ double CQUtil::distance(vector<POINT_GEN>& path)
 	}
 	return dist;
 }
-// sp-ep ¶óÀÎÀ» 100À¸·Î ÇØ¼­ sp¿¡¼­ °æ·Î¸¦ µû¶ó¼­ percent¸¸Å­ ¶³¾îÁø °Å¸®ÀÇ ÁÂÇ¥¸¦ ¸®ÅÏÇÑ´Ù.
+// sp-ep Returns the coordinates of a distance of per cent along the path from sp with the line 100.
 POINT_GEN CQUtil::getOffsetPoint(POINT_GEN sp, POINT_GEN ep, int percent)
 {
 	int dx = (int)((double)(ep.x - sp.x) * (double)percent / 100.0);
@@ -28,7 +28,7 @@ POINT_GEN CQUtil::getOffsetPoint(POINT_GEN sp, POINT_GEN ep, int percent)
 	POINT_GEN ret = { sp.x + dx, sp.y + dy };
 	return ret;
 }
-// pathÀÇ ½ÃÀÛÁ¡¿¡¼­ °æ·Î¸¦ µû¶ó¼­ dist¸¸Å­ ¶³¾îÁø °Å¸®ÀÇ ÁÂÇ¥¸¦ ¸®ÅÏÇÑ´Ù.
+// pathì˜ ì‹œì‘ì ì—ì„œ ê²½ë¡œë¥¼ ë”°ë¼ì„œ distë§Œí¼ ë–¨ì–´ì§„ ê±°ë¦¬ì˜ ì¢Œí‘œë¥¼ ë¦¬í„´í•œë‹¤.		//IDK WHAT IS THIS
 POINT_GEN CQUtil::getOffsetPoint(vector<POINT_GEN>& path, double dist)
 {
 	POINT_GEN ret = { 0,0 };
@@ -54,7 +54,9 @@ POINT_GEN CQUtil::getOffsetPoint(vector<POINT_GEN>& path, double dist)
 		return path.back();
 	return ret;
 }
-// i¿Í j»çÀÌÀÇ Á¤¼ö ·£´ı°ªÀ» ¸®ÅÏÇÑ´Ù.
+
+
+// iì™€ jì‚¬ì´ì˜ ì •ìˆ˜ ëœë¤ê°’ì„ ë¦¬í„´í•œë‹¤.
 long CQUtil::getRandomLong(long i, long j)
 {
 	int min = i;
@@ -73,7 +75,7 @@ long CQUtil::getRandomLong(long i, long j)
 	int r = rand() % d;			// 0, 1, 2, 3
 	return (min + r);			// 2, 3, 4, 5
 }
-// Á¡ pt¿¡¼­ r¸¸Å­ ¶³¾îÁ®¼­ a¸¸Å­ È¸ÀüÇÑ Á¡ÀÇ ÁÂÇ¥¸¦ ¸®ÅÏ. 3½Ã°¡ 0µµ, ¹İ½Ã°è¹æÇâÀ¸·Î Áõ°¡
+// ì  ptì—ì„œ rë§Œí¼ ë–¨ì–´ì ¸ì„œ aë§Œí¼ íšŒì „í•œ ì ì˜ ì¢Œí‘œë¥¼ ë¦¬í„´. 3ì‹œê°€ 0ë„, ë°˜ì‹œê³„ë°©í–¥ìœ¼ë¡œ ì¦ê°€
 POINT_GEN CQUtil::getPoint(POINT_GEN& pt, double radius, double angle)
 {
 	double rad = DTR(angle);
@@ -84,12 +86,12 @@ POINT_GEN CQUtil::getPoint(POINT_GEN& pt, double radius, double angle)
 	return ret;
 }
 //==========================================================================================================
-// path´Â ÀÔ·ÂµÈ 2°³ ÀÌ»óÀÈ ±âÁØÁÂÇ¥ÀÌ°í ÀÌ ÁÂÇ¥µé·Î Á÷¼±À» ±×·Á¼­ nTimeStamp·Î ºĞÇÒÇÑ ÁÂÇ¥¸¦
-// ptArray¿¡ ´ã¾Æ¼­ ¸®ÅÏÇÑ´Ù.
+// pathëŠ” ì…ë ¥ëœ 2ê°œ ì´ìƒìœ ê¸°ì¤€ì¢Œí‘œì´ê³  ì´ ì¢Œí‘œë“¤ë¡œ ì§ì„ ì„ ê·¸ë ¤ì„œ nTimeStampë¡œ ë¶„í• í•œ ì¢Œí‘œë¥¼
+// ptArrayì— ë‹´ì•„ì„œ ë¦¬í„´í•œë‹¤.
 void CQUtil::generateLinePath(vector<POINT_GEN>& ptArray, int nTimeStamp, vector<POINT_GEN>& path)
 {
 	int size = (int)path.size();
-	// ÀÌµ¿ °æ·ÎÁ¡ ¹è¿­ pathº¸´Ù nTimeStamp°¡ ÀÛ´Ù¸é ±×³É path¸¦ ¼³Á¤ÇÏ°í ¸®ÅÏ
+	// ì´ë™ ê²½ë¡œì  ë°°ì—´ pathë³´ë‹¤ nTimeStampê°€ ì‘ë‹¤ë©´ ê·¸ëƒ¥ pathë¥¼ ì„¤ì •í•˜ê³  ë¦¬í„´
 	if (size <= 1 || nTimeStamp <= size)
 	{
 		ptArray = path;
@@ -106,8 +108,8 @@ void CQUtil::generateLinePath(vector<POINT_GEN>& ptArray, int nTimeStamp, vector
 	}
 	ptArray.push_back(path.back());
 }
-// path´Â ÀÔ·ÂµÈ 3°³ ÀÌ»óÀÇ ±âÁØÁÂÇ¥ÀÌ°í ÀÌ ÁÂÇ¥µé·Î º£Áö¾î°î¼±À» ±×·Á¼­ nTimeStamp·Î ºĞÇÒÇÑ ÁÂÇ¥¸¦
-// ptArray¿¡ ´ã¾Æ¼­ ¸®ÅÏÇÑ´Ù.
+// pathëŠ” ì…ë ¥ëœ 3ê°œ ì´ìƒì˜ ê¸°ì¤€ì¢Œí‘œì´ê³  ì´ ì¢Œí‘œë“¤ë¡œ ë² ì§€ì–´ê³¡ì„ ì„ ê·¸ë ¤ì„œ nTimeStampë¡œ ë¶„í• í•œ ì¢Œí‘œë¥¼
+// ptArrayì— ë‹´ì•„ì„œ ë¦¬í„´í•œë‹¤.
 void CQUtil::generateBezierCurvePath(vector<POINT_GEN>& ptArray, int nTimeStamp, vector<POINT_GEN>& path)
 {
 	BezierCurve	bc;
@@ -136,25 +138,28 @@ void CQUtil::generateSplineCurvePath(vector<POINT_GEN>& ptArray, int nTimeStamp,
 	
 }
 
-// ±âÁØ°æ·Î¸¦ µû¶ó ÀúÀåµÈ °´Ã¼ÀÇ ÁÂÇ¥¸¦ ·£´ı °æ·Î°¡ µÇµµ·Ï ÁÂÇ¥¸¦ Àç»ı¼ºÇÑ´Ù.
+// Recreate the coordinates of the stored object along the reference path to be a random path.
 void CQUtil::generateRandomPath(vector<POINT_GEN>& ptArray)
 {
 	size_t size = ptArray.size();
-	if (size < 2)	return;
+	if (size < 2) return;
 
 	vector<POINT_GEN> tArray;
-	// ±âÁØ °æ·Î°¡ ÀÏÁ¤ÇÑ °£°İÀ¸·Î »ı¼ºµÇ¾î ÀÖ±â ¶§¹®¿¡ ÀÌ¸¦ ºÒ±ÔÄ¢ °£°İÀÌ µÇµµ·Ï º¯°æÇÑ´Ù.
-	// ÀÌ¶§ ½ÃÀÛÁ¡°ú ³¡Á¡À» ±×³É µĞ´Ù.
+	// change the reference path to be irregular because it is created at regular intervals.
+	// Leave the start and end points at this point.
 	for (size_t i = 1; i < size - 1; i++)
 	{
-		//ptArray[i-1]¿¡¼­ ptArray[i+1]±îÁö¸¦ ÃÑ 200µîºĞÇÑ µÚ 1~199»çÀÌÀÇ ·£´ı°ªÀ» »ı¼ºÇØ¼­
-		// 1~99ÀÌ¸é ptArray[i-1]~pt[i]±îÁö 100µîºĞÇÑ À§Ä¡
-		// 101~199¸é pt[i]¿¡¼­ ptArray[i+1]±îÁö 100µîºĞÇÑ À§Ä¡¸¦ ¼³Á¤ÇÑ´Ù.
+		//divide ptArray [i-1] to ptArray [i+1] in total and generate random values between 1 and 199.
+		// position divided by 100 ptArray[i-1] to pt[i] if 1â€“99
+		// Set the position divided by 100 from pt[i] to ptArray[i+1] on 101-199.
 
 		int t = getRandomLong(1, 199);
-		if (t < 100)		getOffsetPoint(ptArray[i - 1], ptArray[i], t);
-		else if (100 < t)	getOffsetPoint(ptArray[i], ptArray[i+1], t-100);
-		else				tArray.push_back(ptArray[i]);
+		if (t < 100) getOffsetPoint(ptArray[i - 1], ptArray[i], t);
+		else if (100 < t) getOffsetPoint(ptArray[i], ptArray[i + 1], t - 100);
+		else {
+
+			tArray.push_back(ptArray[i]);
+		}
 	}
 
 	vector<POINT_GEN> tArray1;
@@ -164,13 +169,13 @@ void CQUtil::generateRandomPath(vector<POINT_GEN>& ptArray)
 	{
 		pt = ptArray[i];
 
-		// ÇöÀç(i) Á¡¿¡¼­ ´ÙÀ½(i+1) Á¡±îÁöÀÇ °Å¸®ÀÇ 2/3¸¦ ¹İÁö¸§À¸·Î ¿øÀ» ±×¸®°í
-		// ±× ¿ø ¾È¿¡ ¼ÓÇÏ´Â ÀÓÀÇÀÇ Á¡À» ÇöÀç(i) Á¡ÀÇ »õ·Î¿î Á¡À¸·Î ¼±Á¤
+		// draw a radius of two-thirds of the distance from the current (i) point to the next (i+1) point.
+		// select any point within the circle as a new point for the current (i) point
 		if (i < size - 1)
 		{
 			dist = distance(pt, ptArray[i + 1]);
-			radius = (double)getRandomLong(0L, (long)dist);	// ¿øÀÇ ¹İÁö¸§°ªÀ» ·£´ıÀ¸·Î ¼±ÅÃ
-			angle = getRandomLong(0, 359);					// ¹æÀ§°¢À» ·£´ıÀ¸·Î ¼±ÅÃ
+			radius = (double)getRandomLong(0L, (long)dist); // randomly select the radius value of the circle
+			angle = getRandomLong(0, 359); // randomly select angle direction
 		}
 		tArray1.push_back(getPoint(pt, radius, angle));
 	}

@@ -23,6 +23,8 @@
 #define NODE_SIZE 25
 #define WIND_WIDTH 1800
 #define WIND_HEIGHT 1000
+//#define WIND_WIDTH 1400
+//#define WIND_HEIGHT 800
 #define RAD_CONST 1.25
 #define DIST_CONST 0.8
 #define IDT_TIMER_0 WM_USER + 200

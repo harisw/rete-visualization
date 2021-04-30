@@ -36,7 +36,7 @@ void GenerateData::Generate(vector<pair<int,int>> input_vector, int obj_num, int
 	vector<pair<float, float>> point_list;
 	for (int i = 0; i < obj_num; i++) {
 
-		point_list = pRet->getSingleObjectTrajectory(i);
+		point_list = pRet->getSingleObjectTrajectory(i);		//GET all the location passed by a single point from start-end
 
 		MFC_FixedMultiThread::setupData(i, point_list);
 
