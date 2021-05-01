@@ -8,7 +8,7 @@
 #include "MultiNodeIndexing.h"
 #include "SpatialNodeIndexing.h"
 #include "WorkingMemory.h"
-#include "RTree.h"
+//#include "RTree.h"
 
 #include <list>
 #include <algorithm>

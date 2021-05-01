@@ -4,7 +4,7 @@
 #include "Event.h"
 #include "SlidingWindow.h"
 
-#include "RTree.h"
+//#include "RTree.h"
 
 struct SpatialOpRect
 {
