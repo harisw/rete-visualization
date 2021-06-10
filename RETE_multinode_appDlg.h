@@ -58,7 +58,7 @@ public:
 	//CComboBox m_rule_combo;
 	afx_msg void OnBnClickedButtonInsertRule();
 	CEdit m_rule_content_edit;
-	afx_msg void OnEnChangeEdit1();
+	//afx_msg void OnEnChangeEdit1();
 	//afx_msg void OnBnClickedButton5();
 
 	CEdit m_cq_content_edit;
@@ -107,4 +107,6 @@ public:
 	CListCtrl m_rule_listctrl;
 	afx_msg void OnEnChangeEditcoor1();
 	CComboBox m_trajectoryCombo;
+	int vesselNum = 0;
+	bool first_vessel = true;
 };

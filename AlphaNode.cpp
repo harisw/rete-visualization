@@ -336,6 +336,7 @@ int AlphaNode::justTest(int TimeSlice)
 	}
 
 	if (EventResult.size() > 0) {
+		this->isActivated = true;
 		ReteNet::triggered_node.insert(make_pair(justCondition, this));
 		ReteNet::triggered_node_vect.push_back(this);
 	}

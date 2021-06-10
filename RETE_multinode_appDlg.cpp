@@ -100,6 +100,7 @@ void CRETEmultinodeappDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDITCOOR_6, m_coord_time);
 	DDX_Control(pDX, IDC_LIST1, m_rule_listctrl);
 	DDX_Control(pDX, IDC_COMBO1, m_trajectoryCombo);
+
 }
 
 BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
@@ -109,7 +110,7 @@ BEGIN_MESSAGE_MAP(CRETEmultinodeappDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CRETEmultinodeappDlg::OnBnClickedOk)
 	//ON_BN_CLICKED(IDC_BUTTON1, &CRETEmultinodeappDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CRETEmultinodeappDlg::OnBnClickedButtonInsertRule)
-	ON_EN_CHANGE(IDC_EDIT1, &CRETEmultinodeappDlg::OnEnChangeEdit1)
+	//ON_EN_CHANGE(IDC_EDIT1, &CRETEmultinodeappDlg::OnEnChangeEdit1)
 	//ON_BN_CLICKED(IDC_BUTTON5, &CRETEmultinodeappDlg::OnBnClickedButton5)
 	ON_BN_CLICKED(IDC_BUTTON_INSERT_CQ, &CRETEmultinodeappDlg::OnBnClickedButtonInsertCq)
 	ON_BN_CLICKED(IDC_BUTTON_INSERT_CEP, &CRETEmultinodeappDlg::OnBnClickedButtonInsertCep)
@@ -207,11 +208,15 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	SetDlgItemText(IDC_EDITCOOR_1, L"600,150");
 	SetDlgItemText(IDC_EDITCOOR_2, L"100,300");
 
-	SetDlgItemText(IDC_EDITCOOR_5, L"10");
-	SetDlgItemText(IDC_EDITCOOR_6, L"50");
+	SetDlgItemText(IDC_EDITCOOR_5, L"5");
+	SetDlgItemText(IDC_EDITCOOR_6, L"30");
 
 	SetDlgItemText(IDC_EDIT_VESSEL_X, L"300");
 	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"150");
+
+	//CRETEmultinodeappDlg::OnBnClickedButton9();
+	//CRETEmultinodeappDlg::SetCoordinate_new();
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -426,20 +431,8 @@ void CRETEmultinodeappDlg::OnBnClickedButtonInsertRule()
 
 }
 
-void CRETEmultinodeappDlg::OnEnChangeEdit1()
-{
-	// TODO:  If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialogEx::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO:  Add your control notification handler code here
-}
-
 void CRETEmultinodeappDlg::SetCoordinate_new() {
 	UpdateData(TRUE);
-
-	//vector<POINT> coordList;
 
 	vector<pair<int, int>> coordList;
 	if (m_coordinate_0 != L"") {
@@ -507,7 +500,7 @@ void CRETEmultinodeappDlg::SetCoordinate_new() {
 	//int a = 10;
 	fixed_data_num_of_obj = obj_num;
 
-	MessageBox(L"Data generated sucessfully", L"Congrats", MB_OK);
+	//MessageBox(L"Data generated sucessfully", L"Congrats", MB_OK);
 
 	UpdateData(FALSE);
 }
@@ -1966,89 +1959,79 @@ void CRETEmultinodeappDlg::OnBnClickedButton9()
 	vector<string> made;
 	vector<vector<pair<string, string>>> colMade;
 
-	//vessels
-	made = {};
-	made.push_back("IF elevation<10 & iff=false");
-	made.push_back("THEN enemyvessel");
-	colMade = ReteNet::parseConditionOriginal(made);
-	ReteNet::growTheNodes(colMade);
+
+	if (first_vessel) {
+		//vessels
+		made = {};
+		made.push_back("IF elevation<10 & iff=false");
+		made.push_back("THEN enemyvessel");
+		colMade = ReteNet::parseConditionOriginal(made);
+		ReteNet::growTheNodes(colMade);
+
+		//made = {};
+		//made.push_back("IF speed>3 & elevation<10 & iff=true");
+		//made.push_back("THEN allyvessel");
+		//colMade = ReteNet::parseConditionOriginal(made);
+		//ReteNet::growTheNodes(colMade);
+
+		//submarines
+		made = {};
+		made.push_back("IF elevation<0 & iff=false");
+		made.push_back("THEN enemysubmarine");
+		colMade = ReteNet::parseConditionOriginal(made);
+		ReteNet::growTheNodes(colMade);
+		first_vessel = false;
+
+		//made = {};
+		//made.push_back("IF speed>3 & elevation<0 & iff=true");
+		//made.push_back("THEN allysubmarine");
+		//colMade = ReteNet::parseConditionOriginal(made);
+		//ReteNet::growTheNodes(colMade);
+
+		//aircraft
+		made = {};
+		made.push_back("IF elevation>5 & iff=false");
+		made.push_back("THEN enemyaircraft");
+		colMade = ReteNet::parseConditionOriginal(made);
+		ReteNet::growTheNodes(colMade);
 	
-	
+		//made = {};
+		//made.push_back("IF speed>10 & elevation>5 & iff=true");
+		//made.push_back("THEN allyaircraft");
+		//colMade = ReteNet::parseConditionOriginal(made);
 
-
-
-	//made = {};
-	//made.push_back("IF speed>3 & elevation<10 & iff=true");
-	//made.push_back("THEN allyvessel");
-	//colMade = ReteNet::parseConditionOriginal(made);
-
-	//ReteNet::growTheNodes(colMade);
-
-	//submarines
-	made = {};
-	made.push_back("IF elevation<0 & iff=false");
-	made.push_back("THEN enemysubmarine");
-	colMade = ReteNet::parseConditionOriginal(made);
-	ReteNet::growTheNodes(colMade);
-	
-
-
-	//made = {};
-	//made.push_back("IF speed>3 & elevation<0 & iff=true");
-	//made.push_back("THEN allysubmarine");
-	//colMade = ReteNet::parseConditionOriginal(made);
-	//ReteNet::growTheNodes(colMade);
-
-	//aircraft
-	made = {};
-	made.push_back("IF elevation>5 & iff=false");
-	made.push_back("THEN enemyaircraft");
-	colMade = ReteNet::parseConditionOriginal(made);
-	ReteNet::growTheNodes(colMade);
-	
-
-
-	//made = {};
-	//made.push_back("IF speed>10 & elevation>5 & iff=true");
-	//made.push_back("THEN allyaircraft");
-	//colMade = ReteNet::parseConditionOriginal(made);
-
-	//ReteNet::growTheNodes(colMade);
-
+		//ReteNet::growTheNodes(colMade);
+	}
 
 	CString xStr, yStr;
 	GetDlgItemText(IDC_EDIT_VESSEL_X, xStr);
 	GetDlgItemText(IDC_EDIT_VESSEL_Y, yStr);
-
-	//RADAR -------------------------------------
-	/*int x_int = VISUAL_W / 2;
-	int y_int = VISUAL_H / 2;*/
-
 	int x_int = _wtoi(xStr);
 	int y_int = _wtoi(yStr);
-
 	char buff[10];
+	string x, y, temp;
 
+	int radarCounter = 0;
+	int sonarCounter = 0;
+
+	//RADAR -------------------------------------
 	made = {};
 	x_int += 50;
-	string x = _itoa(x_int, buff, 10);
-	string y = _itoa(y_int, buff, 10);
-	string temp = "IF radar_dist(point(" + y + ", " + x + "), 100, enemyaircraft) & enemyaircraft.type = recon";
+	x = _itoa(x_int, buff, 10);
+	y = _itoa(y_int, buff, 10);
+	temp = "IF radar_dist(point(" + y + ", " + x + "), 100, enemyaircraft) & enemyaircraft.type = recon";
 	made.push_back(temp);
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN radarenemyaircraft0");
+	made.push_back("THEN radarenemyaircraft"+to_string(vesselNum)+to_string(radarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
-
-
 	made = {};
-	made.push_back("IF exist(radarenemyaircraft0)");
+	made.push_back("IF exist(radarenemyaircraft" + to_string(vesselNum) + to_string(radarCounter)+")");
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN radarenemyaircraftresp0");
+	made.push_back("THEN radarenemyaircraftresp"+ to_string(vesselNum)+ to_string(radarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
+	radarCounter++;
 
 
 	x_int -= 100;
@@ -2057,47 +2040,39 @@ void CRETEmultinodeappDlg::OnBnClickedButton9()
 	temp = "IF radar_dist(point(" + y + ", " + x + "), 100, enemyaircraft) & enemyaircraft.type = recon";
 	made.push_back(temp);
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN radarenemyaircraft1");
+	made.push_back("THEN radarenemyaircraft" + to_string(vesselNum) + to_string(radarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
-
-
 	made = {};
-	made.push_back("IF exist(radarenemyaircraft1)");
+	made.push_back("IF exist(radarenemyaircraft" + to_string(vesselNum) + to_string(radarCounter) + ")");
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN radarenemyaircraftresp1");
+	made.push_back("THEN radarenemyaircraftresp" + to_string(vesselNum) + to_string(radarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
 
 
 	//SONAR -------------------------------------
-	/*x_int = VISUAL_W / 2;
-	y_int = VISUAL_H / 2;*/
-
 	x_int = _wtoi(xStr);
 	y_int = _wtoi(yStr);
-
 	x_int += 50;
 	x = _itoa(x_int, buff, 10);
 	y = _itoa(y_int, buff, 10);
+
 	made = {};
 	temp = "IF sonar_dist(config((0,40),80,(" + y + "," + x + ")), enemyvessel) & enemyvessel.type = recon";
 	made.push_back(temp);
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN sonarenemyvessel0");
+	made.push_back("THEN sonarenemyvessel" + to_string(vesselNum) + to_string(sonarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
-
 	made = {};
-	made.push_back("IF exist(sonarenemyvessel0)");
+	made.push_back("IF exist(sonarenemyvessel" + to_string(vesselNum) + to_string(sonarCounter)+")");
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN sonarenemyvesselresp0");
+	made.push_back("THEN sonarenemyvesselresp" + to_string(vesselNum) + to_string(sonarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
+	sonarCounter++;
+
 
 	x_int -= 100;
 	x = _itoa(x_int, buff, 10);
@@ -2106,39 +2081,35 @@ void CRETEmultinodeappDlg::OnBnClickedButton9()
 	temp = "IF sonar_dist(config((160,200),80,(" + y + "," + x + ")), enemyvessel) & enemyvessel.type = recon";
 	made.push_back(temp);
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN sonarenemyvessel1");
+	made.push_back("THEN sonarenemyvessel" + to_string(vesselNum) + to_string(sonarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
-
 	made = {};
-	made.push_back("IF exist(sonarenemyvessel1)");
+	made.push_back("IF exist(sonarenemyvessel" + to_string(vesselNum) + to_string(sonarCounter) + ")");
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN sonarenemyvesselresp1");
+	made.push_back("THEN sonarenemyvesselresp" + to_string(vesselNum) + to_string(sonarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
+	sonarCounter++;
+
 
 	x_int += 50;
-
 	x = _itoa(x_int, buff, 10);
 	y = _itoa(y_int, buff, 10);
 	made = {};
 	temp = "IF sonar_dist(config((60,110),80,(" + y + "," + x + ")), enemyvessel) & enemyvessel.type = recon";
 	made.push_back(temp);
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN sonarenemyvessel2");
+	made.push_back("THEN sonarenemyvessel" + to_string(vesselNum) + to_string(sonarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
-
 	made = {};
-	made.push_back("IF exist(sonarenemyvessel1)");
+	made.push_back("IF exist(sonarenemyvessel" + to_string(vesselNum) + to_string(sonarCounter) + ")");
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN sonarenemyvesselresp2");
+	made.push_back("THEN sonarenemyvesselresp" + to_string(vesselNum) + to_string(sonarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
+	sonarCounter++;
 
 	x = _itoa(x_int, buff, 10);
 	y = _itoa(y_int, buff, 10);
@@ -2146,21 +2117,19 @@ void CRETEmultinodeappDlg::OnBnClickedButton9()
 	temp = "IF sonar_dist(config((250,290),80,(" + y + "," + x + ")), enemyvessel) & enemyvessel.type = recon";
 	made.push_back(temp);
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN sonarenemyvessel3");
+	made.push_back("THEN sonarenemyvessel" + to_string(vesselNum) + to_string(sonarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
-	
-
 	made = {};
-	made.push_back("IF exist(sonarenemyvessel1)");
+	made.push_back("IF exist(sonarenemyvessel" + to_string(vesselNum) + to_string(sonarCounter) + ")");
 	made.push_back("WINDOW range=2, trigger=1");
-	made.push_back("THEN sonarenemyvesselresp3");
+	made.push_back("THEN sonarenemyvesselresp" + to_string(vesselNum) + to_string(sonarCounter));
 	colMade = ReteNet::parseConditionOriginal(made);
 	ReteNet::growTheNodes(colMade);
 	
+	vesselNum++;
 	updateRuleList();
-	MessageBox(L"Rules for checking Aircraft, Vessels, and Submarines have been inserted",
-		L"Rules Inserted", MB_OK);
+	//MessageBox(L"Rules for checking Aircraft, Vessels, and Submarines have been inserted", L"Rules Inserted", MB_OK);
 }
 
 

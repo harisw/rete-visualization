@@ -56,12 +56,14 @@ private:
 	vector<Node*> visualizedNode;
 	CPen m_oPen;
 	CPen* oldPen;
+	CPen blinkPen;
 	CPen greenPen;
 	CPen bluePen;
 	CPen redPen;
 	CPen thinPen;
 	CPen thickPen;
 	CBrush hollowBrush;
+	CBrush checkerBrush;
 	CRect objRect;
 	CRect nodesRect;
 
