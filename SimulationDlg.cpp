@@ -25,7 +25,7 @@ void SimulationDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	//DDX_Control(pDX, IDC_LIST2, rule_list_ctrl);
-	DDX_Control(pDX, IDC_LIST4, m_alpha_list_ctrl);
+	//DDX_Control(pDX, IDC_LIST4, m_alpha_list_ctrl);
 	DDX_Control(pDX, IDC_LIST3, m_beta_list_ctrl);
 	DDX_Control(pDX, IDC_EDIT1, m_output_ctrl);
 }
@@ -47,15 +47,11 @@ BOOL SimulationDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  Add extra initialization here
-	MoveWindow(50, 30, WIND_WIDTH, WIND_HEIGHT);
-	m_alpha_list_ctrl.InsertColumn(0, _T("AlphaNode Rules"), LVCFMT_LEFT, 600);
+	ShowWindow(SW_SHOWMAXIMIZED);
+	//MoveWindow(50, 30, WIND_WIDTH, WIND_HEIGHT);
 	m_beta_list_ctrl.InsertColumn(0, _T("BetaNode Rules"), LVCFMT_LEFT, 1000);
 
 	DWORD dwStyle;
-	dwStyle = GetDlgItem(IDC_LIST4)->SendMessage(LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0);
-	dwStyle |= LVS_EX_FULLROWSELECT|LVS_REPORT|LVS_EX_GRIDLINES;
-	GetDlgItem(IDC_LIST4)->SendMessage(LVM_SETEXTENDEDLISTVIEWSTYLE, 0, dwStyle);
-	
 	dwStyle = GetDlgItem(IDC_LIST3)->SendMessage(LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0);
 	dwStyle |= LVS_EX_FULLROWSELECT | LVS_REPORT | LVS_EX_GRIDLINES;
 	GetDlgItem(IDC_LIST3)->SendMessage(LVM_SETEXTENDEDLISTVIEWSTYLE, 0, dwStyle);
@@ -92,7 +88,7 @@ BOOL SimulationDlg::OnInitDialog()
 	m_output_ctrl.ShowScrollBar(SB_VERT, TRUE);
 	blinkPen.CreatePen(PS_DOT, 3, RGB(255, 255, 255));
 	
-	//SetTimer(IDT_TIMER_0, 500, NULL);
+	SetTimer(IDT_TIMER_VISNODE, 500, NULL);
 	paintMode = 3;
 
 
@@ -137,28 +133,9 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 
 	switch (nIDEvent)
 	{
-	//case IDT_TIMER_0:
-	//	 
-	//	while (!ReteNet::triggered_ev.empty()) {
-	//		
-	//		output = ReteNet::triggered_ev.front();
-	//		appendTextToEditCtrl(output);
-	//		ReteNet::triggered_ev.pop();
-	//		paintMode = 1;
-	//	}
-	//	if (paintMode == 1) {
-	//		updateNodes();
-	//		if (!nodeUpdate && !initialRete)
-	//			break;
-	//		updateListCtrl();
-	//		CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
-	//		paintNodeVisual(nodesDC);
-	//		initialRete = false;
-	//		//InvalidateRect(nodesRect); //right one
-	//	}
-
-
-	//	break;
+	case IDT_TIMER_VISNODE:
+		draw_node = true;
+		//UpdateWindow(nodesRect);
 	case IDT_TIMER_OBJ_SIMU:
 		if (global_itt >= m_object_location[0].size()) {
 			//Invalidate(false);
@@ -262,9 +239,9 @@ void SimulationDlg::updateListCtrl()
 		currNode = triggered_vect[j];
 		condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
 
-		if (currNode->getType() == "Alpha")
-			m_alpha_list_ctrl.InsertItem(0, condition.c_str());
-		else
+		//if (currNode->getType() == "Alpha")
+		//	m_alpha_list_ctrl.InsertItem(0, condition.c_str());
+		//else
 			m_beta_list_ctrl.InsertItem(0, condition.c_str());
 	}
 	lastTriggeredVect = triggered_vect.size();
@@ -448,21 +425,22 @@ void SimulationDlg::drawNodes(CClientDC& dc)
 {
 	HBRUSH redBrush = CreateSolidBrush(0x000000FF);
 	HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
-
-
+	HBRUSH greenBrush = CreateSolidBrush(0x0000FF00);
+	
 	Node* currNode = nullptr;
 	CPoint currPosition;
 	oldPen = (CPen*)dc.SelectObject(&m_oPen);
 	for (int i = lastUpdateIndex; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
-		if (currNode->getType() == "Alpha")
-			dc.SelectObject(redBrush);
-		else
-			dc.SelectObject(blueBrush);
-		
 		if (currNode->isActivated)
-			dc.SelectObject(blinkPen);
+			dc.SelectObject(greenBrush);
+		else {
+			if (currNode->getType() == "Alpha")
+				dc.SelectObject(redBrush);
+			else
+				dc.SelectObject(blueBrush);
+		}
 
 		currPosition = CPoint(currNode->visualPosition.first, currNode->visualPosition.second);
 
@@ -675,12 +653,12 @@ void SimulationDlg::drawObjects()
 			}
 
 
-			if (!drawn) {
-				
-				m_NodeList = ReteNet::getCopyNodes();
-				paintNodeVisual(nodesDC);
-				drawn = true;
-			}
+			//if (!drawn) {
+			//	
+			//	m_NodeList = ReteNet::getCopyNodes();
+			//	paintNodeVisual(nodesDC);
+			//	drawn = true;
+			//}
 			//while (!ReteNet::triggered_ev.empty()) {
 			//	
 			//	output = ReteNet::triggered_ev.front();

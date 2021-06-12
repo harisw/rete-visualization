@@ -27,7 +27,7 @@
 //#define WIND_HEIGHT 800
 #define RAD_CONST 1.25
 #define DIST_CONST 0.8
-#define IDT_TIMER_0 WM_USER + 200
+#define IDT_TIMER_VISNODE WM_USER + 200
 #define IDT_TIMER_OBJ_SIMU WM_USER + 201
 // SimulationDlg dialog
 
@@ -84,6 +84,7 @@ private:
 	float x_norm, y_norm;
 
 	bool has_drawn;
+	bool draw_node = true;
 	unordered_map<string, int> color_hex_map;
 	unordered_map<int, polygon> spatialNodePolygon;
 	int global_itt = 0;

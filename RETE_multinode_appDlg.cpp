@@ -214,8 +214,8 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	SetDlgItemText(IDC_EDIT_VESSEL_X, L"300");
 	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"150");
 
-	//CRETEmultinodeappDlg::OnBnClickedButton9();
-	//CRETEmultinodeappDlg::SetCoordinate_new();
+	CRETEmultinodeappDlg::OnBnClickedButton9();
+	CRETEmultinodeappDlg::SetCoordinate_new();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
