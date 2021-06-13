@@ -80,8 +80,7 @@ private:
 
 	float x_norm, y_norm;
 
-	bool has_drawn;
-	bool draw_node = true;
+	bool node_first_draw = true;
 	unordered_map<string, int> color_hex_map;
 	unordered_map<int, polygon> spatialNodePolygon;
 	int global_itt = 0;

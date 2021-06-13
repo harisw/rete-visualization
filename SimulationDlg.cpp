@@ -126,9 +126,10 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 	{
 	case IDT_TIMER_VISNODE:
 		paintMode = 3;
-		//InvalidateRect(nodesRect);
+		InvalidateRect(nodesRect);
+		if (global_itt >= m_object_location[0].size())
+			KillTimer(IDT_TIMER_VISNODE);
 		break;
-		//UpdateWindow(nodesRect);
 	case IDT_TIMER_OBJ_SIMU:
 		if (global_itt >= m_object_location[0].size()) {
 			//Invalidate(false);
@@ -224,13 +225,15 @@ void SimulationDlg::paintWMNode(CClientDC &dc)
 
 void SimulationDlg::paintNodeVisual(CClientDC &dc)
 {
-	findSizeScaling(dc);
-	//paintWMNode(nodesDC);
-	getNodesPosition();
+	//if (node_first_draw) {
+		findSizeScaling(dc);
+		getNodesPosition();
+	//}
 	drawConnections(dc);
 	drawNodes(dc);
 	lastUpdateIndex = m_NodeList.size();
 	nodeUpdate = false;
+	node_first_draw = false;
 }
 
 void SimulationDlg::updateListCtrl()
@@ -381,7 +384,7 @@ void SimulationDlg::drawConnections(CClientDC& dc)
 	vector<Node*> nextNodes;
 	//oldPen = (CPen*)dc.SelectObject(&m_oPen);
 
-	for (int i = lastUpdateIndex; i < m_NodeList.size(); i++) {
+	for (int i = 0; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
 		if (currNode->getType() == "Alpha") {
@@ -437,7 +440,7 @@ void SimulationDlg::drawNodes(CClientDC& dc)
 	Node* currNode = nullptr;
 	CPoint currPosition;
 	oldPen = (CPen*)dc.SelectObject(&m_oPen);
-	for (int i = lastUpdateIndex; i < m_NodeList.size(); i++) {
+	for (int i = 0; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
 		if (currNode->isActivated)
@@ -606,7 +609,7 @@ void SimulationDlg::initObjectVisualization()
 
 	spatialNodePolygon = SpatialNodeIndexing::getExistingPolygons();
 
-	has_drawn = false;
+	//has_drawn = false;
 	return;
 }
 
@@ -689,6 +692,6 @@ void SimulationDlg::drawObjects()
 
 		CString cs(_itoa(global_itt, buff, 10));
 		dc.TextOutW(first_loc + 20, second_loc, cs);
-		has_drawn = true;
+		//has_drawn = true;
 	}
 }
