@@ -21,10 +21,6 @@
 
 #define INF 10000 
 #define NODE_SIZE 25
-#define WIND_WIDTH 1800
-#define WIND_HEIGHT 1000
-//#define WIND_WIDTH 1400
-//#define WIND_HEIGHT 800
 #define RAD_CONST 1.25
 #define DIST_CONST 0.8
 #define IDT_TIMER_VISNODE WM_USER + 200
@@ -50,6 +46,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 private:
+	CRect windRect;
 	CPoint wmPos;
 	int wmRad, xWM;
 
@@ -68,7 +65,7 @@ private:
 	CRect nodesRect;
 
 	//vector<Node*> triggeredNodes;
-	int paintMode;
+	int paintMode = 1;
 	typedef boost::geometry::model::d2::point_xy<double> point_type;
 
 	typedef bg::model::point<float, 2, bg::cs::cartesian> point;
@@ -93,7 +90,7 @@ private:
 	float yCorrection = 0;
 	int rad;
 	int distance;
-	int xStart = 50;
+	int xStart = 25;
 	bool initialRete = true;
 	bool nodeUpdate = false;
 	int lastUpdateIndex = 0;

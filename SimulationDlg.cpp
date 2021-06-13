@@ -48,16 +48,14 @@ BOOL SimulationDlg::OnInitDialog()
 
 	// TODO:  Add extra initialization here
 	ShowWindow(SW_SHOWMAXIMIZED);
-	//MoveWindow(50, 30, WIND_WIDTH, WIND_HEIGHT);
-	m_beta_list_ctrl.InsertColumn(0, _T("BetaNode Rules"), LVCFMT_LEFT, 1000);
+	CWnd* parent = this->GetParent();
+	parent->GetWindowRect(&windRect);
 
+	m_beta_list_ctrl.InsertColumn(0, _T("Event Triggered"), LVCFMT_LEFT, 1000);
 	DWORD dwStyle;
 	dwStyle = GetDlgItem(IDC_LIST3)->SendMessage(LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0);
 	dwStyle |= LVS_EX_FULLROWSELECT | LVS_REPORT | LVS_EX_GRIDLINES;
 	GetDlgItem(IDC_LIST3)->SendMessage(LVM_SETEXTENDEDLISTVIEWSTYLE, 0, dwStyle);
-
-
-	//updateListCtrl();
 	
 	CClientDC dc(this);
 	m_dcMem.CreateCompatibleDC(&dc);
@@ -82,17 +80,11 @@ BOOL SimulationDlg::OnInitDialog()
 	CWnd* nodeWnd = GetDlgItem(IDC_STATIC_NODE);
 	nodeWnd->GetClientRect(&nodesRect);
 	nodesRect.top += 30;
-	nodesRect.left += 1095;
-	nodesRect.right += 1095;
+	/*nodesRect.left += 1095;
+	nodesRect.right += 1095;*/
 	
 	m_output_ctrl.ShowScrollBar(SB_VERT, TRUE);
 	blinkPen.CreatePen(PS_DOT, 3, RGB(255, 255, 255));
-	
-	SetTimer(IDT_TIMER_VISNODE, 500, NULL);
-	paintMode = 3;
-
-
-
 
 	BITMAP bm;
 	CBitmap bmpMask, * pOldMask, * pOldSrc;
@@ -130,11 +122,12 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 	// TODO: Add your message handler code here and/or call default
 	string output;
 
-
 	switch (nIDEvent)
 	{
 	case IDT_TIMER_VISNODE:
-		draw_node = true;
+		paintMode = 3;
+		//InvalidateRect(nodesRect);
+		break;
 		//UpdateWindow(nodesRect);
 	case IDT_TIMER_OBJ_SIMU:
 		if (global_itt >= m_object_location[0].size()) {
@@ -142,6 +135,7 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 			KillTimer(IDT_TIMER_OBJ_SIMU);
 			return;
 		}
+		paintMode = 2;
 		drawObjects();
 		//if (has_drawn)
 		//paintMode = 2;
@@ -159,8 +153,21 @@ void SimulationDlg::OnPaint()
 {
 	CDialog::OnPaint();
 
+	CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
+	if (paintMode == 1) {
+		m_NodeList = ReteNet::getCopyNodes();
+		paintNodeVisual(nodesDC);
+		drawObjects();
+		paintMode = 0;
+		SetTimer(IDT_TIMER_VISNODE, 1000, NULL);
+		SetTimer(IDT_TIMER_OBJ_SIMU, 500, NULL);
+	}
+	/*if(paintMode == 2)
+		drawObjects();*/
 	if (paintMode == 3) {
-		SetTimer(IDT_TIMER_OBJ_SIMU, 100, NULL);
+		//m_NodeList = ReteNet::getCopyNodes();
+		paintNodeVisual(nodesDC);
+		paintMode = 0;
 	}
 
 	paintMode = 0;
@@ -276,11 +283,12 @@ void SimulationDlg::updateNodes()
 void SimulationDlg::findSizeScaling(CClientDC &dc)
 {
 	dc.SelectObject(thickPen);
+	int windWidth = windRect.Width();
 	if (m_NodeList.size() < 70) {
 		rad = 47;
-		distance = 70;
+		distance = 50;
 		wmRad = rad + 20;
-		xWM = (WIND_WIDTH / 2) - 450;
+		xWM = (windWidth / 2) - 450;
 		xCorrection = 25;
 		yCorrection = 40;
 		//dc.SelectObject(thickPen);
@@ -289,7 +297,7 @@ void SimulationDlg::findSizeScaling(CClientDC &dc)
 		rad = 40;
 		distance = 55;
 		wmRad = rad + 10;
-		xWM = (WIND_WIDTH / 2) - 150;
+		xWM = (windWidth / 2) - 150;
 		xCorrection = 15;
 		yCorrection = 30;
 	}
@@ -297,7 +305,7 @@ void SimulationDlg::findSizeScaling(CClientDC &dc)
 		rad = 35;
 		distance = 50;
 		wmRad = rad + 5;
-		xWM = (WIND_WIDTH / 2);
+		xWM = (windWidth / 2);
 		xCorrection = 10;
 		yCorrection = 20;
 		//dc.SelectObject(thinPen);
@@ -307,8 +315,7 @@ void SimulationDlg::findSizeScaling(CClientDC &dc)
 void SimulationDlg::getNodesPosition()
 {
 	int yAlpha = distance;
-	int yBeta = 100;
-	int xBeta = 50;
+	int xBeta, yBeta;
 
 	Node* currNode = nullptr;
 	Node* leftInput = nullptr;
@@ -488,7 +495,7 @@ Node* SimulationDlg::findClickedNode(CPoint point)
 	//return nullptr;
 
 	int xMin, xMax, yMin, yMax;
-	float windowH = WIND_HEIGHT; float windowW = WIND_WIDTH;
+	float windowH = windRect.Height(); float windowW = windRect.Width();
 	float xDist = 2.5 * rad * (windowH / windowW);
 	float yDist = 2.5 * rad * (windowW / (windowH * 5));
 
@@ -615,7 +622,6 @@ void SimulationDlg::drawObjects()
 	float first_loc = 0;
 	float second_loc = 0;
 	string output;
-	CClientDC nodesDC(GetDlgItem(IDC_STATIC_NODE));
 	int drawn = false;
 	if (m_object_location.size() > 0) {
 		while (global_itt < m_object_location[0].size() && counter < cycle_step) {
@@ -648,7 +654,7 @@ void SimulationDlg::drawObjects()
 				}
 				dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
 				//Invalidate();
-				Sleep(34);
+				Sleep(24);
 				//Sleep(24);
 			}
 
