@@ -214,8 +214,8 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	SetDlgItemText(IDC_EDIT_VESSEL_X, L"300");
 	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"150");
 
-	CRETEmultinodeappDlg::OnBnClickedButton9();
-	CRETEmultinodeappDlg::SetCoordinate_new();
+	//CRETEmultinodeappDlg::OnBnClickedButton9();
+	//CRETEmultinodeappDlg::SetCoordinate_new();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -500,7 +500,7 @@ void CRETEmultinodeappDlg::SetCoordinate_new() {
 	//int a = 10;
 	fixed_data_num_of_obj = obj_num;
 
-	//MessageBox(L"Data generated sucessfully", L"Congrats", MB_OK);
+	MessageBox(L"Data generated sucessfully", L"Congrats", MB_OK);
 
 	UpdateData(FALSE);
 }
@@ -2129,7 +2129,7 @@ void CRETEmultinodeappDlg::OnBnClickedButton9()
 	
 	vesselNum++;
 	updateRuleList();
-	//MessageBox(L"Rules for checking Aircraft, Vessels, and Submarines have been inserted", L"Rules Inserted", MB_OK);
+	MessageBox(L"Rules for checking Aircraft, Vessels, and Submarines have been inserted", L"Rules Inserted", MB_OK);
 }
 
 

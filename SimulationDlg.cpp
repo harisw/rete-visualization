@@ -177,30 +177,67 @@ void SimulationDlg::OnPaint()
 
 void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	// TODO: Add your message handler code here and/or call default
+	m_output_ctrl.Clear();
+
 	Node* currentNode = findClickedNode(point);
 
-	if (currentNode == nullptr)
+	if (currentNode == nullptr) {
+		wstring output_txt = L"NO Output";
+		m_output_ctrl.SetWindowTextW(output_txt.c_str());
 		return;
+	}
 
-	
+	m_output_ctrl.Clear();
+	string output = "";
 	if (currentNode->getType() == "Alpha") {
-		AlphaNodeDlg* alpha_detail = new AlphaNodeDlg(this);
-		alpha_detail->currNode = dynamic_cast<AlphaNode*>(currentNode);
-		m_alphaDlgs.push_back(alpha_detail);
+		AlphaNode* currentAlpha = dynamic_cast<AlphaNode*>(currentNode);
 
-		alpha_detail->Create(IDD_AlphaNodeDlg);
-		alpha_detail->ShowWindow(SW_SHOW);
+		output += "ID : " + to_string(currentNode->getID())+"\r\n";
+		Node* prevNode = currentAlpha->getPrevNode().second;
+		if (prevNode != NULL)
+			output += "Input : " + prevNode->justCondition + "\r\n";
+		else
+			output += "Input : \r\n";
+
+		output += "Content : " + currentNode->justCondition + "\r\n";
+
+
+		output += "Next Pairs : \r\n";
+		vector<Node*> nextPairs = currentNode->getNextPairs();
+		output += "- " + nextPairs[0]->justCondition;
+
+		for (int j = 1; j < nextPairs.size(); j++) {
+			output += "\r\n- ";
+			output += nextPairs[j]->justCondition;
+		}
+
 	}
 	else {
-		BetaNodeDlg* beta_detail = new BetaNodeDlg(this);
-		beta_detail->currNode = dynamic_cast<BetaNode*>(currentNode);
+		BetaNode* currentBeta = dynamic_cast<BetaNode*>(currentNode);
 
-		m_betaDlgs.push_back(beta_detail);
+		output += "ID : " + to_string(currentNode->getID()) + "\r\n";
+		
+		output += "Left Input : " + currentBeta->getLeftConnName() + "\r\n";
+		
+		output += "Right Input : " + currentBeta->getRightConnName() + "\r\n";
 
-		beta_detail->Create(IDD_BetaNodeDlg);
-		beta_detail->ShowWindow(SW_SHOW);
+		output += "Content : " + currentNode->justCondition + "\r\n";
+
+
+		output += "Next Pairs : \r\n";
+		vector<Node*> nextPairs = currentNode->getNextPairs();
+
+		if (nextPairs.size() > 0) {
+			output += "- " + nextPairs[0]->justCondition;
+			for (int j = 1; j < nextPairs.size(); j++) {
+				output += "\r\n- ";
+				output += nextPairs[j]->justCondition;
+			}
+		}
+
 	}
+	wstring output_txt(output.begin(), output.end());
+	m_output_ctrl.SetWindowTextW(output_txt.c_str());
 	CDialog::OnLButtonDown(nFlags, point);
 }
 
@@ -325,7 +362,7 @@ void SimulationDlg::getNodesPosition()
 	Node* rightInput = nullptr;
 	BetaNode* currentBeta = nullptr;
 
-	nodePositions.clear(); //Reset node position
+	//nodePositions.clear(); //Reset node position
 	for (int i = lastUpdateIndex; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
