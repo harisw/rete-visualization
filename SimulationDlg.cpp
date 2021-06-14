@@ -36,6 +36,7 @@ BEGIN_MESSAGE_MAP(SimulationDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_DESTROY()
+	ON_BN_CLICKED(IDC_BUTTON1, &SimulationDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -86,13 +87,11 @@ BOOL SimulationDlg::OnInitDialog()
 	m_output_ctrl.ShowScrollBar(SB_VERT, TRUE);
 	blinkPen.CreatePen(PS_DOT, 3, RGB(255, 255, 255));
 
-	BITMAP bm;
-	CBitmap bmpMask, * pOldMask, * pOldSrc;
-	CDC dcMask;
-	static const WORD wPat[8] = { 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa };
-	//const_cast<CBitmap&>(rSrc).GetBitmap(&bm);
-	bmpMask.CreateBitmap(8, 8, 1, 1, wPat);
-	checkerBrush.CreatePatternBrush(&bmpMask);
+	redBrush.CreateSolidBrush(0x000000FF);
+	blueBrush.CreateSolidBrush(0x00FF0000);
+	greenBrush.CreateSolidBrush(0x0000FF00);
+	highlightedBrush.CreateSolidBrush(0x00EA51FF);
+	
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
@@ -159,26 +158,24 @@ void SimulationDlg::OnPaint()
 		m_NodeList = ReteNet::getCopyNodes();
 		paintNodeVisual(nodesDC);
 		drawObjects();
-		paintMode = 0;
 		SetTimer(IDT_TIMER_VISNODE, 1000, NULL);
 		SetTimer(IDT_TIMER_OBJ_SIMU, 500, NULL);
 	}
 	/*if(paintMode == 2)
 		drawObjects();*/
-	if (paintMode == 3) {
+	if (paintMode == 3 || highlightMode) {
 		//m_NodeList = ReteNet::getCopyNodes();
 		paintNodeVisual(nodesDC);
-		paintMode = 0;
 	}
 
 	paintMode = 0;
-	
+	highlightMode = false;
 }
 
 void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	m_output_ctrl.Clear();
-
+	
 	Node* currentNode = findClickedNode(point);
 
 	if (currentNode == nullptr) {
@@ -187,6 +184,7 @@ void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		return;
 	}
 
+	highlighted_NodeID.insert(currentNode->SuperNodeID);
 	m_output_ctrl.Clear();
 	string output = "";
 	if (currentNode->getType() == "Alpha") {
@@ -194,8 +192,10 @@ void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 		output += "ID : " + to_string(currentNode->getID())+"\r\n";
 		Node* prevNode = currentAlpha->getPrevNode().second;
-		if (prevNode != NULL)
-			output += "Input : " + prevNode->justCondition + "\r\n";
+		if (prevNode != NULL) {
+			highlighted_NodeID.insert(prevNode->SuperNodeID);
+			output += "Input : " + to_string(prevNode->SuperNodeID) + " || " + prevNode->justCondition + "\r\n";
+		}
 		else
 			output += "Input : \r\n";
 
@@ -217,9 +217,10 @@ void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 		output += "ID : " + to_string(currentNode->getID()) + "\r\n";
 		
-		output += "Left Input : " + currentBeta->getLeftConnName() + "\r\n";
-		
-		output += "Right Input : " + currentBeta->getRightConnName() + "\r\n";
+		if(currentBeta->leftSourcePair.second != NULL)
+			output += "Left Input : " + to_string(currentBeta->leftSourcePair.second->SuperNodeID) + " || " + currentBeta->getLeftConnName() + "\r\n";
+		if (currentBeta->rightSourcePair.second != NULL)
+			output += "Right Input : " + to_string(currentBeta->rightSourcePair.second->SuperNodeID) + " || " + currentBeta->getRightConnName() + "\r\n";
 
 		output += "Content : " + currentNode->justCondition + "\r\n";
 
@@ -235,9 +236,18 @@ void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 		}
 
+		if(currentBeta->leftSourcePair.second != NULL)
+			highlighted_NodeID.insert(currentBeta->leftSourcePair.second->SuperNodeID);
+		if (currentBeta->rightSourcePair.second != NULL)
+			highlighted_NodeID.insert(currentBeta->rightSourcePair.second->SuperNodeID);
 	}
 	wstring output_txt(output.begin(), output.end());
 	m_output_ctrl.SetWindowTextW(output_txt.c_str());
+
+	//repaint highlighted
+	highlightMode = true;
+	InvalidateRect(nodesRect);
+
 	CDialog::OnLButtonDown(nFlags, point);
 }
 
@@ -271,6 +281,8 @@ void SimulationDlg::paintNodeVisual(CClientDC &dc)
 	lastUpdateIndex = m_NodeList.size();
 	nodeUpdate = false;
 	node_first_draw = false;
+	highlighted_NodeID.clear();
+
 }
 
 void SimulationDlg::updateListCtrl()
@@ -424,6 +436,9 @@ void SimulationDlg::drawConnections(CClientDC& dc)
 	for (int i = 0; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
+		if (highlightMode && highlighted_NodeID.find(currNode->SuperNodeID) == highlighted_NodeID.end())	//SKIP IF NOT HIGHLIGHTED in highlight mode
+			continue;
+
 		if (currNode->getType() == "Alpha") {
 			currentAlpha = dynamic_cast<AlphaNode*>(currNode);
 
@@ -435,6 +450,8 @@ void SimulationDlg::drawConnections(CClientDC& dc)
 			nextNodes = currentAlpha->getNextPairs();
 			for (int j = 0; j < nextNodes.size(); j++) {
 				if (nextNodes[j]->visualPosition == make_pair(0, 0))
+					continue;
+				if (highlightMode && highlighted_NodeID.find(nextNodes[j]->SuperNodeID) == highlighted_NodeID.end())
 					continue;
 				dc.MoveTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
 				dc.LineTo(nextNodes[j]->visualPosition.first + xCorrection, nextNodes[j]->visualPosition.second + yCorrection);
@@ -457,6 +474,8 @@ void SimulationDlg::drawConnections(CClientDC& dc)
 			for (int j = 0; j < nextNodes.size(); j++) {
 				if (nextNodes[j]->visualPosition == make_pair(0, 0))
 					continue;
+				if (highlightMode && highlighted_NodeID.find(nextNodes[j]->SuperNodeID) == highlighted_NodeID.end())
+					continue;
 				dc.MoveTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
 				dc.LineTo(nextNodes[j]->visualPosition.first + xCorrection, nextNodes[j]->visualPosition.second + yCorrection);
 			}
@@ -469,18 +488,17 @@ void SimulationDlg::drawConnections(CClientDC& dc)
 }
 
 void SimulationDlg::drawNodes(CClientDC& dc)
-{
-	HBRUSH redBrush = CreateSolidBrush(0x000000FF);
-	HBRUSH blueBrush = CreateSolidBrush(0x00FF0000);
-	HBRUSH greenBrush = CreateSolidBrush(0x0000FF00);
-	
+{	
 	Node* currNode = nullptr;
 	CPoint currPosition;
 	oldPen = (CPen*)dc.SelectObject(&m_oPen);
 	for (int i = 0; i < m_NodeList.size(); i++) {
 		currNode = m_NodeList[i];
 
-		if (currNode->isActivated)
+		
+		if(highlightMode && highlighted_NodeID.find(currNode->SuperNodeID) != highlighted_NodeID.end())		//PAINT FOR HIGHLIGHTED NODE
+			dc.SelectObject(highlightedBrush);
+		else if (currNode->isActivated)
 			dc.SelectObject(greenBrush);
 		else {
 			if (currNode->getType() == "Alpha")
@@ -698,30 +716,7 @@ void SimulationDlg::drawObjects()
 				//Sleep(24);
 			}
 
-
-			//if (!drawn) {
-			//	
-			//	m_NodeList = ReteNet::getCopyNodes();
-			//	paintNodeVisual(nodesDC);
-			//	drawn = true;
-			//}
-			//while (!ReteNet::triggered_ev.empty()) {
-			//	
-			//	output = ReteNet::triggered_ev.front();
-			//	appendTextToEditCtrl(output);
-			//	ReteNet::triggered_ev.pop();
-			//	paintMode = 1;
-			//}
-			//if (paintMode == 1) {
-			//	updateNodes();
 			updateListCtrl();
-			//	if (nodeUpdate || initialRete) {
-			//		
-			//		paintNodeVisual(nodesDC);
-			//		initialRete = false;
-			//	}
-			//	//InvalidateRect(nodesRect); //right one
-			//}
 
 			global_itt++;
 			counter++;
@@ -731,4 +726,11 @@ void SimulationDlg::drawObjects()
 		dc.TextOutW(first_loc + 20, second_loc, cs);
 		//has_drawn = true;
 	}
+}
+
+void SimulationDlg::OnBnClickedButton1()
+{
+	paintMode = 3;
+	InvalidateRect(nodesRect);
+	// TODO: Add your control notification handler code here
 }

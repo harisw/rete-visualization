@@ -61,6 +61,10 @@ private:
 	CPen thickPen;
 	CBrush hollowBrush;
 	CBrush checkerBrush;
+	CBrush redBrush;
+	CBrush blueBrush;
+	CBrush greenBrush;
+	CBrush highlightedBrush;
 	CRect objRect;
 	CRect nodesRect;
 
@@ -94,7 +98,7 @@ private:
 	bool nodeUpdate = false;
 	int lastUpdateIndex = 0;
 	int lastTriggeredVect = 0;
-
+	bool highlightMode = false;
 	vector<AlphaNodeDlg*> m_alphaDlgs;
 	vector<BetaNodeDlg*> m_betaDlgs;
 
@@ -133,7 +137,7 @@ public:
 	CListCtrl m_beta_list_ctrl;
 	vector<Node*> m_NodeList;
 	vector<Node*> m_newNodes;
-
+	set<int, greater<int>> highlighted_NodeID;
 	CEdit m_output_ctrl;
 
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
@@ -144,6 +148,7 @@ public:
 	void getNodesPosition();
 
 	afx_msg void OnDestroy();
+	afx_msg void OnBnClickedButton1();
 };
 
 //#endif // !SIMUDLG_H

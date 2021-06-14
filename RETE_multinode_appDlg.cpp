@@ -205,16 +205,21 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	m_trajectoryCombo.SetCurSel(0);
 
 	SetDlgItemText(IDC_EDITCOOR_0, L"50,50");
-	SetDlgItemText(IDC_EDITCOOR_1, L"600,150");
-	SetDlgItemText(IDC_EDITCOOR_2, L"100,300");
+	//SetDlgItemText(IDC_EDITCOOR_1, L"600,150");
+	SetDlgItemText(IDC_EDITCOOR_2, L"600,150");
 
-	SetDlgItemText(IDC_EDITCOOR_5, L"5");
+	SetDlgItemText(IDC_EDITCOOR_5, L"3");
 	SetDlgItemText(IDC_EDITCOOR_6, L"30");
 
+	//SET UP VESSEL INPUT
 	SetDlgItemText(IDC_EDIT_VESSEL_X, L"300");
 	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"150");
+	CRETEmultinodeappDlg::OnBnClickedButton9();
 
-	//CRETEmultinodeappDlg::OnBnClickedButton9();
+	SetDlgItemText(IDC_EDIT_VESSEL_X, L"450");
+	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"450");
+	CRETEmultinodeappDlg::OnBnClickedButton9();
+
 	//CRETEmultinodeappDlg::SetCoordinate_new();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -1950,6 +1955,7 @@ void CRETEmultinodeappDlg::OnBnClickedButton7()
 }
 
 
+//VESSEL RULE INSERTION
 void CRETEmultinodeappDlg::OnBnClickedButton9()
 {
 	UpdateData(true);
@@ -2129,7 +2135,7 @@ void CRETEmultinodeappDlg::OnBnClickedButton9()
 	
 	vesselNum++;
 	updateRuleList();
-	MessageBox(L"Rules for checking Aircraft, Vessels, and Submarines have been inserted", L"Rules Inserted", MB_OK);
+	//MessageBox(L"Rules for checking Aircraft, Vessels, and Submarines have been inserted", L"Rules Inserted", MB_OK);
 }
 
 

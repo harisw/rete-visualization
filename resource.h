@@ -75,7 +75,6 @@
 #define IDC_EDITCOOR_7                  1049
 #define IDC_STATIC_OBJECT               1049
 #define IDC_STATIC_NODE                 1050
-#define IDC_CHECK2                      1053
 
 // Next default values for new objects
 // 
