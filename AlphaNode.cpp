@@ -350,7 +350,7 @@ int AlphaNode::justTest(int TimeSlice)
 		//ReteNet::triggered_ev.push(justCondition);
 		ReteNet::triggered_node.insert(make_pair(n->justCondition, n));
 		ReteNet::triggered_node_vect.push_back(n);
-
+		n->isActivated = true;
 	}
 
 	if (EventResult.size() > 0) {
