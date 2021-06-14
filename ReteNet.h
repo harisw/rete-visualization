@@ -111,6 +111,7 @@ public:
 	static queue< string > triggered_ev;
 	static map<string, Node*> triggered_node;
 	static vector<Node*> triggered_node_vect;
+	static bool is_execution_done;
 	/*static void pushTriggeredEvent(string inpEvent) {
 		triggered_ev.push_back(inpEvent);
 		return;

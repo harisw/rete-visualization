@@ -126,7 +126,7 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 	case IDT_TIMER_VISNODE:
 		paintMode = 3;
 		InvalidateRect(nodesRect);
-		if (global_itt >= m_object_location[0].size())
+		if (ReteNet::is_execution_done)
 			KillTimer(IDT_TIMER_VISNODE);
 		break;
 	case IDT_TIMER_OBJ_SIMU:
@@ -159,7 +159,7 @@ void SimulationDlg::OnPaint()
 		paintNodeVisual(nodesDC);
 		drawObjects();
 		SetTimer(IDT_TIMER_VISNODE, 1000, NULL);
-		SetTimer(IDT_TIMER_OBJ_SIMU, 500, NULL);
+		SetTimer(IDT_TIMER_OBJ_SIMU, 1000, NULL);
 	}
 	/*if(paintMode == 2)
 		drawObjects();*/
@@ -451,8 +451,8 @@ void SimulationDlg::drawConnections(CClientDC& dc)
 			for (int j = 0; j < nextNodes.size(); j++) {
 				if (nextNodes[j]->visualPosition == make_pair(0, 0))
 					continue;
-				if (highlightMode && highlighted_NodeID.find(nextNodes[j]->SuperNodeID) == highlighted_NodeID.end())
-					continue;
+				//if (highlightMode && highlighted_NodeID.find(nextNodes[j]->SuperNodeID) == highlighted_NodeID.end())
+				//	continue;
 				dc.MoveTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
 				dc.LineTo(nextNodes[j]->visualPosition.first + xCorrection, nextNodes[j]->visualPosition.second + yCorrection);
 			}
@@ -474,8 +474,8 @@ void SimulationDlg::drawConnections(CClientDC& dc)
 			for (int j = 0; j < nextNodes.size(); j++) {
 				if (nextNodes[j]->visualPosition == make_pair(0, 0))
 					continue;
-				if (highlightMode && highlighted_NodeID.find(nextNodes[j]->SuperNodeID) == highlighted_NodeID.end())
-					continue;
+				/*if (highlightMode && highlighted_NodeID.find(nextNodes[j]->SuperNodeID) == highlighted_NodeID.end())
+					continue;*/
 				dc.MoveTo(currNode->visualPosition.first + xCorrection, currNode->visualPosition.second + yCorrection);
 				dc.LineTo(nextNodes[j]->visualPosition.first + xCorrection, nextNodes[j]->visualPosition.second + yCorrection);
 			}
@@ -712,15 +712,15 @@ void SimulationDlg::drawObjects()
 				}
 				dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
 				//Invalidate();
-				Sleep(24);
+				Sleep(304);
 				//Sleep(24);
 			}
 
-			updateListCtrl();
 
 			global_itt++;
 			counter++;
 		}
+		updateListCtrl();
 
 		CString cs(_itoa(global_itt, buff, 10));
 		dc.TextOutW(first_loc + 20, second_loc, cs);

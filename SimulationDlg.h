@@ -88,7 +88,7 @@ private:
 	unordered_map<string, int> color_hex_map;
 	unordered_map<int, polygon> spatialNodePolygon;
 	int global_itt = 0;
-	int cycle_step = 10;
+	int cycle_step = 5;
 	float xCorrection = 0;
 	float yCorrection = 0;
 	int rad;

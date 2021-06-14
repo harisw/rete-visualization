@@ -785,10 +785,10 @@ int BetaNode::justTest(int TimeSlice)
 #ifdef ONLY_TRIGGER_RESULT
 		output_stream << "-------------------> TRIGGERED event: " << thisProduct
 			<< " --- " << Utilities::translateTime(Utilities::getTimeSec()) << endl;
-		/*ReteNet::triggered_ev.push(output_stream.str());
+		ReteNet::triggered_ev.push(output_stream.str());
 		ReteNet::triggered_node.insert(make_pair(justCondition, this));
-		ReteNet::triggered_node_vect.push_back(this);*/
-
+		ReteNet::triggered_node_vect.push_back(this);
+		this->isActivated = true;
 		cout << "-------------------> TRIGGERED event: " << thisProduct
 			<< " --- " << Utilities::translateTime(Utilities::getTimeSec()) << endl;
 #endif // ONLY_TRIGGER_RESULT
