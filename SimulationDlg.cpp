@@ -179,7 +179,7 @@ void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	Node* currentNode = findClickedNode(point);
 
 	if (currentNode == nullptr) {
-		wstring output_txt = L"NO Output";
+		wstring output_txt = L"No Output";
 		m_output_ctrl.SetWindowTextW(output_txt.c_str());
 		return;
 	}
@@ -190,16 +190,16 @@ void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	if (currentNode->getType() == "Alpha") {
 		AlphaNode* currentAlpha = dynamic_cast<AlphaNode*>(currentNode);
 
-		output += "ID : " + to_string(currentNode->getID())+"\r\n";
+		output += "ID : " + to_string(currentNode->getID())+"\r\n\r\n";
 		Node* prevNode = currentAlpha->getPrevNode().second;
 		if (prevNode != NULL) {
 			highlighted_NodeID.insert(prevNode->SuperNodeID);
-			output += "Input : " + to_string(prevNode->SuperNodeID) + " || " + prevNode->justCondition + "\r\n";
+			output += "Input : " + prevNode->justCondition + "\r\n\r\n";
 		}
 		else
 			output += "Input : \r\n";
 
-		output += "Content : " + currentNode->justCondition + "\r\n";
+		output += "Content : " + currentNode->justCondition + "\r\n\r\n";
 
 
 		output += "Next Pairs : \r\n";
@@ -215,14 +215,14 @@ void SimulationDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	else {
 		BetaNode* currentBeta = dynamic_cast<BetaNode*>(currentNode);
 
-		output += "ID : " + to_string(currentNode->getID()) + "\r\n";
+		output += "ID : " + to_string(currentNode->getID()) + "\r\n\r\n";
 		
 		if(currentBeta->leftSourcePair.second != NULL)
-			output += "Left Input : " + to_string(currentBeta->leftSourcePair.second->SuperNodeID) + " || " + currentBeta->getLeftConnName() + "\r\n";
+			output += "Left Input : "+ currentBeta->getLeftConnName() + "\r\n";
 		if (currentBeta->rightSourcePair.second != NULL)
-			output += "Right Input : " + to_string(currentBeta->rightSourcePair.second->SuperNodeID) + " || " + currentBeta->getRightConnName() + "\r\n";
+			output += "Right Input : "+ currentBeta->getRightConnName() + "\r\n\r\n";
 
-		output += "Content : " + currentNode->justCondition + "\r\n";
+		output += "Content : " + currentNode->justCondition + "\r\n\r\n";
 
 
 		output += "Next Pairs : \r\n";
