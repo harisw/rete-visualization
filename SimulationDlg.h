@@ -93,6 +93,7 @@ private:
 	float yCorrection = 0;
 	int rad;
 	int distance;
+	int yDistance;
 	int xStart = 25;
 	bool initialRete = true;
 	bool nodeUpdate = false;

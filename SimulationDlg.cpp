@@ -315,6 +315,7 @@ void SimulationDlg::findSizeScaling(CClientDC &dc)
 	int windWidth = windRect.Width();
 	if (m_NodeList.size() < 70) {
 		rad = 47;
+		yDistance = 100;
 		distance = 50;
 		wmRad = rad + 20;
 		xWM = (windWidth / 2) - 450;
@@ -368,12 +369,12 @@ void SimulationDlg::getNodesPosition()
 
 			if (leftInput != nullptr && rightInput != nullptr) {
 				xBeta = (leftInput->visualPosition.first + rightInput->visualPosition.first) / 2;
-				yBeta = max(leftInput->visualPosition.second, rightInput->visualPosition.second) + distance;
+				yBeta = max(leftInput->visualPosition.second, rightInput->visualPosition.second) + yDistance;
 			}
 			else {
 				xBeta = leftInput != nullptr ? leftInput->visualPosition.first : rightInput->visualPosition.first;
 				yBeta = leftInput != nullptr ? leftInput->visualPosition.second : rightInput->visualPosition.second; 
-				yBeta += distance;
+				yBeta += yDistance;
 			}
 
 
@@ -500,13 +501,13 @@ CPoint SimulationDlg::getPosition(int x, int y)
 		return CPoint(x, y);
 
 	x += (distance / 3);
-	y += (distance / 2.5);
+	y += (yDistance / 2.5);
 	candidate1 = CPoint(x, y + (rad / 4));
 	candidate2 = CPoint(x + rad, y + (rad / 4));
 
 	while (findClickedNode(candidate1) != nullptr || findClickedNode(candidate2) != nullptr) {
 		x += (distance / 2);
-		y += (distance / 2);
+		y += (yDistance / 2);
 		candidate1 = CPoint(x, y + (rad / 4));
 		candidate2 = CPoint(x + rad, y + (rad / 4));
 	}
@@ -529,8 +530,8 @@ Node* SimulationDlg::findClickedNode(CPoint point)
 
 	int xMin, xMax, yMin, yMax;
 	float windowH = windRect.Height(); float windowW = windRect.Width();
-	float xDist = 2.5 * rad * (windowH / windowW);
-	float yDist = 2.5 * rad * (windowW / (windowH * 5));
+	float xDist = 2 * rad * (windowH / windowW);
+	float yDist = 3 * rad * (windowW / (windowH * 5));
 
 	//cout << "CLICKED (" << x << ", " << y << ")" << endl;
 	while (l <= r) {
