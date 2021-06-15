@@ -211,14 +211,14 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 	SetDlgItemText(IDC_EDITCOOR_5, L"3");
 	SetDlgItemText(IDC_EDITCOOR_6, L"50");
 
-	//SET UP VESSEL INPUT
+	////SET UP VESSEL INPUT
 	SetDlgItemText(IDC_EDIT_VESSEL_X, L"300");
 	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"150");
-	CRETEmultinodeappDlg::OnBnClickedButton9();
+	//CRETEmultinodeappDlg::OnBnClickedButton9();
 
-	SetDlgItemText(IDC_EDIT_VESSEL_X, L"450");
-	SetDlgItemText(IDC_EDIT_VESSEL_Y, L"450");
-	CRETEmultinodeappDlg::OnBnClickedButton9();
+	//SetDlgItemText(IDC_EDIT_VESSEL_X, L"450");
+	//SetDlgItemText(IDC_EDIT_VESSEL_Y, L"450");
+	//CRETEmultinodeappDlg::OnBnClickedButton9();
 
 	//CRETEmultinodeappDlg::SetCoordinate_new();
 

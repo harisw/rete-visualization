@@ -157,7 +157,7 @@ void SimulationDlg::OnPaint()
 	if (paintMode == 1) {
 		m_NodeList = ReteNet::getCopyNodes();
 		paintNodeVisual(nodesDC);
-		drawObjects();
+		//drawObjects();
 		SetTimer(IDT_TIMER_VISNODE, 1000, NULL);
 		SetTimer(IDT_TIMER_OBJ_SIMU, 1000, NULL);
 	}
