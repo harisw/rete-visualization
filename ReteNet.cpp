@@ -22,6 +22,7 @@ vector<Node*> ReteNet::NodeList;
 queue< string > ReteNet::triggered_ev;
 map<string, Node*> ReteNet::triggered_node;
 vector<Node*> ReteNet::triggered_node_vect;
+vector<bool> ReteNet::triggered_node_ID;
 bool ReteNet::is_execution_done = false;
 
 //this is spatial node indexing

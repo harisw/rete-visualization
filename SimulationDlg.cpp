@@ -37,6 +37,7 @@ BEGIN_MESSAGE_MAP(SimulationDlg, CDialogEx)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BUTTON1, &SimulationDlg::OnBnClickedButton1)
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -55,7 +56,7 @@ BOOL SimulationDlg::OnInitDialog()
 	m_beta_list_ctrl.InsertColumn(0, _T("Event Triggered"), LVCFMT_LEFT, 1000);
 	DWORD dwStyle;
 	dwStyle = GetDlgItem(IDC_LIST3)->SendMessage(LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0);
-	dwStyle |= LVS_EX_FULLROWSELECT | LVS_REPORT | LVS_EX_GRIDLINES;
+	dwStyle |= LVS_EX_FULLROWSELECT | LVS_REPORT | LVS_EX_GRIDLINES | WS_CLIPCHILDREN;
 	GetDlgItem(IDC_LIST3)->SendMessage(LVM_SETEXTENDEDLISTVIEWSTYLE, 0, dwStyle);
 	
 	CClientDC dc(this);
@@ -128,15 +129,19 @@ void SimulationDlg::OnTimer(UINT_PTR nIDEvent)
 		InvalidateRect(nodesRect);
 		if (ReteNet::is_execution_done)
 			KillTimer(IDT_TIMER_VISNODE);
+		updateListCtrl();
 		break;
 	case IDT_TIMER_OBJ_SIMU:
 		if (global_itt >= m_object_location[0].size()) {
 			//Invalidate(false);
+			m_beta_list_ctrl.DeleteAllItems();
+			updateListCtrl();
 			KillTimer(IDT_TIMER_OBJ_SIMU);
 			return;
 		}
 		paintMode = 2;
 		drawObjects();
+		
 		//if (has_drawn)
 		//paintMode = 2;
 		//Invalidate(objRect);
@@ -158,7 +163,7 @@ void SimulationDlg::OnPaint()
 		m_NodeList = ReteNet::getCopyNodes();
 		paintNodeVisual(nodesDC);
 		//drawObjects();
-		SetTimer(IDT_TIMER_VISNODE, 1000, NULL);
+		SetTimer(IDT_TIMER_VISNODE, 1500, NULL);
 		SetTimer(IDT_TIMER_OBJ_SIMU, 1000, NULL);
 	}
 	/*if(paintMode == 2)
@@ -166,6 +171,7 @@ void SimulationDlg::OnPaint()
 	if (paintMode == 3 || highlightMode) {
 		//m_NodeList = ReteNet::getCopyNodes();
 		paintNodeVisual(nodesDC);
+		fill(ReteNet::triggered_node_ID.begin(), ReteNet::triggered_node_ID.end(), false);
 	}
 
 	paintMode = 0;
@@ -272,10 +278,11 @@ void SimulationDlg::paintWMNode(CClientDC &dc)
 
 void SimulationDlg::paintNodeVisual(CClientDC &dc)
 {
-	//if (node_first_draw) {
-		findSizeScaling(dc);
+	findSizeScaling(dc);
+	if (paintMode == 1) {
+
 		getNodesPosition();
-	//}
+	}
 	drawConnections(dc);
 	drawNodes(dc);
 	lastUpdateIndex = m_NodeList.size();
@@ -297,40 +304,10 @@ void SimulationDlg::updateListCtrl()
 	{
 		currNode = triggered_vect[j];
 		condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
-
-		//if (currNode->getType() == "Alpha")
-		//	m_alpha_list_ctrl.InsertItem(0, condition.c_str());
-		//else
 			m_beta_list_ctrl.InsertItem(0, condition.c_str());
 	}
 	lastTriggeredVect = triggered_vect.size();
-	/*for (int j = 0; j < m_NodeList.size(); j++)
-	{
-		currNode = m_NodeList[j];
-		condition = wstring(currNode->justCondition.begin(), currNode->justCondition.end());
-
-		if (currNode->getType() == "Alpha")
-			m_alpha_list_ctrl.InsertItem(0, condition.c_str());
-		else
-			m_beta_list_ctrl.InsertItem(0, condition.c_str());
-	}*/
 }
-
-void SimulationDlg::updateNodes()
-{	
-	for (nodeMap::iterator it = ReteNet::triggered_node.begin(); it != ReteNet::triggered_node.end(); ++it) {
-		if (!initialRete) {
-			if (find(m_NodeList.begin(), m_NodeList.end(), it->second) == m_NodeList.end()) {
-				nodeUpdate = true;
-				m_NodeList.push_back(it->second);
-			}
-		}
-		else {
-			m_NodeList.push_back(it->second);
-		}
-	}
-}
-
 
 void SimulationDlg::findSizeScaling(CClientDC &dc)
 {
@@ -343,7 +320,6 @@ void SimulationDlg::findSizeScaling(CClientDC &dc)
 		xWM = (windWidth / 2) - 450;
 		xCorrection = 25;
 		yCorrection = 40;
-		//dc.SelectObject(thickPen);
 	}
 	else if (m_NodeList.size() < 100) {
 		rad = 40;
@@ -360,7 +336,6 @@ void SimulationDlg::findSizeScaling(CClientDC &dc)
 		xWM = (windWidth / 2);
 		xCorrection = 10;
 		yCorrection = 20;
-		//dc.SelectObject(thinPen);
 	}
 }
 
@@ -498,7 +473,7 @@ void SimulationDlg::drawNodes(CClientDC& dc)
 		
 		if(highlightMode && highlighted_NodeID.find(currNode->SuperNodeID) != highlighted_NodeID.end())		//PAINT FOR HIGHLIGHTED NODE
 			dc.SelectObject(highlightedBrush);
-		else if (currNode->isActivated)
+		else if (ReteNet::triggered_node_ID[currNode->SuperNodeID])
 			dc.SelectObject(greenBrush);
 		else {
 			if (currNode->getType() == "Alpha")
@@ -681,6 +656,8 @@ void SimulationDlg::drawObjects()
 	float second_loc = 0;
 	string output;
 	int drawn = false;
+	m_beta_list_ctrl.DeleteAllItems();	//RESET OUTPUT
+
 	if (m_object_location.size() > 0) {
 		while (global_itt < m_object_location[0].size() && counter < cycle_step) {
 		//while (global_itt < m_object_location[0].size()) {
@@ -713,15 +690,13 @@ void SimulationDlg::drawObjects()
 				dc.Ellipse(first_loc - rad, second_loc - rad, first_loc + rad, second_loc + rad);
 				//Invalidate();
 				Sleep(304);
-				//Sleep(24);
+				//Sleep(84);
 			}
 
 
 			global_itt++;
 			counter++;
 		}
-		updateListCtrl();
-
 		CString cs(_itoa(global_itt, buff, 10));
 		dc.TextOutW(first_loc + 20, second_loc, cs);
 		//has_drawn = true;
@@ -733,4 +708,12 @@ void SimulationDlg::OnBnClickedButton1()
 	paintMode = 3;
 	InvalidateRect(nodesRect);
 	// TODO: Add your control notification handler code here
+}
+
+
+BOOL SimulationDlg::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: Add your message handler code here and/or call default
+	return true;
+	return CDialogEx::OnEraseBkgnd(pDC);
 }

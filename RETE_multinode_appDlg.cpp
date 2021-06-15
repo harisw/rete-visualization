@@ -206,7 +206,7 @@ BOOL CRETEmultinodeappDlg::OnInitDialog()
 
 	SetDlgItemText(IDC_EDITCOOR_0, L"50,50");
 	SetDlgItemText(IDC_EDITCOOR_1, L"600,150");
-	SetDlgItemText(IDC_EDITCOOR_2, L"150,150");
+	SetDlgItemText(IDC_EDITCOOR_2, L"100,350");
 
 	SetDlgItemText(IDC_EDITCOOR_5, L"3");
 	SetDlgItemText(IDC_EDITCOOR_6, L"50");
@@ -1965,7 +1965,6 @@ void CRETEmultinodeappDlg::OnBnClickedButton9()
 	vector<string> made;
 	vector<vector<pair<string, string>>> colMade;
 
-
 	if (first_vessel) {
 		//vessels
 		made = {};
@@ -2175,6 +2174,8 @@ void CRETEmultinodeappDlg::OnBnClickedSimu1()
 {
 	SimulationDlg dlg;
 	//dlg.m_NodeList = ReteNet::getCopyNodes();
+	ReteNet::triggered_node_ID.resize(ReteNet::GetNumberOfNodes()+1);
+	fill(ReteNet::triggered_node_ID.begin(), ReteNet::triggered_node_ID.end(), false);
 	MFC_FixedMultiThread::start(fixed_data_num_of_obj);
 	dlg.num_of_obj = fixed_data_num_of_obj;
 	dlg.DoModal();

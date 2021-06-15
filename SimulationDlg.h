@@ -144,11 +144,11 @@ public:
 	afx_msg void OnPaint();
 	void paintNodeVisual(CClientDC& dc);
 	void updateListCtrl();
-	void updateNodes();
 	void getNodesPosition();
 
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedButton1();
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };
 
 //#endif // !SIMUDLG_H
