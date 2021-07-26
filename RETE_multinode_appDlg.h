@@ -8,9 +8,9 @@
 #include "ReteNet.h"
 #include "MFC_MultiThread.h"
 #include "MFC_FixedMultiThread.h"
-#include "RulesVisualDlg.h"
-#include "ObjectVisualization.h"
+
 #include "GenerateData.h"
+#include "SimulationDlg.h"
 
 using namespace std;
 
@@ -41,8 +41,16 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+private:
+	wstring vectToWstr(vector<string>* inp);
+	int ruleCount = 0;
+	void updateRuleList();
+	map<CString, int> curveTypes = { {L"LINE", 0}, 
+		{L"BEZIER", 1},
+		{L"CURVE", 2 } };
 public:
 
+	vector<string> m_rulesString;
 	bool is_processing;
 
 	afx_msg void OnBnClickedOk();
@@ -50,12 +58,9 @@ public:
 	//CComboBox m_rule_combo;
 	afx_msg void OnBnClickedButtonInsertRule();
 	CEdit m_rule_content_edit;
-	afx_msg void OnEnChangeEdit1();
+	//afx_msg void OnEnChangeEdit1();
 	//afx_msg void OnBnClickedButton5();
-	CListCtrl m_alpha_tree;
-	CListCtrl m_beta_tree;
-	vector<string> m_alpha_nodes;
-	vector<string> m_beta_nodes;
+
 	CEdit m_cq_content_edit;
 	CEdit m_cep_content_edit;
 	afx_msg void OnBnClickedButtonInsertCq();
@@ -87,7 +92,6 @@ public:
 //	afx_msg void OnDropdownButtonVessel(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedButton9();
 	afx_msg void OnBnClickedButton10();
-	afx_msg void OnBnClickedButton6();
 	afx_msg void SetCoordinate_new();
 	CString m_coordinate_0;
 	CString m_coordinate_1;
@@ -96,4 +100,13 @@ public:
 	CString m_coordinate_4;
 	CString m_coord_obj_num;
 	CString m_coord_time;
+	
+	afx_msg void OnBnClickedSimu1();
+	afx_msg void OnEnChangeEdit6();
+	afx_msg void OnBnClickedButton12();
+	CListCtrl m_rule_listctrl;
+	afx_msg void OnEnChangeEditcoor1();
+	CComboBox m_trajectoryCombo;
+	int vesselNum = 0;
+	bool first_vessel = true;
 };

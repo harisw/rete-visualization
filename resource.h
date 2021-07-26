@@ -6,17 +6,18 @@
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
 #define IDD_RETE_MULTINODE_APP_DIALOG   102
-#define IDD_RulesVisualDlg              103
 #define IDD_AlphaNodeDlg                104
 #define IDD_BetaNodeDlg                 105
-#define IDD_RulesHelpDlg                106
-#define IDD_ObjectVisualization         108
+#define IDD_SimulationDlg               112
+#define IDD_AlphaNodeDlg2               113
+#define IDD_ObjVisualDlg                116
 #define IDR_MAINFRAME                   128
 #define IDC_COMBO1                      1001
 #define IDC_EDIT1                       1002
 #define IDC_EDIT2                       1003
 #define IDC_BUTTON1                     1004
 #define IDC_EDIT7                       1004
+#define IDC_SIMU1                       1004
 #define IDC_BUTTON2                     1005
 #define IDC_EDIT9                       1005
 #define IDC_LIST1                       1006
@@ -28,7 +29,9 @@
 #define IDC_EDITCOOR_2                  1009
 #define IDC_BUTTON5                     1010
 #define IDC_BUTTON_INSERT_COOR          1010
+#define IDC_LIST3                       1010
 #define IDC_EDIT3                       1011
+#define IDC_LIST4                       1011
 #define IDC_EDIT4                       1012
 #define IDC_BUTTON_FIND_CQ              1013
 #define IDC_BUTTON_INSERT_CQ            1014
@@ -58,7 +61,6 @@
 #define IDC_EDITCOOR_4                  1035
 #define IDC_BUTTON7                     1036
 #define IDC_EDITCOOR_5                  1037
-#define IDC_SCROLLBAR2                  1038
 #define IDC_EDITCOOR_6                  1038
 #define IDC_GUIDE_GROUP                 1039
 #define IDC_GUIDE_IMG                   1040
@@ -71,14 +73,16 @@
 #define IDC_EDIT_VESSEL_X               1047
 #define IDC_EDIT_VESSEL_Y               1048
 #define IDC_EDITCOOR_7                  1049
+#define IDC_STATIC_OBJECT               1049
+#define IDC_STATIC_NODE                 1050
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        140
+#define _APS_NEXT_RESOURCE_VALUE        143
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1049
-#define _APS_NEXT_SYMED_VALUE           112
+#define _APS_NEXT_CONTROL_VALUE         1053
+#define _APS_NEXT_SYMED_VALUE           117
 #endif
 #endif

@@ -19,6 +19,12 @@ vector<int>ReteNet::betaListIDDictionary;
 vector<int>ReteNet::termListIDDictionary;
 vector<Node*> ReteNet::NodeList;
 
+queue< string > ReteNet::triggered_ev;
+map<string, Node*> ReteNet::triggered_node;
+vector<Node*> ReteNet::triggered_node_vect;
+vector<bool> ReteNet::triggered_node_ID;
+bool ReteNet::is_execution_done = false;
+
 //this is spatial node indexing
 vector<int> ReteNet::staticCQNodeId;
 
@@ -36,8 +42,15 @@ priority_queue < Node*, vector<Node*>, ReteNet::CustomCompare> ReteNet::temp_p_q
 //incoming newcomer, a mutex
 std::recursive_mutex ReteNet::mutexOfReteProcess;
 
+queue<string> ReteNet::rulesQueue;
+
 vector<vector<pair<string, string>>> ReteNet::parseConditionOriginal(vector<string> condList)
 {
+	string tempRule = "";
+	for (int j = 0; j < condList.size(); j++)
+		tempRule += condList[j] + " ";
+	
+	rulesQueue.push(tempRule);
 	//Parsing parsing~
 	vector<vector<pair<string, string>>> collectedMade;
 	vector<string> newInputForm;

@@ -53,6 +53,7 @@ public:
 		string& limit, string& condition, string& product);
 	static string getComparisonExp(const string expression);
 
+	
 	//static bool checkEmptyEvent(EventPtr e);
 };
 

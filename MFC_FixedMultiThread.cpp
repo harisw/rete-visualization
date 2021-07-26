@@ -102,7 +102,7 @@ void ThreadFixedDataGeneration::run()
 			}
 		}
 	}
-
+	ReteNet::is_execution_done = true;
 	//	while (global_curr_itt < local_objMap.size()) {
 	//		/*if (is_paused) {
 	//			continue;
@@ -146,6 +146,7 @@ void ThreadFixedDataGeneration::run()
 
 			//cout << "this is wm: " << ReteNet::getWMSize() << endl;
 	//	}
+
 }
 
 EventPtr ThreadFixedDataGeneration::generateFixedEvent(int obj_id, int obj_num, int curr_time)
@@ -289,6 +290,7 @@ void ThreadFixedDataProcessing::run()
 		//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	//}
 	}
+	//ReteNet::is_execution_done = true;
 }
 
 std::thread ThreadFixedDataProcessing::runThread(ReteNet* net, int obj_num)

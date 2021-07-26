@@ -2,7 +2,7 @@
 
 vector<POINT_GEN> GenerateData::converted_vector;
 
-void GenerateData::Generate(vector<pair<int,int>> input_vector, int obj_num, int time_len)
+void GenerateData::Generate(vector<pair<int,int>> input_vector, int obj_num, int time_len, int curveType)
 {
 	converted_vector = {};
 
@@ -11,8 +11,23 @@ void GenerateData::Generate(vector<pair<int,int>> input_vector, int obj_num, int
 		converted_vector.push_back({ vec.first, vec.second });
 	}
 	//generate object and print the output
-	CQObjectSet* pRet = generateObjects(converted_vector, obj_num, time_len, CURVETYPE::LINE);
-
+	/*CQObjectSet* pRet = generateObjects(converted_vector, obj_num, time_len, CURVETYPE::LINE);*/
+	CQObjectSet* pRet;
+	switch (curveType)
+	{
+	case 0:
+		pRet = generateObjects(converted_vector, obj_num, time_len, CURVETYPE::LINE);
+		break;
+	case 1:
+		pRet = generateObjects(converted_vector, obj_num, time_len, CURVETYPE::BEZIER);
+		break;
+	case 2:
+		pRet = generateObjects(converted_vector, obj_num, time_len, CURVETYPE::CURVE);
+		break;
+	default:
+		return;
+	}
+	
 	//insert the produced output :v
 	//errr, after some consideration, better to do this in main function
 
@@ -21,7 +36,7 @@ void GenerateData::Generate(vector<pair<int,int>> input_vector, int obj_num, int
 	vector<pair<float, float>> point_list;
 	for (int i = 0; i < obj_num; i++) {
 
-		point_list = pRet->getSingleObjectTrajectory(i);
+		point_list = pRet->getSingleObjectTrajectory(i);		//GET all the location passed by a single point from start-end
 
 		MFC_FixedMultiThread::setupData(i, point_list);
 

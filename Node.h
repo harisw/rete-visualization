@@ -46,7 +46,10 @@ public:
 	//visualization reqs
 	pair<int, int> visualPosition;
 	virtual vector<Node*> getNextPairs() = 0;
-
+	bool isActivated = false;
+	bool isVisualized() {
+		return visualPosition != make_pair(0, 0);
+	}
 };
 
 

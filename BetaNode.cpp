@@ -3,7 +3,7 @@
 //all of this is located in line 785
 
 //hmm, i forget :v
-//#define ONLY_TRIGGER_RESULT
+#define ONLY_TRIGGER_RESULT
 
 //due to effectivity, this only show the time, without explaining what event that trigger dis
 //#define ONLY_TRIGGER_TIME_RESULT 
@@ -388,7 +388,7 @@ int BetaNode::justTest(int TimeSlice)
 	bool anchorIsAtLeft = true;
 	vector<int> anchorObjId = {};
 
-
+	stringstream output_stream;
 	//in case both of the inputs are same
 	//idk why but only left that is working
 	if (leftSourcePair.second == rightSourcePair.second) {
@@ -783,6 +783,13 @@ int BetaNode::justTest(int TimeSlice)
 #endif // (SHOW_RESULT)
 
 #ifdef ONLY_TRIGGER_RESULT
+		output_stream << "-------------------> TRIGGERED event: " << thisProduct
+			<< " --- " << Utilities::translateTime(Utilities::getTimeSec()) << endl;
+		ReteNet::triggered_ev.push(output_stream.str());
+		//ReteNet::triggered_node.insert(make_pair(justCondition, this));
+		ReteNet::triggered_node_vect.push_back(this);
+		ReteNet::triggered_node_ID[this->SuperNodeID] = true;
+		//this->isActivated = true;
 		cout << "-------------------> TRIGGERED event: " << thisProduct
 			<< " --- " << Utilities::translateTime(Utilities::getTimeSec()) << endl;
 #endif // ONLY_TRIGGER_RESULT

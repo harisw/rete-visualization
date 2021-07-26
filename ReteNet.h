@@ -8,7 +8,7 @@
 #include "MultiNodeIndexing.h"
 #include "SpatialNodeIndexing.h"
 #include "WorkingMemory.h"
-#include "RTree.h"
+//#include "RTree.h"
 
 #include <list>
 #include <algorithm>
@@ -28,6 +28,7 @@ private:
 class ReteNet
 {
 public:
+	static queue<string> rulesQueue;
 	static vector<vector<pair<string, string>>> parseConditionOriginal(vector<string> condList);
 	static void tokenizeMultiExpCEP(string input, vector<pair<string, string>>& res);
 
@@ -107,7 +108,15 @@ public:
 		return NodeList;
 	}
 	static priority_queue < Node*, vector<Node*>, CustomCompare> p_queue, temp_p_queue;
-
+	static queue< string > triggered_ev;
+	static map<string, Node*> triggered_node;
+	static vector<Node*> triggered_node_vect;
+	static vector<bool> triggered_node_ID;
+	static bool is_execution_done;
+	/*static void pushTriggeredEvent(string inpEvent) {
+		triggered_ev.push_back(inpEvent);
+		return;
+	}*/
 	static std::recursive_mutex mutexOfReteProcess;//mutex lock among threads
 
 private:
