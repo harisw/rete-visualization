@@ -2,6 +2,7 @@
 #define _SPLINE_H
 
 #include <math.h>
+#include <algorithm>
 #define DIV_FACTOR 4.0 //adjust this factor to adjust the curve smoothness
 class Curve
 {
