@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Node.h"
-//#include "BetaNode.h"
 #include <string>
 #include <cstdlib>
 #include "SlidingWindow.h"

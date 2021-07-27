@@ -1,14 +1,10 @@
 #pragma once
 
-//#include "AlphaNode.h"
-//#include "BetaNode.h"
-//#include "TerminalNode.h"
 #include "Node.h"
 
 #include "MultiNodeIndexing.h"
 #include "SpatialNodeIndexing.h"
 #include "WorkingMemory.h"
-//#include "RTree.h"
 
 #include <list>
 #include <algorithm>
@@ -27,6 +23,7 @@ private:
 
 class AlphaNode;
 class BetaNode;
+//class SpatialNodeIndexing;
 class ReteNet
 {
 public:

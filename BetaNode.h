@@ -1,6 +1,5 @@
 #pragma once
 #include "Node.h"
-//#include "TerminalNode.h"
 #include "SlidingWindow.h"
 #include "ReteNet.h"
 #include "SpatialOp.h"

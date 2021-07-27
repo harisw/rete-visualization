@@ -12,7 +12,8 @@
 #include <algorithm>
 
 #include "Node.h"
-#include "ReteNet.h"
+#include "AlphaNode.h"
+#include "BetaNode.h"
 #include "RTree.h"
 #include "Utilities.h"
 

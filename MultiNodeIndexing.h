@@ -1,10 +1,9 @@
 #pragma once
 #include "Node.h"
-//#include "ReteNet.h"
-#include "RTree.h"
-#include "Utilities.h"
 #include "AlphaNode.h"
 #include "BetaNode.h"
+#include "RTree.h"
+#include "Utilities.h"
 #include <algorithm>
 
 #define MAX_LIM 9999

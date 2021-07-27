@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 #include "ReteNet.h"
-#include "MFC_FixedMultiThread.h"
 #include <thread>
 
 using namespace std;
