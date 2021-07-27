@@ -54,9 +54,6 @@
     <ClInclude Include="MultiNodeIndexing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MultiThread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -79,12 +76,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RTree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AlphaNodeDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BetaNodeDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MFC_FixedMultiThread.h">
@@ -134,9 +125,6 @@
     <ClCompile Include="MultiNodeIndexing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MultiThread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -156,12 +144,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorkingMemory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AlphaNodeDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BetaNodeDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MFC_FixedMultiThread.cpp">

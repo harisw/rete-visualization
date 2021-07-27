@@ -1,7 +1,7 @@
 #pragma once
 
-#include "AlphaNode.h"
-#include "BetaNode.h"
+//#include "AlphaNode.h"
+//#include "BetaNode.h"
 //#include "TerminalNode.h"
 #include "Node.h"
 
@@ -25,6 +25,8 @@ private:
 	Node* executedNode;
 };
 
+class AlphaNode;
+class BetaNode;
 class ReteNet
 {
 public:
@@ -118,6 +120,7 @@ public:
 		return;
 	}*/
 	static std::recursive_mutex mutexOfReteProcess;//mutex lock among threads
+	static void parseMultipleRules(vector<vector<string>> &input);
 
 private:
 	static WorkingMemory m_WMSet;

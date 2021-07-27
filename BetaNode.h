@@ -8,6 +8,7 @@
 #include "Utilities.h"
 #include <string>
 #include <queue>
+#include "AlphaNode.h"
 //#include "../execution/EventProcess.h"
 
 class BetaNode : public Node

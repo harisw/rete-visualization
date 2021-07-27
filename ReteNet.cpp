@@ -1108,6 +1108,15 @@ void ReteNet::checkTemporalQueue(int TimeSlice, int TimeNow)
 		return NodeList.size();
 	}
 
+	void ReteNet::parseMultipleRules(vector<vector<string>> &input)
+	{
+		vector<vector<pair<string, string>>> colMade;
+		for (int j = 0; j < input.size(); j++) {
+			colMade = ReteNet::parseConditionOriginal(input[j]);
+			ReteNet::growTheNodes(colMade);
+		}
+	}
+
 	//std::thread ReteNet::runTemporal()
 	//{
 	//	return std::thread(&ReteNet::ThreadTemporalExecution, this);
