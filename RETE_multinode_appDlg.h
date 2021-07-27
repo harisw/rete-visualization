@@ -109,4 +109,5 @@ public:
 	CComboBox m_trajectoryCombo;
 	int vesselNum = 0;
 	bool first_vessel = true;
+	afx_msg void OnBnClickedButton6();
 };

@@ -14,8 +14,8 @@
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
-#include "AlphaNodeDlg.h"
-#include "BetaNodeDlg.h"
+//#include "AlphaNodeDlg.h"
+//#include "BetaNodeDlg.h"
 //#ifndef SIMUDLG_H
 //#define SIMUDLG_H
 
@@ -100,8 +100,8 @@ private:
 	int lastUpdateIndex = 0;
 	int lastTriggeredVect = 0;
 	bool highlightMode = false;
-	vector<AlphaNodeDlg*> m_alphaDlgs;
-	vector<BetaNodeDlg*> m_betaDlgs;
+	/*vector<AlphaNodeDlg*> m_alphaDlgs;
+	vector<BetaNodeDlg*> m_betaDlgs;*/
 
 
 	void showAlphaWindow(AlphaNode* nodeInput);

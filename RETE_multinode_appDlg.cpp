@@ -138,6 +138,7 @@ ON_BN_CLICKED(IDC_SIMU1, &CRETEmultinodeappDlg::OnBnClickedSimu1)
 ON_EN_CHANGE(IDC_EDIT6, &CRETEmultinodeappDlg::OnEnChangeEdit6)
 ON_BN_CLICKED(IDC_BUTTON12, &CRETEmultinodeappDlg::OnBnClickedButton12)
 ON_EN_CHANGE(IDC_EDITCOOR_1, &CRETEmultinodeappDlg::OnEnChangeEditcoor1)
+ON_BN_CLICKED(IDC_BUTTON6, &CRETEmultinodeappDlg::OnBnClickedButton6)
 END_MESSAGE_MAP()
 
 
@@ -2207,4 +2208,56 @@ void CRETEmultinodeappDlg::OnEnChangeEditcoor1()
 	// with the ENM_CHANGE flag ORed into the mask.
 
 	// TODO:  Add your control notification handler code here
+}
+
+
+void CRETEmultinodeappDlg::OnBnClickedButton6()
+{
+	
+	//BASIC IF ELSE
+	vector<vector<string>> mades;
+	vector<string> made;
+	vector<vector<pair<string, string>>> colMade;
+
+	if (first_vessel) {
+		//vessels
+		made = {};
+		made.push_back("IF elevation<10 & iff=false");
+		made.push_back("THEN enemyvessel");
+		mades.push_back(made);
+
+		//made = {};
+		//made.push_back("IF speed>3 & elevation<10 & iff=true");
+		//made.push_back("THEN allyvessel");
+		//colMade = ReteNet::parseConditionOriginal(made);
+		//ReteNet::growTheNodes(colMade);
+
+		//submarines
+		made = {};
+		made.push_back("IF elevation<0 & iff=false");
+		made.push_back("THEN enemysubmarine");
+		mades.push_back(made);
+		first_vessel = false;
+
+		//made = {};
+		//made.push_back("IF speed>3 & elevation<0 & iff=true");
+		//made.push_back("THEN allysubmarine");
+		//colMade = ReteNet::parseConditionOriginal(made);
+		//ReteNet::growTheNodes(colMade);
+
+		//aircraft
+		made = {};
+		made.push_back("IF elevation>5 & iff=false");
+		made.push_back("THEN enemyaircraft");
+		mades.push_back(made);
+
+		//made = {};
+		//made.push_back("IF speed>10 & elevation>5 & iff=true");
+		//made.push_back("THEN allyaircraft");
+		//colMade = ReteNet::parseConditionOriginal(made);
+
+		//ReteNet::growTheNodes(colMade);
+		ReteNet::parseMultipleRules(mades);
+		updateRuleList();
+	}
 }
